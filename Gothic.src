@@ -3,7 +3,6 @@ Source/Raw/2.d
 Source/Raw/3.d
 Source/Raw/4.d
 Source/Raw/5.d
-Source/Raw/8.d
 Source/Raw/9.d
 Source/Raw/10.d
 Source/Raw/11.d
@@ -5075,4 +5074,5 @@ Source/externals.d
 Source/Ikarus/Ikarus_Const_G2.d
 Source/Ikarus/Ikarus.d
 Source/Ikarus/float.d
+Source/Ikarus/EngineClasses_G2/Misc.d
 Source/Ikarus/EngineClasses_G2/oCGame.d
