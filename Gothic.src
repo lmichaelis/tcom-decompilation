@@ -12,7 +12,6 @@ Source/Raw/14.d
 Source/Raw/15.d
 Source/Raw/16.d
 Source/Raw/17.d
-Source/Raw/18.d
 Source/Raw/19.d
 Source/Raw/20.d
 Source/Raw/21.d
@@ -5076,3 +5075,4 @@ Source/Ikarus/Ikarus.d
 Source/Ikarus/float.d
 Source/Ikarus/EngineClasses_G2/Misc.d
 Source/Ikarus/EngineClasses_G2/oCGame.d
+Source/Ikarus/EngineClasses_G2/oCInfoManager.d
