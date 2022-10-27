@@ -1,0 +1,176 @@
+instance DIA_LEA_EXIT(C_INFO) {
+    NPC = 0xc98f;
+    NR = 999;
+    CONDITION = DIA_LEA_EXIT_CONDITION;
+    INFORMATION = DIA_LEA_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_LEA_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_LEA_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_LEA_Q102_HELLO(C_INFO) {
+    NPC = 0xc98f;
+    NR = 1;
+    CONDITION = DIA_LEA_Q102_HELLO_CONDITION;
+    INFORMATION = DIA_LEA_Q102_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Are you all right?";
+}
+
+func int DIA_LEA_Q102_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_LEA_Q102_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q102_Hello_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q102_Hello_09_01");
+    AI_STOPLOOKAT(SELF);
+    AI_PLAYANI(SELF, T_SEARCH_SCARED);
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q102_Hello_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q102_Hello_09_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q102_Hello_09_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q102_Hello_15_05");
+}
+
+instance DIA_LEA_Q104_RIKPROBLEM(C_INFO) {
+    NPC = 0xc98f;
+    NR = 1;
+    CONDITION = DIA_LEA_Q104_CONDITION;
+    INFORMATION = DIA_LEA_Q104_INFO;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_LEA_Q104_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q104)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x1568f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEA_Q104_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q104_RikProblem_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_RikProblem_09_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_RikProblem_09_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_RikProblem_09_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_RikProblem_09_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q104_RikProblem_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_RikProblem_09_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q104_RikProblem_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_RikProblem_09_09");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_Q104, LOG_Q104_LEAPROBLEMWITHRIK);
+}
+
+instance DIA_LEA_Q104_SOLVEDPROBLEM(C_INFO) {
+    NPC = 0xc98f;
+    NR = 10;
+    CONDITION = DIA_LEA_Q104_SOLVEDPROBLEM_CONDITION;
+    INFORMATION = DIA_LEA_Q104_SOLVEDPROBLEM_INFO;
+    DESCRIPTION = "Rik won't give you any more trouble.";
+}
+
+func int DIA_LEA_Q104_SOLVEDPROBLEM_CONDITION() {
+    if ((Q104_HELPEDLEA) == (TRUE)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEA_Q104_SOLVEDPROBLEM_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q104_SolvedProblem_15_01");
+    if (((Q104_RIKIDRUNK) == (TRUE)) && ((Q104_WONFIGHTWITHRIKI) == (FALSE))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_SolvedProblem_09_02");
+        AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q104_SolvedProblem_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_SolvedProblem_09_04");
+        B_GIVEPLAYERXP(XP_Q104_RIKIDRUNK);
+    };
+    if ((Q104_FIGHTWITHRIKI) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_SolvedProblem_09_05");
+        AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q104_SolvedProblem_15_06");
+        B_GIVEPLAYERXP(XP_Q104_RIKIBEATEN);
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_SolvedProblem_09_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_SolvedProblem_09_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_Q104_SolvedProblem_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_Q104_SolvedProblem_09_10");
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_WAITTILLEND(OTHER, SELF);
+    B_STANDUP();
+    AI_LOGENTRY(TOPIC_Q104, LOG_Q104_LEAPROBLEMSOLVED);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, "Q104Wait");
+    Q104_LEABROTHERLYWORK = 1;
+    B_STARTOTHERROUTINE(BAU_11027_FARMER, "Pub");
+}
+
+instance DIA_LEA_GQ001_WHEREISJORN(C_INFO) {
+    NPC = 0xc98f;
+    NR = 10;
+    CONDITION = DIA_LEA_GQ001_WHEREISJORN_CONDITION;
+    INFORMATION = DIA_LEA_GQ001_WHEREISJORN_INFO;
+    DESCRIPTION = "Did you hear about the break-in at Kurt's house?";
+}
+
+func int DIA_LEA_GQ001_WHEREISJORN_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x1575a)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEA_GQ001_WHEREISJORN_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_GQ001_WhereIsJorn_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_GQ001_WhereIsJorn_09_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_GQ001_WhereIsJorn_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_GQ001_WhereIsJorn_09_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_GQ001_WhereIsJorn_09_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_GQ001_WhereIsJorn_09_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_GQ001_WhereIsJorn_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_GQ001_WhereIsJorn_09_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_GQ001_WhereIsJorn_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_GQ001_WhereIsJorn_09_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Lea_GQ001_WhereIsJorn_09_11");
+    AI_OUTPUT(OTHER, SELF, "DIA_Lea_GQ001_WhereIsJorn_15_12");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_LEA_AMBIENT(C_INFO) {
+    NPC = 0xc98f;
+    NR = 870;
+    CONDITION = DIA_LEA_AMBIENT_CONDITION;
+    INFORMATION = DIA_LEA_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How's life?";
+}
+
+func int DIA_LEA_AMBIENT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q104)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x1568f))) {
+        return FALSE;
+    };
+    if (NPC_KNOWSINFO(OTHER, 0x16578)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEA_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew5");
+    if ((LOG_GETSTATUS(MIS_Q102)) == (LOG_SUCCESS)) {
+        if (NPC_KNOWSINFO(OTHER, 0x1657e)) {
+            AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+            B_SAY(SELF, OTHER, "$GREETINGS_FromFriend");
+        };
+        B_SAY(SELF, OTHER, "$SQ416_GOODJOB_02");
+    };
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    B_SAY(SELF, OTHER, "$IMBUSY_CALM");
+    AI_RESETFACEANI(SELF);
+}
+

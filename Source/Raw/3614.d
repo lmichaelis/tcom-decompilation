@@ -1,0 +1,231 @@
+instance DIA_RUPERT_EXIT(C_INFO) {
+    NPC = 0xc959;
+    NR = 999;
+    CONDITION = DIA_RUPERT_EXIT_CONDITION;
+    INFORMATION = DIA_RUPERT_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_RUPERT_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_RUPERT_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RUPERT_Q101_HELLO(C_INFO) {
+    NPC = 0xc959;
+    NR = 1;
+    CONDITION = DIA_RUPERT_Q101_HELLO_CONDITION;
+    INFORMATION = DIA_RUPERT_Q101_HELLO_INFO;
+    DESCRIPTION = "Hey, where are you from?";
+}
+
+func int DIA_RUPERT_Q101_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_RUPERT_Q101_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rupert_Q101_Hello_15_01");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_Hello_07_02");
+}
+
+instance DIA_RUPERT_Q101_TIME(C_INFO) {
+    NPC = 0xc959;
+    NR = 1;
+    CONDITION = DIA_RUPERT_Q101_TIME_CONDITION;
+    INFORMATION = DIA_RUPERT_Q101_TIME_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "We still have some time before we reach shore.";
+}
+
+func int DIA_RUPERT_Q101_TIME_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0xfd42)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RUPERT_Q101_TIME_INFO() {
+    SHIPTALK += 1;
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Rupert_Q101_Time_15_01");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_Time_07_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_Time_07_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_Time_07_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_Time_07_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_Time_07_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_Time_07_07");
+    AI_LOGENTRY(TOPIC_Q101, LOG_Q101_RUPERT);
+}
+
+instance DIA_RUPERT_Q101_WAITASEC(C_INFO) {
+    NPC = 0xc959;
+    NR = 1;
+    CONDITION = DIA_RUPERT_Q101_WAITASEC_CONDITION;
+    INFORMATION = DIA_RUPERT_Q101_WAITASEC_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RUPERT_Q101_WAITASEC_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0xfd45)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RUPERT_Q101_WAITASEC_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_WaitASec_07_01");
+    AI_LOGENTRY(TOPIC_Q101, LOG_Q101_RUPERT_HUNGRY);
+    INFO_CLEARCHOICES(0xfd48);
+    if (((NPC_HASITEMS(OTHER, 0x8e33)) >= (1)) || ((NPC_HASITEMS(OTHER, 0x8e35)) >= (1))) {
+        INFO_ADDCHOICE(0xfd48, "I have a few pieces of rat meat with me.", 0xfd4d);
+    };
+    INFO_ADDCHOICE(0xfd48, "Unfortunately, no.", 0xfd4c);
+}
+
+var int RUPERT_Q101_NORATMEAT = 0;
+func void DIA_RUPERT_Q101_WAITASEC_NO() {
+    RUPERT_Q101_NORATMEAT = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Rupert_Q101_WaitASec_No_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_WaitASec_No_07_02");
+    INFO_CLEARCHOICES(0xfd48);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_RUPERT_Q101_WAITASEC_YES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rupert_Q101_WaitASec_Yes_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_WaitASec_Yes_07_02");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_WaitASec_Yes_07_03");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_WaitASec_Yes_07_04");
+    B_STANDUP();
+    B_USEFAKESCROLL();
+    CREATEINVITEMS(SELF, 0x8c2b, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x8c2b, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_WaitASec_Yes_07_05");
+    AI_LOGENTRY(TOPIC_Q101, LOG_Q101_RUPERT_RECIPE);
+    INFO_CLEARCHOICES(0xfd48);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RUPERT_Q101_GOTRATMEAT(C_INFO) {
+    NPC = 0xc959;
+    NR = 1;
+    CONDITION = DIA_RUPERT_Q101_GOTRATMEAT_CONDITION;
+    INFORMATION = DIA_RUPERT_Q101_GOTRATMEAT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I have a few pieces of rat meat with me.";
+}
+
+func int DIA_RUPERT_Q101_GOTRATMEAT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0xfd45)) {
+        if ((RUPERT_Q101_NORATMEAT) == (TRUE)) {
+            if (((NPC_HASITEMS(OTHER, 0x8e33)) >= (1)) || ((NPC_HASITEMS(OTHER, 0x8e35)) >= (1))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RUPERT_Q101_GOTRATMEAT_INFO() {
+    DIA_RUPERT_Q101_WAITASEC_YES();
+}
+
+instance DIA_RUPERT_Q101_GOTYOURMEAL(C_INFO) {
+    NPC = 0xc959;
+    NR = 1;
+    CONDITION = DIA_RUPERT_Q101_GOTYOURMEAL_CONDITION;
+    INFORMATION = DIA_RUPERT_Q101_GOTYOURMEAL_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I got your shashliks.";
+}
+
+func int DIA_RUPERT_Q101_GOTYOURMEAL_CONDITION() {
+    if ((NPC_HASITEMS(OTHER, 0x8f23)) >= (1)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RUPERT_Q101_GOTYOURMEAL_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rupert_Q101_GotYourMeal_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 0x8f23, 1);
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_GotYourMeal_07_02");
+    B_STANDUP();
+    AI_STOPLOOKAT(SELF);
+    AI_USEITEM(SELF, 0x8f23);
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_GotYourMeal_07_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_GotYourMeal_07_04");
+    CREATEINVITEMS(SELF, 0x8c17, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x8c17, 1);
+    B_GIVEPLAYERXP(XP_Q101_RUPERTFOOD);
+    ACH_3_COUNTER += 1;
+}
+
+instance DIA_RUPERT_Q101_AMBIENT(C_INFO) {
+    NPC = 0xc959;
+    NR = 1;
+    CONDITION = DIA_RUPERT_Q101_AMBIENT_CONDITION;
+    INFORMATION = DIA_RUPERT_Q101_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RUPERT_Q101_AMBIENT_CONDITION() {
+    if ((NPC_ISINSTATE(SELF, 0xf09f)) && (NPC_KNOWSINFO(OTHER, 0xfd51))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RUPERT_Q101_AMBIENT_INFO() {
+    NPC_INITAMBIENTS(SELF, 1);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Rupert_Q101_Ambient_07_01");
+    };
+    AI_RESETFACEANI(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RUPERT_Q101_ADDAMBIENT(C_INFO) {
+    NPC = 0xc959;
+    NR = 1;
+    CONDITION = DIA_RUPERT_Q101_ADDAMBIENT_CONDITION;
+    INFORMATION = DIA_RUPERT_Q101_ADDAMBIENT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RUPERT_Q101_ADDAMBIENT_CONDITION() {
+    if (NPC_ISINSTATE(SELF, 0xf09f)) {
+        if (((((RUPERT_Q101_NORATMEAT) == (FALSE)) && (NPC_KNOWSINFO(OTHER, 0xfd48))) && (!(NPC_KNOWSINFO(OTHER, 0xfd51)))) && ((NPC_HASITEMS(OTHER, 0x8f23)) == (0))) {
+            return TRUE;
+        };
+        if (((((RUPERT_Q101_NORATMEAT) == (TRUE)) && ((NPC_HASITEMS(OTHER, 0x8e33)) == (0))) && ((NPC_HASITEMS(OTHER, 0x8e35)) == (0))) && (!(NPC_KNOWSINFO(OTHER, 0xfd4e)))) {
+            return TRUE;
+        };
+        if (((((RUPERT_Q101_NORATMEAT) == (TRUE)) && (NPC_KNOWSINFO(OTHER, 0xfd4e))) && (!(NPC_KNOWSINFO(OTHER, 0xfd51)))) && ((NPC_HASITEMS(OTHER, 0x8f23)) == (0))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RUPERT_Q101_ADDAMBIENT_INFO() {
+    B_SAY(SELF, OTHER, "$NOITEMS");
+    AI_STOPPROCESSINFOS(SELF);
+}
+

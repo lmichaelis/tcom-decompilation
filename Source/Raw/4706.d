@@ -1,0 +1,48 @@
+func void EVENTSMANAGER_Q401() {
+    if ((LOG_GETSTATUS(MIS_Q401)) != (LOG_RUNNING)) {
+        return;
+    };
+    if ((Q401_NEARSWAMPHOUSE) == (FALSE)) {
+        if (NPC_KNOWSINFO(HERO, 0x14dbb)) {
+            if ((NPC_GETDISTTOWP(HERO, "PART11_SWAMPHOUSE_ENTRY")) <= (0x73a)) {
+                Q401_NEARSWAMPHOUSE = TRUE;
+                B_LOGENTRY(TOPIC_Q401, LOG_Q401_NEARSWAMPHOUSE);
+            };
+        };
+    };
+    if ((Q401_WOODCUTTERSREFUSECOUNT) >= (3)) {
+        if (HLP_ISVALIDNPC(BAU_2277_LOWELL)) {
+            if ((NPC_ISDEAD(BAU_2277_LOWELL)) && ((Q401_ESTICUTTERS) == (1))) {
+                Q401_ESTICUTTERS = 3;
+                B_LOGENTRY(TOPIC_Q401, LOG_Q401_WOODCUTTERSFAILED);
+            };
+        };
+    };
+    if ((Q401_FABIOANDGANGGONE) == (0)) {
+        if ((Q401_FABIOISDEAD_LOGENTRY) == (FALSE)) {
+            if (NPC_ISDEAD(NONE_5_FABIO)) {
+                FINALBOARDS_FABIOISDEAD = TRUE;
+                FINALBOARDS_FABIOISDEAD_HOW = 2;
+                Q401_FABIOISDEAD_LOGENTRY = TRUE;
+                B_LOGENTRY(TOPIC_Q401, LOG_Q401_FABIOISDEAD);
+            };
+        };
+        if ((Q401_FABIOFRIENDISDEAD_LOGENTRY) == (FALSE)) {
+            if (((NPC_ISDEAD(NONE_6365_ESTI)) || (NPC_ISDEAD(NONE_6364_SIGMUN))) || (NPC_ISDEAD(NONE_6363_GALBO))) {
+                if (((Q401_REFUGEEAREDEAD) == (FALSE)) && ((Q401_FABIOISDEAD_LOGENTRY) == (FALSE))) {
+                    Q401_FABIOFRIENDISDEAD_LOGENTRY = TRUE;
+                    B_LOGENTRY(TOPIC_Q401, LOG_Q401_FABIOFRIENDISDEAD);
+                };
+            };
+        };
+        if ((Q401_REFUGEEAREDEAD) == (FALSE)) {
+            if (((((((((NPC_ISDEAD(NONE_6365_ESTI)) && (NPC_ISDEAD(NONE_6364_SIGMUN))) && (NPC_ISDEAD(NONE_6363_GALBO))) && (NPC_ISDEAD(NONE_5_FABIO))) && (NPC_ISDEAD(NONE_6374_REFUGEE))) && (NPC_ISDEAD(NONE_6375_REFUGEE))) && (NPC_ISDEAD(NONE_6376_REFUGEE))) && (NPC_ISDEAD(NONE_6377_REFUGEE))) && (NPC_ISDEAD(NONE_6378_REFUGEE))) {
+                Q401_REFUGEEAREDEAD = TRUE;
+                B_LOGENTRY(TOPIC_Q401, LOG_Q401_REFUGEEAREDEAD);
+            };
+        };
+    };
+}
+
+var int EVENTSMANAGER_Q401.Q401_FABIOISDEAD_LOGENTRY = 0;
+var int EVENTSMANAGER_Q401.Q401_FABIOFRIENDISDEAD_LOGENTRY = 0;

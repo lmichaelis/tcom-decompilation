@@ -1,0 +1,30 @@
+const int SPL_COST_FEAR = 50;
+const int SPL_TIME_FEAR = 5;
+instance SPELL_FEAR(C_SPELL_PROTO) {
+    C_SPELL_PROTO();
+    TIME_PER_MANA = 0;
+    DAMAGE_PER_LEVEL = 0;
+    TARGETCOLLECTALGO = TARGET_COLLECT_NONE;
+}
+
+func int SPELL_LOGIC_FEAR(var int MANAINVESTED) {
+    if ((NPC_GETACTIVESPELLISSCROLL(SELF)) && ((SELF.ATTRIBUTE[2]) >= (SPL_COST_SCROLL))) {
+        return SPL_SENDCAST;
+    };
+    if ((SELF.ATTRIBUTE[2]) >= (SPL_COST_FEAR)) {
+        return SPL_SENDCAST;
+    };
+    return SPL_SENDSTOP;
+}
+
+func void SPELL_CAST_FEAR() {
+    if ((OTHER.GUILD) != (GIL_DRAGON)) {
+        AI_SETNPCSTOSTATE(SELF, 0xab4a, 1000);
+    };
+    if (NPC_GETACTIVESPELLISSCROLL(SELF)) {
+        SELF.ATTRIBUTE[2] = (SELF.ATTRIBUTE[2]) - (SPL_COST_SCROLL);
+    };
+    SELF.ATTRIBUTE[2] = (SELF.ATTRIBUTE[2]) - (SPL_COST_FEAR);
+    SELF.AIVAR[20] += 1;
+}
+

@@ -1,0 +1,483 @@
+instance DIA_GRIF_EXIT(C_INFO) {
+    NPC = 0xcb61;
+    NR = 999;
+    CONDITION = DIA_GRIF_EXIT_CONDITION;
+    INFORMATION = DIA_GRIF_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_GRIF_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_GRIF_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_GRIF_HELLO(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_HELLO_CONDITION;
+    INFORMATION = DIA_GRIF_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Hey, who are you?";
+}
+
+func int DIA_GRIF_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_GRIF_HELLO_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_Hello_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Hello_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Hello_03_03");
+    AI_RESETFACEANI(OTHER);
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_GRIF_PLANS(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_PLANS_CONDITION;
+    INFORMATION = DIA_GRIF_PLANS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you have another expedition planned?";
+}
+
+func int DIA_GRIF_PLANS_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x11503)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_PLANS_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_Plans_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Plans_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Plans_03_03");
+    AI_RESETFACEANI(OTHER);
+    AI_RESETFACEANI(SELF);
+    LOG_CREATETOPIC(TOPIC_ARAXOSTRADER, LOG_NOTE);
+    AI_LOGENTRY(TOPIC_ARAXOSTRADER, LOG_TRADER_ARAXOS_GRIF);
+}
+
+instance DIA_GRIF_TRADE(C_INFO) {
+    NPC = 0xcb61;
+    NR = 900;
+    CONDITION = DIA_GRIF_TRADE_CONDITION;
+    INFORMATION = DIA_GRIF_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Show me your wares.";
+}
+
+func int DIA_GRIF_TRADE_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x11506)) && ((Q509_GRIFVOLFZACKE) == (0))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_TRADE_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_LetsTrade2");
+    B_GIVETRADEINV(SELF);
+}
+
+instance DIA_GRIF_Q509_QUESTION(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_Q509_QUESTION_CONDITION;
+    INFORMATION = DIA_GRIF_Q509_QUESTION_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I have a proposition for you...";
+}
+
+func int DIA_GRIF_Q509_QUESTION_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q509)) == (LOG_RUNNING)) && ((Q509_COUNTWARRIORS) < (4))) && (NPC_KNOWSINFO(OTHER, 0x11506))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_Q509_QUESTION_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_Q509_Question_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_Q509_Question_15_02");
+    AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Q509_Question_03_03");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Q509_Question_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Q509_Question_03_05");
+    AI_RESETFACEANI(OTHER);
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_GRIF_NEWARMOR(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_NEWARMOR_CONDITION;
+    INFORMATION = DIA_GRIF_NEWARMOR_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GRIF_NEWARMOR_CONDITION() {
+    if (((KAPITEL) >= (5)) && ((HERO.GUILD) == (GIL_VLK))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_Q509_GO() {
+    if ((GRIF_Q509_LOGENTRY) == (FALSE)) {
+        GRIF_Q509_LOGENTRY = TRUE;
+        SELF.AIVAR[15] = TRUE;
+        SELF.FLAGS = 2;
+        NPC_EXCHANGEROUTINE(SELF, "Q509_WAIT");
+        AI_LOGENTRY(TOPIC_Q509, LOG_Q509_GRIF);
+        AI_FUNCTION(SELF, 0xf74c);
+    };
+}
+
+var int DIA_GRIF_Q509_GO.GRIF_Q509_LOGENTRY = 0;
+func void DIA_GRIF_NEWARMOR_INFO() {
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_NewArmor_03_01");
+    INFO_CLEARCHOICES(0x1150f);
+    INFO_ADDCHOICE(0x1150f, "I don't have time...", 0x11517);
+    INFO_ADDCHOICE(0x1150f, "You don't like my armor?", 0x11516);
+    INFO_CLEARCHOICES(0x11518);
+    INFO_ADDCHOICE(0x11518, "I don't have time...", 0x11517);
+    INFO_ADDCHOICE(0x11518, "You don't like my armor?", 0x11516);
+}
+
+var int GRIF_NEWARMOR_REFUSE = 0;
+var int GRIF_NEWARMOR_ACCEPT = 0;
+func void DIA_GRIF_NEWARMOR_DONTLIKE() {
+    GRIF_NEWARMOR_ACCEPT = TRUE;
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_NewArmor_DontLike_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_NewArmor_DontLike_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_NewArmor_DontLike_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_NewArmor_DontLike_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_NewArmor_DontLike_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_NewArmor_DontLike_03_06");
+    AI_RESETFACEANI(OTHER);
+    AI_RESETFACEANI(SELF);
+    INFO_CLEARCHOICES(0x1150f);
+    INFO_CLEARCHOICES(0x11518);
+    if ((Q509_GRIFVOLFZACKE) == (1)) {
+        DIA_GRIF_Q509_GO();
+    };
+}
+
+func void DIA_GRIF_NEWARMOR_NOTIME() {
+    GRIF_NEWARMOR_REFUSE = TRUE;
+    B_SAY(OTHER, SELF, "$MARVIN_QuestRefused");
+    AI_RESETFACEANI(SELF);
+    INFO_CLEARCHOICES(0x1150f);
+    INFO_CLEARCHOICES(0x11518);
+    if ((Q509_GRIFVOLFZACKE) == (1)) {
+        DIA_GRIF_Q509_GO();
+    };
+}
+
+instance DIA_GRIF_Q509_LETSGO(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_Q509_LETSGO_CONDITION;
+    INFORMATION = DIA_GRIF_Q509_LETSGO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Get ready to go.";
+}
+
+func int DIA_GRIF_Q509_LETSGO_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q509)) == (LOG_RUNNING)) && ((Q509_COUNTWARRIORS) < (4))) && (NPC_KNOWSINFO(OTHER, 0x1150c))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_Q509_LETSGO_INFO() {
+    B_GIVEPLAYERXP(XP_VARHDAL_RECRUIT);
+    Q509_GRIFVOLFZACKE = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_Q509_LetsGo_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Q509_LetsGo_03_02");
+    B_STANDUP();
+    if ((((HERO.GUILD) == (GIL_MIL)) && ((MARVIN_MILITIASPECIALIZATION) < (3))) || (((HERO.GUILD) == (GIL_SLD)) && ((MARVIN_ARAXOSSPECIALIZATION) < (3)))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grif_Q509_LetsGo_03_03");
+        DIA_GRIF_NEWARMOR_INFO();
+    };
+    AI_STOPPROCESSINFOS(SELF);
+    DIA_GRIF_Q509_GO();
+}
+
+instance DIA_GRIF_Q509_FEEL(C_INFO) {
+    NPC = 0xcb61;
+    NR = 90;
+    CONDITION = DIA_GRIF_Q509_FEEL_CONDITION;
+    INFORMATION = DIA_GRIF_Q509_FEEL_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How's the morale?";
+}
+
+func int DIA_GRIF_Q509_FEEL_CONDITION() {
+    if (((NPC_GETDISTTOWP(SELF, "PART5_Q509_GRIF")) < (0x7d0)) && ((Q509_GRIFVOLFZACKE) == (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_Q509_FEEL_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_VolfzackMorale3");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Q509_Feel_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_GRIF_CRABARMORTAKEQUEST(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_CRABARMORTAKEQUEST_CONDITION;
+    INFORMATION = DIA_GRIF_CRABARMORTAKEQUEST_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You don't like my armor?";
+}
+
+func int DIA_GRIF_CRABARMORTAKEQUEST_CONDITION() {
+    if ((GRIF_NEWARMOR_REFUSE) == (TRUE)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_CRABARMORTAKEQUEST_INFO() {
+    DIA_GRIF_NEWARMOR_DONTLIKE();
+}
+
+instance DIA_GRIF_JUSTGIVEIT(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_JUSTGIVEIT_CONDITION;
+    INFORMATION = DIA_GRIF_JUSTGIVEIT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You're just gonna give it to me for free?";
+}
+
+func int DIA_GRIF_JUSTGIVEIT_CONDITION() {
+    if ((GRIF_NEWARMOR_ACCEPT) == (TRUE)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_JUSTGIVEIT_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_JustGiveIt_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_JustGiveIt_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_JustGiveIt_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_GRIF_SURE(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_SURE_CONDITION;
+    INFORMATION = DIA_GRIF_SURE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Okay, I'll take care of it.";
+}
+
+func int DIA_GRIF_SURE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x11521)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_SURE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_Sure_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Sure_03_02");
+    AI_RESETFACEANI(SELF);
+    CREATEINVITEMS(SELF, 0x9bdf, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x9bdf, 1);
+}
+
+instance DIA_GRIF_WHYHELP(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_WHYHELP_CONDITION;
+    INFORMATION = DIA_GRIF_WHYHELP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Why do you want to help me?";
+}
+
+func int DIA_GRIF_WHYHELP_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x11521)) && ((NPC_KNOWSINFO(OTHER, 0x11524)) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_WHYHELP_INFO() {
+    AI_STARTFACEANI(OTHER, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_WhyHelp_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_WhyHelp_03_02");
+    if ((Q509_GRIFVOLFZACKE) == (TRUE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grif_WhyHelp_03_03");
+    };
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_GRIF_MATERIALS(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_MATERIALS_CONDITION;
+    INFORMATION = DIA_GRIF_MATERIALS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I have all the ingredients.";
+}
+
+func int DIA_GRIF_MATERIALS_CONDITION() {
+    if ((GRIF_NEEDMATERIALS) == (TRUE)) {
+        if (((((((NPC_HASITEMS(OTHER, 0x859b)) >= (GRIF_CRABARMORPRICE)) && ((NPC_HASITEMS(OTHER, 0x859a)) >= (1))) && ((NPC_HASITEMS(OTHER, 0x8a13)) >= (1))) && ((NPC_HASITEMS(OTHER, 0x89ff)) >= (1))) && ((NPC_HASITEMS(OTHER, 0x89fe)) >= (2))) && ((NPC_HASITEMS(OTHER, 0x844e)) >= (4))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int GRIF_MATERIALSGIVEN = 0;
+var int GRIF_MATERIALSGIVEN_DAY = 0;
+func void DIA_GRIF_MATERIALS_INFO() {
+    GRIF_MATERIALSGIVEN = TRUE;
+    GRIF_MATERIALSGIVEN_DAY = WLD_GETDAY();
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_Materials_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_Materials_03_02");
+    AI_RESETFACEANI(SELF);
+    NPC_REMOVEINVITEMS(SELF, 0x844e, 4);
+}
+
+var int GRIF_ARMORGIVEN = 0;
+instance DIA_GRIF_ARMORREADY(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_ARMORREADY_CONDITION;
+    INFORMATION = DIA_GRIF_ARMORREADY_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Is the armor ready yet?";
+}
+
+func int DIA_GRIF_ARMORREADY_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x1152a)) && ((GRIF_MATERIALSGIVEN) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_ARMORREADY_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grif_ArmorReady_15_01");
+    if ((GRIF_MATERIALSGIVEN_DAY) <= ((WLD_GETDAY()) - (1))) {
+        GRIF_MATERIALSGIVEN = 2;
+        AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grif_ArmorReady_03_03");
+        CREATEINVITEMS(SELF, 0x8a74, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x8a74, 1);
+        AI_WAITTILLEND(SELF, OTHER);
+        AI_EQUIPARMOR(OTHER, 0x8a74);
+        AI_PLAYANI(OTHER, R_SCRATCHRSHOULDER);
+        AI_OUTPUT(SELF, OTHER, "DIA_Grif_ArmorReady_03_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grif_ArmorReady_03_05");
+        GRIF_ARMORGIVEN = TRUE;
+    };
+    AI_STARTFACEANI(SELF, "S_ANGRY", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grif_ArmorReady_03_02");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_GRIF_AMBIENT(C_INFO) {
+    NPC = 0xcb61;
+    NR = 1;
+    CONDITION = DIA_GRIF_AMBIENT_CONDITION;
+    INFORMATION = DIA_GRIF_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_GRIF_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x11503)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew2");
+    if ((HERO.GUILD) != (GIL_SLD)) {
+        if ((GRIF_ARMORGIVEN) == (FALSE)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Grif_Ambient_03_01");
+        } else if ((GRIF_ARMORGIVEN) == (TRUE)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Grif_Ambient_03_02");
+        };
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        if ((KAPITEL) < (4)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Grif_Ambient_03_03");
+        } else if ((KAPITEL) >= (4)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Grif_Ambient_03_04");
+        };
+    };
+}
+
+instance DIA_GRIF_PICKPOCKET(C_INFO) {
+    NPC = 0xcb61;
+    NR = 900;
+    CONDITION = DIA_GRIF_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_GRIF_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120;
+}
+
+func int DIA_GRIF_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRIF_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x11536);
+    INFO_ADDCHOICE(0x11536, DIALOG_BACK, 0x1153a);
+    INFO_ADDCHOICE(0x11536, DIALOG_PICKPOCKET, 0x11539);
+}
+
+func void DIA_GRIF_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        CREATEINVITEMS(SELF, 0x8443, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x8443, 1);
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x11536);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x11536);
+}
+
+func void DIA_GRIF_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x11536);
+}
+

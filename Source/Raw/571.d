@@ -1,0 +1,47 @@
+func void ZS_CHECKSWD() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    if ((C_BODYSTATECONTAINS(SELF, BS_UNCONSCIOUS)) && (C_BODYSTATECONTAINS(SELF, BS_DEAD))) {
+        if ((NPC_HASITEMS(SELF, 0x8cc0)) == (1)) {
+            NPC_REMOVEINVITEM(SELF, 0x8cc0);
+        };
+    };
+    if ((NPC_HASITEMS(SELF, 0x8cc0)) == (0)) {
+        CREATEINVITEM(SELF, 0x8cc0);
+    };
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_CHECKSWD_LOOP() {
+    if (NPC_ISONFP(SELF, SCEME_CHECKSWORD)) {
+        AI_ALIGNTOFP(SELF);
+        if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+            SELF.AIVAR[19] = NOTINPOS;
+        };
+    };
+    if (WLD_ISFPAVAILABLE(SELF, SCEME_CHECKSWORD)) {
+        AI_GOTOFP(SELF, SCEME_CHECKSWORD);
+        AI_STANDUP(SELF);
+        AI_ALIGNTOFP(SELF);
+        SELF.AIVAR[19] = NOTINPOS_WALK;
+    };
+    AI_ALIGNTOWP(SELF);
+    if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+        SELF.AIVAR[19] = NOTINPOS;
+    };
+    if ((SELF.AIVAR[19]) == (NOTINPOS)) {
+        AI_STANDUP(SELF);
+        AI_USEITEMTOSTATE(SELF, 0x8cc0, 1);
+        SELF.AIVAR[19] = ISINPOS;
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_CHECKSWD_END() {
+    AI_USEITEMTOSTATE(SELF, 0x8cc0, -(1));
+}
+

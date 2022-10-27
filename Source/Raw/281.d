@@ -1,0 +1,5 @@
+func void B_RESETALL(var C_NPC SLF) {
+    B_STOPLOOKAT(SLF);
+    AI_REMOVEWEAPON(SLF);
+}
+

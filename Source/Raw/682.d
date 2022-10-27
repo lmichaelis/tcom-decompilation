@@ -1,0 +1,87 @@
+func void ZS_RUNTORAMHA() {
+    NPC_SETPERCTIME(SELF, 0x3f800000);
+    NPC_PERCENABLE(SELF, PERC_ASSESSBODY, 0x165ea);
+    NPC_PERCENABLE(SELF, PERC_ASSESSMAGIC, 0xa92d);
+    NPC_PERCENABLE(SELF, PERC_ASSESSDAMAGE, 0x165ec);
+    NPC_PERCENABLE(SELF, PERC_ASSESSWARN, 0x165f1);
+    AI_STANDUP(SELF);
+    AI_SETWALKMODE(SELF, NPC_RUN);
+    SELF.AIVAR[8] = FALSE;
+    SELF.AIVAR[68] = 0;
+    SELF.AIVAR[22] = 0;
+    SELF.AIVAR[20] = 0;
+    SELF.AIVAR[19] = 0;
+}
+
+func int ZS_RUNTORAMHA_LOOP() {
+    NPC_SETTARGET(SELF, VLK_6407_RAMHA);
+    if ((SELF.AIVAR[23]) == (1)) {
+        AI_WAIT(SELF, 0x3e99999a);
+        SELF.AIVAR[23] = 0;
+    };
+    if ((SELF.AIVAR[59]) > (0)) {
+        if (((NPC_GETDISTTOWP(SELF, SELF.WP)) > (SELF.AIVAR[59])) && ((NPC_GETDISTTOWP(VLK_6407_RAMHA, SELF.WP)) > (SELF.AIVAR[59]))) {
+            SELF.FIGHT_TACTIC = FAI_NAILED;
+        } else {
+            SELF.FIGHT_TACTIC = SELF.AIVAR[60];
+        };
+    };
+    if ((HLP_ISVALIDNPC(VLK_6407_RAMHA)) && (!(C_NPCISDOWN(VLK_6407_RAMHA)))) {
+        if ((VLK_6407_RAMHA.AIVAR[4]) == (FALSE)) {
+            AI_ATTACK(SELF);
+        } else {
+            NPC_CLEARAIQUEUE(SELF);
+        } else {
+            SELF.AIVAR[7] = HLP_GETINSTANCEID(VLK_6407_RAMHA);
+        } else {
+            return LOOP_CONTINUE;
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    NPC_PERCEIVEALL(SELF);
+    if ((((HLP_ISVALIDNPC(VLK_6407_RAMHA)) && (!(C_NPCISDOWN(VLK_6407_RAMHA)))) && (((NPC_GETDISTTONPC(SELF, VLK_6407_RAMHA)) < (PERC_DIST_INTERMEDIAT)) || (NPC_ISPLAYER(VLK_6407_RAMHA)))) && ((VLK_6407_RAMHA.AIVAR[4]) == (FALSE))) {
+        SELF.AIVAR[7] = HLP_GETINSTANCEID(VLK_6407_RAMHA);
+        return LOOP_CONTINUE;
+    };
+    NPC_GETNEXTTARGET(SELF);
+    NPC_CLEARAIQUEUE(SELF);
+    AI_STANDUP(SELF);
+    return LOOP_END;
+}
+
+func void ZS_RUNTORAMHA_END() {
+    if (NPC_ISDEAD(VLK_6407_RAMHA)) {
+        NPC_CLEARAIQUEUE(SELF);
+        AI_STARTSTATE(SELF, 0x1661a, 0, "");
+        return;
+    };
+}
+
+func void B_QA202_MONSTERATTACK() {
+    if ((NPC_GETDISTTONPC(SELF, HERO)) <= (0x9c4)) {
+        AI_STARTSTATE(SELF, 0xb521, 0, "");
+        PRINTD("Atakuje Ramhe!");
+    };
+    PRINTD("Nie spe³niasz warunków");
+}
+
+func void ZS_RAMHAATTACK() {
+    SELF.SENSES = SENSE_SMELL;
+    SELF.SENSES_RANGE = 0x7d0;
+    NPC_SETPERCTIME(SELF, 0x3f800000);
+    NPC_PERCENABLE(SELF, PERC_ASSESSPLAYER, 0xb524);
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_RAMHAATTACK_LOOP() {
+    if ((SELF.AIVAR[19]) == (NOTINPOS)) {
+        AI_PLAYANI(SELF, T_WARN);
+        SELF.AIVAR[19] = ISINPOS;
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_RAMHAATTACK_END() {
+}
+

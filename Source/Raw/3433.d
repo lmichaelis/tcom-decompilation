@@ -1,0 +1,318 @@
+func void TELEPORT_CREATERUNE() {
+    if ((TELEPORT_GOTANYRUNE) == (FALSE)) {
+        TELEPORT_GOTANYRUNE = TRUE;
+        LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+        if ((NPC_KNOWSINFO(HERO, 0x15933)) || ((LOG_GETSTATUS(MIS_Q108)) == (LOG_SUCCESS))) {
+            B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_FIRSTRUNE);
+        } else {
+            B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_FIRSTRUNENOLOKVAR);
+        } else {
+            CREATEINVITEMS(HERO, 0x94b0, 1);
+        };
+    };
+}
+
+func int TELEPORT_GOTANYRUNE_CHECK() {
+    if ((((((((((((((TELEPORT_CITYINNOS) == (TRUE)) || ((TELEPORT_CITYADANOS) == (TRUE))) || ((TELEPORT_CITYHOME) == (TRUE))) || ((TELEPORT_LIGHTHOUSE) == (TRUE))) || ((TELEPORT_TOMB) == (TRUE))) || ((TELEPORT_VOLFZACK) == (TRUE))) || ((TELEPORT_SILBACH) == (TRUE))) || ((TELEPORT_SWAMPV1) == (TRUE))) || ((TELEPORT_LURKER) == (TRUE))) || ((TELEPORT_SKELETONS) == (TRUE))) || ((TELEPORT_WOLFSDEN) == (TRUE))) || ((TELEPORT_SWAMPV2) == (TRUE))) || ((TELEPORT_MONASTERY) == (TRUE))) {
+        return TRUE;
+    };
+    return FALSE;
+}
+
+func void TELEPORT_CITYINNOS_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94b4)) {
+        if ((TELEPORT_CITYINNOS) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94b4, 1);
+            TELEPORT_CITYINNOS = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_CITYINNOS);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_CITYADANOS_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94b5)) {
+        if ((TELEPORT_CITYADANOS) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94b5, 1);
+            TELEPORT_CITYADANOS = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_CITYADANOS);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_LIGHTHOUSE_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94b6)) {
+        if ((TELEPORT_LIGHTHOUSE) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94b6, 1);
+            TELEPORT_LIGHTHOUSE = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_LIGHTHOUSE);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_TOMB_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94b7)) {
+        if ((TELEPORT_TOMB) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94b7, 1);
+            TELEPORT_TOMB = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_TOMB);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_VOLFZACK_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94b8)) {
+        if ((TELEPORT_VOLFZACK) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94b8, 1);
+            TELEPORT_VOLFZACK = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_VOLFZACK);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_SILBACH_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94b9)) {
+        if ((TELEPORT_SILBACH) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94b9, 1);
+            TELEPORT_SILBACH = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_SILBACH);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_SWAMPV1_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94ba)) {
+        if ((TELEPORT_SWAMPV1) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94ba, 1);
+            TELEPORT_SWAMPV1 = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_SWAMPV1);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_LURKER_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94bb)) {
+        if ((TELEPORT_LURKER) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94bb, 1);
+            TELEPORT_LURKER = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_LURKER);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_SKELETONS_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94bc)) {
+        if ((TELEPORT_SKELETONS) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94bc, 1);
+            TELEPORT_SKELETONS = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_SKELETONS);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_WOLFSDEN_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94bd)) {
+        if ((TELEPORT_WOLFSDEN) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94bd, 1);
+            TELEPORT_WOLFSDEN = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_WOLFSDEN);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_SWAMPV2_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94be)) {
+        if ((TELEPORT_SWAMPV2) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94be, 1);
+            TELEPORT_SWAMPV2 = TRUE;
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_MONASTERY_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94bf)) {
+        if ((TELEPORT_MONASTERY) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94bf, 1);
+            TELEPORT_MONASTERY = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_MONASTERY);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_OLDTOMB_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94c0)) {
+        if ((TELEPORT_OLDTOMB) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94c0, 1);
+            TELEPORT_OLDTOMB = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_OLDTOMB);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_FISHERMANS_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94c1)) {
+        if ((TELEPORT_FISHERMANS) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94c1, 1);
+            TELEPORT_FISHERMANS = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_FISHERMANS);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORT_OURHOUSE_GOTRUNE(var C_ITEM ITEM) {
+    if ((HLP_GETINSTANCEID(ITEM)) == (0x94c2)) {
+        if ((TELEPORT_OURHOUSE) == (FALSE)) {
+            TELEPORT_CREATERUNE();
+            NPC_REMOVEINVITEMS(HERO, 0x94c2, 1);
+            TELEPORT_OURHOUSE = TRUE;
+            if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+                LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+                B_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_OURHOUSE);
+            };
+        } else {
+            B_GIVEPLAYERXP(XP_GOTRUNE_ANOTHERONE);
+        };
+    };
+}
+
+func void TELEPORTRUNES_GIVELOGENTRY() {
+    if ((TELEPORT_LOKVARTUTORIAL) == (TRUE)) {
+        if ((TELEPORT_OURHOUSE) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_OURHOUSE);
+        };
+        if ((TELEPORT_FISHERMANS) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_FISHERMANS);
+        };
+        if ((TELEPORT_CITYINNOS) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_CITYINNOS);
+        };
+        if ((TELEPORT_CITYADANOS) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_CITYADANOS);
+        };
+        if ((TELEPORT_LIGHTHOUSE) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_LIGHTHOUSE);
+        };
+        if ((TELEPORT_TOMB) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_TOMB);
+        };
+        if ((TELEPORT_VOLFZACK) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_VOLFZACK);
+        };
+        if ((TELEPORT_SILBACH) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_SILBACH);
+        };
+        if ((TELEPORT_SWAMPV1) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_SWAMPV1);
+        };
+        if ((TELEPORT_LURKER) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_LURKER);
+        };
+        if ((TELEPORT_SKELETONS) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_SKELETONS);
+        };
+        if ((TELEPORT_WOLFSDEN) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_WOLFSDEN);
+        };
+        if ((TELEPORT_MONASTERY) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_MONASTERY);
+        };
+        if ((TELEPORT_OLDTOMB) == (TRUE)) {
+            LOG_CREATETOPIC(TOPIC_TELEPORT, LOG_NOTE);
+            AI_LOGENTRY(TOPIC_TELEPORT, LOG_TELEPORT_OLDTOMB);
+        };
+    };
+}
+

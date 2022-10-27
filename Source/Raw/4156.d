@@ -1,0 +1,1533 @@
+var int IVY_FIRSTDIALOGUE = 0;
+var int Q308_IVY_OPTION = 0;
+instance DIA_IVY_EXIT(C_INFO) {
+    NPC = 0xe4af;
+    NR = 999;
+    CONDITION = DIA_IVY_EXIT_CONDITION;
+    INFORMATION = DIA_IVY_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_IVY_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_IVY_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_IVY_BUSY(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_BUSY_CONDITION;
+    INFORMATION = DIA_IVY_BUSY_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_BUSY_CONDITION() {
+    if ((NPC_ISINSTATE(SELF, 0xf09f)) && ((NPC_KNOWSINFO(OTHER, 0x145c9)) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_BUSY_INFO() {
+    if ((Q306_TOURNAMENTSTATUS) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_BUSY_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_BUSY_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_IVY_AFTERBEN(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_AFTERBEN_CONDITION;
+    INFORMATION = DIA_IVY_AFTERBEN_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_AFTERBEN_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x145c9)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_WHO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_03_02");
+    INFO_CLEARCHOICES(0x14435);
+    INFO_ADDCHOICE(0x14435, "How do you know my name?", 0x1443c);
+    INFO_ADDCHOICE(0x14435, "You're well versed.", 0x1443d);
+}
+
+func void DIA_IVY_AFTERBEN_INFO() {
+    SETHOLDTIME(FALSE);
+    Q301_BLOCKTELEPORT = FALSE;
+    if ((Q306_TOURNAMENTSTATUS) == (1)) {
+        IVYREPUTATION = (IVYREPUTATION) + (1);
+        PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_03_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_03_02");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterBen_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_03_04");
+        INFO_CLEARCHOICES(0x14435);
+        INFO_ADDCHOICE(0x14435, "I didn't believe I'd make it myself.", 0x14439);
+        INFO_ADDCHOICE(0x14435, "I'm constantly surprising people, you see.", 0x1443a);
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterBen_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_03_08");
+    if (NPC_ISDEAD(NONE_7500_BEN)) {
+        IVYREPUTATION = (IVYREPUTATION) + (1);
+        PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+        B_GIVEPLAYERXP(XP_GQ001_IVYDIALOGUE_BONUS2);
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_03_09");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterBen_15_10");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_03_11");
+    };
+    DIA_IVY_WHO();
+}
+
+func void DIA_IVY_AFTERBEN_LUCK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterBen_Luck_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_Luck_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_Luck_03_03");
+    DIA_IVY_WHO();
+}
+
+func void DIA_IVY_AFTERBEN_SURPRISE() {
+    Q308_IVY_OPTION = TRUE;
+    B_GIVEPLAYERXP(XP_GQ001_IVYDIALOGUE_BONUS1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterBen_Surprise_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_Surprise_03_02");
+    if (NPC_ISDEAD(NONE_7500_BEN)) {
+        IVYREPUTATION = (IVYREPUTATION) + (1);
+        PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+        B_GIVEPLAYERXP(XP_GQ001_IVYDIALOGUE_BONUS2);
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_Surprise_03_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_Surprise_03_04");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterBen_Surprise_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterBen_Surprise_15_06");
+    DIA_IVY_WHO();
+}
+
+func void DIA_IVY_WHO_NEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Next_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_Next_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Next_03_03");
+    INFO_CLEARCHOICES(0x14435);
+    INFO_ADDCHOICE(0x14435, "Sorry, but I'm not for hire.", 0x1443f);
+    INFO_ADDCHOICE(0x14435, "Go on.", 0x14440);
+}
+
+func void DIA_IVY_WHO_NAME() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_Name_15_01");
+    if ((Q306_THIRDROUNDFINISH) < (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Name_03_02");
+    };
+    if ((Q306_THIRDROUNDFINISH) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Name_03_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Name_03_04");
+    };
+    DIA_IVY_WHO_NEXT();
+}
+
+func void DIA_IVY_WHO_KNOW() {
+    B_GIVEPLAYERXP(XP_GQ001_IVYDIALOGUE_BONUS3);
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_Know_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Know_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Know_03_03");
+    DIA_IVY_WHO_NEXT();
+}
+
+func void DIA_IVY_WHO_KNOW_NEXT2() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Next2_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Next2_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_Next2_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_Next2_03_04");
+    INFO_CLEARCHOICES(0x14435);
+    INFO_ADDCHOICE(0x14435, "I've trusted too many people.", 0x14443);
+    INFO_ADDCHOICE(0x14435, "I have to get back to the city first.", 0x14444);
+}
+
+func void DIA_IVY_WHO_KNOW_NEXT_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_No_15_01");
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_No_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_No_03_03");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_No_15_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_No_03_05");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_No_03_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_No_03_07");
+    };
+    DIA_IVY_WHO_KNOW_NEXT2();
+}
+
+func void DIA_IVY_WHO_KNOW_NEXT_YES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_Yes_15_01");
+    DIA_IVY_WHO_KNOW_NEXT2();
+}
+
+func void DIA_IVY_WHO_END() {
+    SELF.GUILD = GIL_VLK;
+    NPC_SETTRUEGUILD(HERO, HERO.GUILD);
+    AI_FUNCTION(SELF, 0x14442);
+    NPC_SETTRUEGUILD(SELF, GIL_VLK);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_End_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_End_03_02");
+    LOG_CREATETOPIC(TOPIC_Q312, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_Q312), TOPIC_Q312, LOG_RUNNING);
+    if ((IVY_FIRSTDIALOGUE) == (1)) {
+        if ((HERO.GUILD) == (GIL_MIL)) {
+            AI_LOGENTRY(TOPIC_Q312, LOG_GQ001_IVYDIALOGUE_CHOICE1_V1);
+            AI_LOGENTRY(TOPIC_Q301, LOG_GQ001_IVYDIALOGUE_CHOICE1_V1);
+        } else if ((HERO.GUILD) == (GIL_SLD)) {
+            AI_LOGENTRY(TOPIC_Q312, LOG_GQ001_IVYDIALOGUE_CHOICE1_V2);
+            AI_LOGENTRY(TOPIC_Q301, LOG_GQ001_IVYDIALOGUE_CHOICE1_V2);
+        };
+    };
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_LOGENTRY(TOPIC_Q312, LOG_GQ001_IVYDIALOGUE_CHOICE2_V1);
+        AI_LOGENTRY(TOPIC_Q301, LOG_GQ001_IVYDIALOGUE_CHOICE2_V1);
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_LOGENTRY(TOPIC_Q312, LOG_GQ001_IVYDIALOGUE_CHOICE2_V2);
+        AI_LOGENTRY(TOPIC_Q301, LOG_GQ001_IVYDIALOGUE_CHOICE2_V2);
+    };
+    B_GIVEPLAYERXP(XP_Q301_FINISH);
+    LOG_SETSTATUS(_@(MIS_Q301), TOPIC_Q301, LOG_SUCCESS);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, START);
+}
+
+func void IVY_BLOCKCITY() {
+    Q312_GATESCLOSED = TRUE;
+    Q308_SPAWNNPC();
+    PRINTD("Miasto zablokowane!");
+    WLD_SENDTRIGGER("CITYEASTGATEOPEN");
+    WLD_SENDTRIGGER("WESTCITYGATE");
+    Q312_CLOSESEWERS();
+    WLD_INSERTITEM(0x9cf8, "FP_SLUMS_MEATBUGLETTER_01");
+    WLD_INSERTITEM(0x9cf8, "FP_SLUMS_MEATBUGLETTER_02");
+    WLD_INSERTITEM(0x9cf8, "FP_SLUMS_MEATBUGLETTER_03");
+}
+
+func void DIA_IVY_WHO_KNOW_NEXT_YES_NEXT2_NOWAY() {
+    IVY_FIRSTDIALOGUE = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_NoWay_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_NoWay_15_02");
+    DIA_IVY_WHO_END();
+}
+
+func void DIA_IVY_WHO_KNOW_NEXT_YES_NEXT2_COMEBACK() {
+    IVY_FIRSTDIALOGUE = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_ComeBack_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Who_ComeBack_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Who_ComeBack_15_03");
+    DIA_IVY_WHO_END();
+}
+
+instance DIA_IVY_AMBIENTAFTERBEN(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_AMBIENTAFTERBEN_CONDITION;
+    INFORMATION = DIA_IVY_AMBIENTAFTERBEN_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_AMBIENTAFTERBEN_CONDITION() {
+    if ((((NPC_KNOWSINFO(OTHER, 0x14435)) && (NPC_ISINSTATE(SELF, 0xf09f))) && ((LOG_GETSTATUS(MIS_Q308)) != (LOG_RUNNING))) && ((LOG_GETSTATUS(MIS_Q308)) != (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_AMBIENTAFTERBEN_INFO() {
+    NPC_INITAMBIENTS(SELF, 2);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AMBIENTAFTERBEN_03_01");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AMBIENTAFTERBEN_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AMBIENTAFTERBEN_03_03");
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_IVY_Q308HELLO(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_Q308HELLO_CONDITION;
+    INFORMATION = DIA_IVY_Q308HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_Q308HELLO_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_Q308HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_03_02");
+    INFO_CLEARCHOICES(0x14448);
+    INFO_ADDCHOICE(0x14448, "And I didn't know you work for Usurer.", 0x1444b);
+}
+
+func void DIA_IVY_Q308HELLO_WORK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Work_15_01");
+    if ((Q308_IVY_OPTION) == (TRUE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Work_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Work_03_03");
+    INFO_CLEARCHOICES(0x14448);
+    INFO_ADDCHOICE(0x14448, "The boss at home?", 0x1444d);
+}
+
+func void DIA_IVY_Q308HELLO_WORK_NEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Next_03_01");
+    INFO_CLEARCHOICES(0x14448);
+    INFO_ADDCHOICE(0x14448, "I'm investigating an assassination attempt.", 0x14452);
+    INFO_ADDCHOICE(0x14448, "I decided to consider your offer.", 0x14453);
+    WLD_INSERTNPC(0xd0dd, "PARTM4_VOLKER_HOUSE_05");
+}
+
+func void DIA_IVY_Q308HELLO_WORK_BOSS() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Boss_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Boss_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Boss_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Boss_15_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Boss_15_05");
+    if ((OTHER.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Boss_03_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Boss_03_07");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Boss_15_08");
+    };
+    if ((OTHER.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Boss_03_09");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Boss_03_10");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Boss_15_11");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Boss_03_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Boss_03_13");
+    DIA_IVY_Q308HELLO_WORK_NEXT();
+}
+
+func void DIA_IVY_Q308HELLO_WORK_NEXT2() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Next2_03_01");
+    if ((OTHER.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Next2_03_02");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Next2_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Next2_03_04");
+    };
+    if ((OTHER.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Next2_03_05");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Next2_15_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Next2_03_07");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Next2_03_08");
+    INFO_CLEARCHOICES(0x14448);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0x1444f);
+    NPC_EXCHANGEROUTINE(SELF, CUTSCENERTN);
+}
+
+func void IVY_Q308VOLKERHOUSECUTSCENE() {
+    FF_APPLYONCEEXT(0x14450, 75, 4);
+    HERO.AIVAR[4] = TRUE;
+}
+
+func void Q308_MORRISCUTSCENE() {
+    Q308_MORRISCUTSCENE_COUNT = (Q308_MORRISCUTSCENE_COUNT) + (1);
+    if ((Q308_MORRISCUTSCENE_COUNT) == (4)) {
+        Q308_MORRISCUTSCENE_COUNT = 0;
+        CUTSCENE_START(0x1699f);
+    };
+}
+
+var int Q308_MORRISCUTSCENE.Q308_MORRISCUTSCENE_COUNT = 0;
+func void DIA_IVY_Q308HELLO_WORK_FAST_NEXT_INVESTIGATION() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Investigation_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308Hello_Investigation_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Investigation_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Investigation_15_04");
+    DIA_IVY_Q308HELLO_WORK_NEXT2();
+}
+
+func void DIA_IVY_Q308HELLO_WORK_FAST_NEXT_OFFER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308Hello_Offer_15_01");
+    DIA_IVY_Q308HELLO_WORK_NEXT2();
+}
+
+instance DIA_IVY_EXECUTION(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_EXECUTION_CONDITION;
+    INFORMATION = DIA_IVY_EXECUTION_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_EXECUTION_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_EXECUTION_INFO() {
+    Q308_TELEPORTTOFINALCUTSCENE();
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Execution_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Execution_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Execution_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Execution_03_06");
+    INFO_CLEARCHOICES(0x14454);
+    if ((Q308_WHOWILLDIE) == (1)) {
+        INFO_ADDCHOICE(0x14454, "Authorities believe Ars was behind the assassination attempt on the boss.", 0x14458);
+    };
+    INFO_ADDCHOICE(0x14454, "I was able to prove Ars' innocence.", 0x14459);
+}
+
+func void DIA_IVY_EXECUTION_NEXT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_Next_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_Next_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Execution_Next_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_Next_15_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_Next_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Execution_Next_03_06");
+    INFO_CLEARCHOICES(0x14454);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0x1445a);
+}
+
+func void DIA_IVY_EXECUTION_ARSBAD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_ArsBad_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Execution_ArsBad_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_ArsBad_15_03");
+    DIA_IVY_EXECUTION_NEXT();
+}
+
+func void DIA_IVY_EXECUTION_ARSGOOD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_ArsGood_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Execution_ArsGood_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Execution_ArsGood_03_03");
+    DIA_IVY_EXECUTION_NEXT();
+}
+
+func void IVY_Q308_FINALCUTSCENE() {
+    AI_REMOVEWEAPON(HERO);
+    Q308_FINALCUTSCENE = 1;
+}
+
+instance DIA_IVY_AFTEREXECUTION(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_AFTEREXECUTION_CONDITION;
+    INFORMATION = DIA_IVY_AFTEREXECUTION_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_AFTEREXECUTION_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS)) && ((Q308_FINALCUTSCENE) == (3))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_AFTEREXECUTION_INFO() {
+    AI_LOOKATNPC(SELF, OTHER);
+    AI_LOOKATNPC(OTHER, SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_03_02");
+    INFO_CLEARCHOICES(0x1445b);
+    INFO_ADDCHOICE(0x1445b, "As far as I'm concerned, it's pure barbarism.", 0x14463);
+    INFO_ADDCHOICE(0x1445b, "I'm still not sure he should be the one to die.", 0x14462);
+    INFO_ADDCHOICE(0x1445b, "I'm glad you enjoyed it. Most importantly, he got what he deserved.", 0x14461);
+    INFO_ADDCHOICE(0x1445b, DIALOG_BESILENT, 0x14460);
+}
+
+func void DIA_IVY_AFTEREXECUTION_CAMERA() {
+    TELEPORTNPCTOWP(0x71b, "PARTM5_PATH_46");
+    TELEPORTNPCTOWP(0xe4af, "PARTM5_PATH_08");
+    AI_TURNTONPC(SELF, OTHER);
+    AI_TURNTONPC(OTHER, SELF);
+    WLD_SENDTRIGGER("KM_EXECUTION_15");
+    WLD_SENDUNTRIGGER("KM_EXECUTION_14");
+}
+
+func void DIA_IVY_AFTEREXECUTION_NEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_Next_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_Next_03_02");
+    INFO_CLEARCHOICES(0x1445b);
+    INFO_ADDCHOICE(0x1445b, "I will not refuse such company.", 0x14466);
+    INFO_ADDCHOICE(0x1445b, "Meet me there.", 0x14467);
+}
+
+func void DIA_IVY_AFTEREXECUTION_QUIET() {
+    DIA_IVY_AFTEREXECUTION_CAMERA();
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_Quiet_03_01");
+    DIA_IVY_AFTEREXECUTION_NEXT();
+}
+
+func void DIA_IVY_AFTEREXECUTION_HAPPY() {
+    DIA_IVY_AFTEREXECUTION_CAMERA();
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterExecution_Happy_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_Happy_03_02");
+    DIA_IVY_AFTEREXECUTION_NEXT();
+}
+
+func void DIA_IVY_AFTEREXECUTION_DONTKNOW() {
+    DIA_IVY_AFTEREXECUTION_CAMERA();
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterExecution_DontKnow_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_DontKnow_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_DontKnow_03_03");
+    DIA_IVY_AFTEREXECUTION_NEXT();
+}
+
+func void DIA_IVY_AFTEREXECUTION_BAD() {
+    IVYREPUTATION = (IVYREPUTATION) + (1);
+    PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+    DIA_IVY_AFTEREXECUTION_CAMERA();
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterExecution_Bad_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_Bad_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_Bad_03_03");
+    DIA_IVY_AFTEREXECUTION_NEXT();
+}
+
+var int IVY_AFTEREXECUTION_TOTHEVOLKER = 0;
+func void DIA_IVY_AFTEREXECUTION_FINISH() {
+    if ((IVY_AFTEREXECUTION_TOTHEVOLKER) == (1)) {
+        IVYREPUTATION = (IVYREPUTATION) + (1);
+        PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+        NPC_EXCHANGEROUTINE(SELF, "TOTHEVOLKERV1");
+    };
+    NPC_EXCHANGEROUTINE(SELF, "TOTHEVOLKERV2");
+    B_STARTOTHERROUTINE(VLK_15000_VOLKER, "VOLKERTRIALOG");
+    NPC_REFRESH(VLK_15000_VOLKER);
+    INFO_CLEARCHOICES(0x1445b);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_STOPLOOKAT(SELF);
+    AI_STOPLOOKAT(OTHER);
+    AI_FUNCTION(SELF, 0xf943);
+    HERO.AIVAR[4] = FALSE;
+}
+
+func void DIA_IVY_AFTEREXECUTION_BAD_NEXT_YES() {
+    IVY_AFTEREXECUTION_TOTHEVOLKER = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterExecution_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_Yes_03_02");
+    AI_LOGENTRY(TOPIC_Q400, LOG_Q400_TOVOLKERIVY);
+    DIA_IVY_AFTEREXECUTION_FINISH();
+}
+
+func void DIA_IVY_AFTEREXECUTION_BAD_NEXT_NO() {
+    IVY_AFTEREXECUTION_TOTHEVOLKER = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_AfterExecution_No_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_AfterExecution_No_03_02");
+    AI_LOGENTRY(TOPIC_Q400, LOG_Q400_TOVOLKERALONE);
+    DIA_IVY_AFTEREXECUTION_FINISH();
+}
+
+instance DIA_IVY_NEXTMISSION(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_NEXTMISSION_CONDITION;
+    INFORMATION = DIA_IVY_NEXTMISSION_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_NEXTMISSION_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x11f39)) && ((LOG_GETSTATUS(MIS_Q400)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_NEXTMISSION_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_NextMission_03_01");
+    INFO_CLEARCHOICES(0x14468);
+    INFO_ADDCHOICE(0x14468, "Yes, meet me at the fortress.", 0x1446d);
+    INFO_ADDCHOICE(0x14468, "Can you take me there?", 0x1446e);
+}
+
+func void DIA_IVY_NEXTMISSION_NEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_NextMission_Next_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_NextMission_Next_03_02");
+    INFO_CLEARCHOICES(0x14468);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+var int IVY_ROUTETOWOLFSDEN = 0;
+func void DIA_IVY_NEXTMISSION_YES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_NextMission_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_NextMission_Yes_03_02");
+    AI_LOGENTRY(TOPIC_Q400, LOG_Q400_IVY_ALONE);
+    NPC_EXCHANGEROUTINE(SELF, "WOLFSDEN");
+    DIA_IVY_NEXTMISSION_NEXT();
+}
+
+func void DIA_IVY_NEXTMISSION_NO() {
+    IVYREPUTATION = (IVYREPUTATION) + (1);
+    PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+    IVY_ROUTETOWOLFSDEN = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_NextMission_No_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_NextMission_No_03_02");
+    AI_LOGENTRY(TOPIC_Q400, LOG_Q400_IVY_TOGETHER);
+    NPC_EXCHANGEROUTINE(SELF, "SILBACHWAIT");
+    DIA_IVY_NEXTMISSION_NEXT();
+}
+
+instance DIA_IVY_LETSGOWOLF(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_LETSGOWOLF_CONDITION;
+    INFORMATION = DIA_IVY_LETSGOWOLF_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_LETSGOWOLF_CONDITION() {
+    if (((((NPC_ISINSTATE(SELF, 0xf09f)) && (NPC_KNOWSINFO(OTHER, 0x14468))) && ((IVY_ROUTETOWOLFSDEN) == (TRUE))) && ((NPC_GETDISTTOWP(SELF, "VILLAGE_SOUTHGATE_02")) <= (500))) && ((LOG_GETSTATUS(MIS_Q400)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_LETSGOWOLF_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_LetsGoWolf_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_LetsGoWolf_03_02");
+    SELF.AIVAR[15] = TRUE;
+    AI_LOGENTRY(TOPIC_Q400, LOG_Q400_IVY_TOWOLFSDEN);
+    NPC_EXCHANGEROUTINE(SELF, "WOLFSDENGUIDE");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_IVY_WOLFSDEN(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_WOLFSDEN_CONDITION;
+    INFORMATION = DIA_IVY_WOLFSDEN_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_WOLFSDEN_CONDITION() {
+    if ((((NPC_GETDISTTOWP(SELF, "PART16_PATH_12")) <= (500)) && ((KAPITEL) == (4))) && ((LOG_GETSTATUS(MIS_Q400)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_WOLFSDEN_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_03_02");
+    INFO_CLEARCHOICES(0x14472);
+    INFO_ADDCHOICE(0x14472, "If you're not fond of people, why do you hang out in the city?", 0x14476);
+    INFO_ADDCHOICE(0x14472, "It works out pretty well to travel together.", 0x14477);
+    INFO_ADDCHOICE(0x14472, "I'd had enough of the city, too.", 0x14478);
+    SELF.AIVAR[15] = FALSE;
+    NPC_EXCHANGEROUTINE(SELF, "WOLFSDEN");
+}
+
+func void DIA_IVY_WOLFSDEN_NEXT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_WolfsDen_Next_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_Next_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_Next_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_Next_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_Next_03_06");
+    INFO_CLEARCHOICES(0x14472);
+    AI_LOGENTRY(TOPIC_Q400, LOG_Q400_ONTHEPLACE);
+}
+
+func void DIA_IVY_WOLFSDEN_PEOPLE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_WolfsDen_People_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_People_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_People_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_People_03_04");
+    DIA_IVY_WOLFSDEN_NEXT();
+}
+
+func void DIA_IVY_WOLFSDEN_TOGETHER() {
+    IVYREPUTATION = (IVYREPUTATION) + (2);
+    PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_WolfsDen_Together_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_Together_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_Together_03_03");
+    DIA_IVY_WOLFSDEN_NEXT();
+}
+
+func void DIA_IVY_WOLFSDEN_CITY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_WolfsDen_City_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_City_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_WolfsDen_City_03_03");
+    DIA_IVY_WOLFSDEN_NEXT();
+}
+
+instance DIA_IVY_Q401_PLACE(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_Q401_PLACE_CONDITION;
+    INFORMATION = DIA_IVY_Q401_PLACE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What is this place?";
+}
+
+func int DIA_IVY_Q401_PLACE_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14472)) && ((LOG_GETSTATUS(MIS_Q401)) != (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_Q401_PLACE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_Place_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_03_05");
+    INFO_CLEARCHOICES(0x14479);
+    INFO_ADDCHOICE(0x14479, "Taken by force? What happened?", 0x1447c);
+    INFO_ADDCHOICE(0x14479, "The Wolf Sons?", 0x1447d);
+}
+
+func void DIA_IVY_Q401_PLACE_FORCE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_Place_Force_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_Force_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_Force_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_Force_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_Force_03_06");
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_Force_03_05");
+}
+
+func void DIA_IVY_Q401_PLACE_WOLFSON() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_Place_WolfSon_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_WolfSon_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Place_WolfSon_03_03");
+}
+
+instance DIA_IVY_Q401_DATE(C_INFO) {
+    NPC = 0xe4af;
+    NR = 10;
+    CONDITION = DIA_IVY_Q401_DATE_CONDITION;
+    INFORMATION = DIA_IVY_Q401_DATE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Afterwards, why don't we take a walk together somewhere quieter?";
+}
+
+func int DIA_IVY_Q401_DATE_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14472)) && ((KAPITEL) == (4))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_Q401_DATE_NO() {
+    IVYREPUTATION = (IVYREPUTATION) - (1);
+    PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_03_03");
+}
+
+var int IVY_DATELOCATION = 0;
+func void DIA_IVY_Q401_DATE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_Date_15_01");
+    if ((IVYREPUTATION) >= (4)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_03_02");
+        INFO_CLEARCHOICES(0x1447e);
+        INFO_ADDCHOICE(0x1447e, "I was thinking of Bastian's inn.", 0x14484);
+        INFO_ADDCHOICE(0x1447e, "Some quiet glade or beach away from people would be perfect.", 0x14488);
+        INFO_ADDCHOICE(0x1447e, "Maybe Helga's tavern?", 0x14485);
+        INFO_ADDCHOICE(0x1447e, "The Dark Mysteries sounds awfully nice.", 0x14486);
+        INFO_ADDCHOICE(0x1447e, "What do you think of Ernesto's Austeria?", 0x14487);
+    };
+    DIA_IVY_Q401_DATE_NO();
+}
+
+func void DIA_IVY_Q401_DATE_NEXT() {
+    if ((IVY_DATELOCATION) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_Next_03_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_Next_03_02");
+    };
+    if ((IVY_DATELOCATION) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_Next_03_03");
+    };
+    INFO_CLEARCHOICES(0x1447e);
+}
+
+func void DIA_IVY_Q401_DATE_BASTIAN() {
+    IVY_DATELOCATION = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_Date_Bastian_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_Bastian_03_02");
+    DIA_IVY_Q401_DATE_NEXT();
+}
+
+func void DIA_IVY_Q401_DATE_OLAF() {
+    IVY_DATELOCATION = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_Date_Olaf_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_Olaf_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_Olaf_03_03");
+    DIA_IVY_Q401_DATE_NEXT();
+}
+
+func void DIA_IVY_Q401_DATE_BESTMOD() {
+    IVYREPUTATION = (IVYREPUTATION) - (5);
+    PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+    IVY_DATELOCATION = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_Date_BestMod_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_BestMod_03_02");
+    DIA_IVY_Q401_DATE_NEXT();
+}
+
+func void DIA_IVY_Q401_DATE_ERNESO() {
+    IVYREPUTATION = (IVYREPUTATION) + (1);
+    PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+    IVY_DATELOCATION = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_Date_Erneso_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_Erneso_03_02");
+    DIA_IVY_Q401_DATE_NEXT();
+}
+
+func void DIA_IVY_Q401_DATE_LAND() {
+    IVYREPUTATION = (IVYREPUTATION) + (2);
+    PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+    IVY_DATELOCATION = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_Date_Land_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_Date_Land_03_02");
+    DIA_IVY_Q401_DATE_NEXT();
+}
+
+instance DIA_IVY_Q401_ABOUTYOU(C_INFO) {
+    NPC = 0xe4af;
+    NR = 11;
+    CONDITION = DIA_IVY_Q401_ABOUTYOU_CONDITION;
+    INFORMATION = DIA_IVY_Q401_ABOUTYOU_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You never said anything about yourself.";
+}
+
+func int DIA_IVY_Q401_ABOUTYOU_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14472)) && ((KAPITEL) == (4))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_Q401_ABOUTYOU_INFO() {
+    IVYREPUTATION = (IVYREPUTATION) + (1);
+    PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_AboutYou_15_01");
+    if ((IVYREPUTATION) >= (4)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_AboutYou_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_AboutYou_03_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_AboutYou_03_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_AboutYou_03_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_AboutYou_03_06");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_AboutYou_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_AboutYou_03_08");
+}
+
+instance DIA_IVY_Q401_OLDFRIENDS(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_Q401_OLDFRIENDS_CONDITION;
+    INFORMATION = DIA_IVY_Q401_OLDFRIENDS_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_Q401_OLDFRIENDS_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x1648a)) && ((KAPITEL) == (4))) {
+        if ((Q401_REFUGEEAREDEAD) == (FALSE)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_Q401_OLDFRIENDS_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_OldFriends_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q401_OldFriends_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q401_OldFriends_03_03");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_IVY_BLOCKWAY(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_BLOCKWAY_CONDITION;
+    INFORMATION = DIA_IVY_BLOCKWAY_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_BLOCKWAY_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x13e1d)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_BLOCKWAY_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_BlockWay_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_BlockWay_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_BlockWay_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_BlockWay_03_04");
+    B_STARTOTHERROUTINE(DJG_10026_LUCY, "Q401_SMALLTALK");
+    NPC_REFRESH(DJG_10026_LUCY);
+    NPC_EXCHANGEROUTINE(SELF, "Q401_SMALLTALK");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_IVY_INSIDE(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_INSIDE_CONDITION;
+    INFORMATION = DIA_IVY_INSIDE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_INSIDE_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q401)) == (LOG_SUCCESS)) && ((NPC_GETDISTTOWP(SELF, "WOLFSDEN_PATH_43")) <= (500))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_INSIDE_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Inside_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Inside_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Inside_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Inside_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Inside_03_07");
+    LOG_CREATETOPIC(TOPIC_Q402, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_Q402), TOPIC_Q402, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_Q402, LOG_Q402_START);
+    B_STARTOTHERROUTINE(DJG_10026_LUCY, START);
+    NPC_REFRESH(DJG_10026_LUCY);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, "WOLFSDENINSIDE");
+}
+
+instance DIA_IVY_CANYOUTEACHME(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_CANYOUTEACHME_CONDITION;
+    INFORMATION = DIA_IVY_CANYOUTEACHME_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Could you teach me something?";
+}
+
+func int DIA_IVY_CANYOUTEACHME_CONDITION() {
+    if ((((NPC_KNOWSINFO(OTHER, 0x14448)) && (NPC_ISINSTATE(SELF, 0xf09f))) && ((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING))) || ((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_CANYOUTEACHME_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Canyouteachme_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Canyouteachme_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Canyouteachme_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Canyouteachme_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Canyouteachme_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Canyouteachme_03_05");
+    LOG_CREATETOPIC(TOPIC_TEACHER, LOG_NOTE);
+    AI_LOGENTRY(TOPIC_TEACHER, LOG_TEACHER_IVY);
+}
+
+var string IVY_PRINTS = "";
+const int IVY_RLEVEL = 30;
+var int IVY_CURRENTDEXLEVEL = 0;
+var int IVY_NOMORE = 0;
+instance DIA_IVY_TRAIN(C_INFO) {
+    NPC = 0xe4af;
+    NR = 7;
+    CONDITION = DIA_IVY_TRAIN_CONDITION;
+    INFORMATION = DIA_IVY_TRAIN_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "I want to be more dexterous.";
+}
+
+func int DIA_IVY_TRAIN_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14495)) && ((IVY_NOMORE) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_TRAIN_CHOICES() {
+    IVY_GOLDCOST = 25;
+    IVY_CURRENTDEXLEVEL = OTHER.AIVAR[82];
+    INFO_CLEARCHOICES(0x1449c);
+    INFO_ADDCHOICE(0x1449c, DIALOG_BACK, 0x144a1);
+    INFO_ADDCHOICE(0x1449c, B_BUILDLEARNSTRING2(PRINT_LEARNDEX1, B_GETLEARNCOSTATTRIBUTE(OTHER, ATR_DEXTERITY, 1), IVY_GOLDCOST), 0x144a2);
+    INFO_ADDCHOICE(0x1449c, B_BUILDLEARNSTRING2(PRINT_LEARNDEX5, B_GETLEARNCOSTATTRIBUTE(OTHER, ATR_DEXTERITY, 5), (IVY_GOLDCOST) * (5)), 0x144a3);
+}
+
+var int DIA_IVY_TRAIN_CHOICES.IVY_GOLDCOST = 0;
+func void DIA_IVY_TRAIN_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Train_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Train_03_01");
+    DIA_IVY_TRAIN_CHOICES();
+}
+
+func void DIA_IVY_TRAIN_BACK() {
+    if (((OTHER.AIVAR[82]) < (120)) && ((OTHER.AIVAR[82]) >= (60))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Train_Back_03_00");
+    };
+    if ((OTHER.AIVAR[82]) >= (120)) {
+        IVYREPUTATION = (IVYREPUTATION) + (1);
+        PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Train_Back_03_01");
+        IVY_NOMORE = TRUE;
+    };
+    INFO_CLEARCHOICES(0x1449c);
+}
+
+func void DIA_IVY_TRAINDEX_1() {
+    if (((NPC_HASITEMS(OTHER, 0x859b)) >= (IVY_PAYMENT1)) && ((OTHER.AIVAR[82]) >= (30))) {
+        if ((IVY_CURRENTDEXLEVEL) < (OTHER.AIVAR[82])) {
+            SND_PLAY(GELDBEUTEL);
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, IVY_PAYMENT1);
+            NPC_REMOVEINVITEMS(SELF, 0x859b, IVY_PAYMENT1);
+        };
+        B_TEACHATTRIBUTEPOINTS(SELF, OTHER, ATR_DEXTERITY, 1, 120);
+        DIA_IVY_TRAIN_CHOICES();
+    };
+    if ((NPC_HASITEMS(OTHER, 0x859b)) < (IVY_PAYMENT1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Train_DEX1_13_00");
+        IVY_PRINTS = CONCATSTRINGS(PRINT_RGOLD, INTTOSTRING(IVY_PAYMENT1));
+        PRINTSCREEN(IVY_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_IVY_TRAIN_CHOICES();
+    };
+    if ((OTHER.AIVAR[82]) < (30)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Train_DEX1_13_01");
+        IVY_PRINTS = CONCATSTRINGS(PRINT_MINATR, INTTOSTRING(IVY_RLEVEL));
+        PRINTSCREEN(IVY_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_IVY_TRAIN_CHOICES();
+    };
+}
+
+func void DIA_IVY_TRAINDEX_5() {
+    if (((NPC_HASITEMS(OTHER, 0x859b)) >= (IVY_PAYMENT5)) && ((OTHER.AIVAR[82]) >= (30))) {
+        if ((IVY_CURRENTDEXLEVEL) < (OTHER.AIVAR[82])) {
+            SND_PLAY(GELDBEUTEL);
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, IVY_PAYMENT5);
+            NPC_REMOVEINVITEMS(SELF, 0x859b, IVY_PAYMENT5);
+        };
+        B_TEACHATTRIBUTEPOINTS(SELF, OTHER, ATR_DEXTERITY, 5, 120);
+        DIA_IVY_TRAIN_CHOICES();
+    };
+    if ((NPC_HASITEMS(OTHER, 0x859b)) < (IVY_PAYMENT5)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Train_DEX5_13_00");
+        IVY_PRINTS = CONCATSTRINGS(PRINT_RGOLD, INTTOSTRING(IVY_PAYMENT5));
+        PRINTSCREEN(IVY_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_IVY_TRAIN_CHOICES();
+    };
+    if ((OTHER.AIVAR[82]) < (30)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Train_DEX5_13_01");
+        IVY_PRINTS = CONCATSTRINGS(PRINT_MINATR, INTTOSTRING(IVY_RLEVEL));
+        PRINTSCREEN(IVY_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_IVY_TRAIN_CHOICES();
+    };
+}
+
+instance DIA_IVY_TRAIN_PICKLOCK2(C_INFO) {
+    NPC = 0xe4af;
+    NR = 7;
+    CONDITION = DIA_IVY_TRAIN_PICKLOCK2_CONDITION;
+    INFORMATION = DIA_IVY_TRAIN_PICKLOCK2_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = B_BUILDLEARNSTRING2(PRINT_LEARN_PICKLOCK2, 0, IVY_PICKLOCK2);
+}
+
+func int DIA_IVY_TRAIN_PICKLOCK2_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14495)) && ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKLOCK)) < (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_TRAIN_PICKLOCK2_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_TRAIN_Picklock2_15_00");
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (IVY_PICKLOCK2)) {
+        if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKLOCK)) >= (2)) {
+            IVYREPUTATION = (IVYREPUTATION) + (1);
+            PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+            if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_SNEAK)) == (0)) {
+                PRINTSCREEN(PRINT_LEARNSNEAK, -(1), YPOS_LEVELUP, FONT_SCREEN, 2);
+                AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Sneak_03_01");
+                B_TEACHTHIEFTALENT(NONE_16_IVY, HERO, NPC_TALENT_SNEAK, 1);
+                AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Sneak_03_02");
+            };
+            NPC_REMOVEINVITEMS(SELF, 0x859b, IVY_PICKLOCK2);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Picklock2_03_01");
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, IVY_PICKLOCK2);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Picklock2_03_02");
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Picklock2_03_03");
+}
+
+instance DIA_IVY_TRAIN_PICKLOCK3(C_INFO) {
+    NPC = 0xe4af;
+    NR = 7;
+    CONDITION = DIA_IVY_TRAIN_PICKLOCK3_CONDITION;
+    INFORMATION = DIA_IVY_TRAIN_PICKLOCK3_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = B_BUILDLEARNSTRING2(PRINT_LEARN_PICKLOCK3, 0, IVY_PICKLOCK3);
+}
+
+func int DIA_IVY_TRAIN_PICKLOCK3_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14495)) && ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKLOCK)) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_TRAIN_PICKLOCK3_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_TRAIN_Picklock3_15_00");
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (IVY_PICKLOCK3)) {
+        IVYREPUTATION = (IVYREPUTATION) + (1);
+        PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+        if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKLOCK)) == (3)) {
+            NPC_REMOVEINVITEMS(SELF, 0x859b, IVY_PICKLOCK3);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Picklock3_03_01");
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, IVY_PICKLOCK3);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Picklock3_03_02");
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Picklock3_03_03");
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Picklock3_03_04");
+}
+
+instance DIA_IVY_Q308_BLOODFLASK(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_Q308_BLOODFLASK_CONDITION;
+    INFORMATION = DIA_IVY_Q308_BLOODFLASK_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_Q308_BLOODFLASK_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && ((Q310_BLOODFLASKCREATE) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_Q308_BLOODFLASK_INFO() {
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Bloodflask_03_01");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Bloodflask_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Bloodflask_03_03");
+    INFO_CLEARCHOICES(0x144aa);
+    INFO_ADDCHOICE(0x144aa, "I prefer to keep it to myself.", 0x144af);
+    INFO_ADDCHOICE(0x144aa, "Sure, keep it.", 0x144ae);
+}
+
+func void DIA_IVY_Q308_BLOODFLASK_NEXT() {
+    NPC_REMOVEINVITEMS(SELF, 0x91ac, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_Bloodflask_Next_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 0x91ac, 1);
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Bloodflask_Next_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Bloodflask_Next_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_LOGENTRY(TOPIC_Q308, LOG_Q308_IVY_TAKEBLOODFLASK);
+    Q308_IVYTOOKFLASK = TRUE;
+    INFO_CLEARCHOICES(0x144aa);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, "Q308_SLAGERSMALLTALK");
+    B_STARTOTHERROUTINE(VLK_6425_SLAGER, "Q308_SLAGERSMALLTALK");
+    NPC_REFRESH(VLK_6425_SLAGER);
+}
+
+func void DIA_IVY_Q308_BLOODFLASK_GIVE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_Bloodflask_Give_15_01");
+    DIA_IVY_Q308_BLOODFLASK_NEXT();
+}
+
+func void DIA_IVY_Q308_BLOODFLASK_MYSELF() {
+    IVYREPUTATION = (IVYREPUTATION) - (1);
+    PRINTD(CS2("Relacja z Ivy: ", INTTOSTRING(IVYREPUTATION)));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_Bloodflask_Myself_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Bloodflask_Myself_03_02");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Bloodflask_Myself_03_03");
+    INFO_CLEARCHOICES(0x144aa);
+    INFO_ADDCHOICE(0x144aa, "Not really...", 0x144b1);
+    INFO_ADDCHOICE(0x144aa, "I'm investigating, they have to let me in!", 0x144b2);
+}
+
+func void DIA_IVY_Q308_BLOODFLASK_ADDCHOICE() {
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(0x144aa);
+    INFO_ADDCHOICE(0x144aa, "Okay, take this vial.", 0x144b3);
+}
+
+func void DIA_IVY_Q308_BLOODFLASK_MYSELF_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_Bloodflask_No_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Bloodflask_No_03_02");
+    DIA_IVY_Q308_BLOODFLASK_ADDCHOICE();
+}
+
+func void DIA_IVY_Q308_BLOODFLASK_MYSELF_GUARD() {
+    AI_STARTFACEANI(OTHER, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_Bloodflask_Guard_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Bloodflask_Guard_03_02");
+    DIA_IVY_Q308_BLOODFLASK_ADDCHOICE();
+}
+
+func void DIA_IVY_Q308_BLOODFLASK_MYSELF_GUARD_TAKEIT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_Bloodflask_TakeIt_15_01");
+    DIA_IVY_Q308_BLOODFLASK_NEXT();
+}
+
+instance DIA_IVY_Q308_BUSY(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_Q308_BUSY_CONDITION;
+    INFORMATION = DIA_IVY_Q308_BUSY_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_Q308_BUSY_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && ((NPC_KNOWSINFO(OTHER, 0x12b35)) == (FALSE))) && (NPC_ISINSTATE(SELF, 0xf09f))) && ((Q308_TELEPORTIVYTOHERO) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_Q308_BUSY_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_Busy_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_IVY_Q308_HARBOURTALK(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_Q308_HARBOURTALK_CONDITION;
+    INFORMATION = DIA_IVY_Q308_HARBOURTALK_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_Q308_HARBOURTALK_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x12b35))) {
+        if ((LOG_GETSTATUS(MIS_Q311)) != (LOG_SUCCESS)) {
+            if (NPC_ISINSTATE(SELF, 0xf09f)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_Q308_HARBOURTALK_INFO() {
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_HarbourTalk_03_01");
+    INFO_CLEARCHOICES(0x144b7);
+    INFO_ADDCHOICE(0x144b7, "I came across people distributing some leaflets around the city...", 0x144ba);
+}
+
+func void DIA_IVY_Q308_HARBOURTALK_NOTES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_HarbourTalk_Notes_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_HarbourTalk_Notes_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_HarbourTalk_Notes_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_HarbourTalk_Notes_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_HarbourTalk_Notes_03_05");
+    AI_RESETFACEANI(SELF);
+    B_GIVEPLAYERXP(XP_Q308_IVYHARBOURSMALLTALK);
+    NPC_EXCHANGEROUTINE(SELF, "Q308_OLDCITY");
+    INFO_CLEARCHOICES(0x144b7);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_IVY_Q308_FINISHBLOOD(C_INFO) {
+    NPC = 0xe4af;
+    NR = 1;
+    CONDITION = DIA_IVY_Q308_FINISHBLOOD_CONDITION;
+    INFORMATION = DIA_IVY_Q308_FINISHBLOOD_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_IVY_Q308_FINISHBLOOD_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && ((Q308_TELEPORTIVYTOHERO) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_Q308_FINISHBLOOD_INFO() {
+    B_STARTOTHERROUTINE(VLK_6388_MORRIS, "Q308");
+    NPC_REFRESH(VLK_6388_MORRIS);
+    TELEPORTNPCTOWP(0xd22c, VLK_6388_MORRIS.WP);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_03_01");
+    INFO_CLEARCHOICES(0x144bb);
+    INFO_ADDCHOICE(0x144bb, "What did you find out?", 0x144bf);
+    INFO_ADDCHOICE(0x144bb, "How did you find me here?", 0x144be);
+}
+
+func void DIA_IVY_Q308_FINISHBLOOD_HOW() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_FinishBlood_How_15_01");
+    AI_STARTFACEANI(SELF, "S_DOUBT", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_How_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+func void DIA_IVY_Q308_FINISHBLOOD_WHAT() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_FinishBlood_What_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_What_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_What_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_What_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_What_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_What_03_06");
+    INFO_CLEARCHOICES(0x144bb);
+    INFO_ADDCHOICE(0x144bb, "So it was Ars who painted Volker's house?", 0x144c0);
+}
+
+func void DIA_IVY_Q308_FINISHBLOOD_WHAT_ARS() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_FinishBlood_Ars_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_Ars_03_02");
+    INFO_CLEARCHOICES(0x144bb);
+    INFO_ADDCHOICE(0x144bb, "And you think he attacked Volker?", 0x144c1);
+}
+
+func void DIA_IVY_Q308_FINISHBLOOD_WHAT_ARS_VOLKER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_FinishBlood_Volker_15_01");
+    AI_STARTFACEANI(SELF, "S_DOUBT", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_Volker_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_Volker_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_Volker_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_Volker_03_05");
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(0x144bb);
+    INFO_ADDCHOICE(0x144bb, "You're right, the process needs to be completed as soon as possible.", 0x144c3);
+    if ((LOG_GETSTATUS(MIS_SQ305)) == (LOG_RUNNING)) {
+        INFO_ADDCHOICE(0x144bb, "I'll check one more lead first...", 0x144c4);
+    };
+}
+
+func void DIA_IVY_Q308_FINISHBLOOD_END() {
+    NPC_EXCHANGEROUTINE(SELF, "ATTEMPT");
+    INFO_CLEARCHOICES(0x144bb);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    if ((OTHER.GUILD) == (GIL_MIL)) {
+        AI_LOGENTRY(TOPIC_Q308, LOG_Q308_CANFINISH_MIL);
+    };
+    if ((OTHER.GUILD) == (GIL_SLD)) {
+        AI_LOGENTRY(TOPIC_Q308, LOG_Q308_CANFINISH_SLD);
+    };
+}
+
+func void DIA_IVY_Q308_FINISHBLOOD_WHAT_ARS_VOLKER_RIGHT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_FinishBlood_Right_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_Right_03_02");
+    DIA_IVY_Q308_FINISHBLOOD_END();
+}
+
+func void DIA_IVY_Q308_FINISHBLOOD_WHAT_ARS_VOLKER_NOTKNOW() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_Q308_FinishBlood_NotKnow_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_Q308_FinishBlood_NotKnow_03_02");
+    DIA_IVY_Q308_FINISHBLOOD_END();
+}
+
+instance DIA_IVY_TRAIN_PICKPOCKET(C_INFO) {
+    NPC = 0xe4af;
+    NR = 7;
+    CONDITION = DIA_IVY_TRAIN_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_IVY_TRAIN_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = B_BUILDLEARNSTRING2(PRINT_LEARN_PICKPOCKET1, B_GETLEARNCOSTTALENT(OTHER, NPC_TALENT_PICKPOCKET, 1), IVY_PICKPOCKET);
+}
+
+func int DIA_IVY_TRAIN_PICKPOCKET_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14495)) && ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) < (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_TRAIN_PICKPOCKET_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_TRAIN_Pickpocket_15_00");
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (IVY_PICKPOCKET)) {
+        if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+            if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_SNEAK)) == (0)) {
+                PRINTSCREEN(PRINT_LEARNSNEAK, -(1), YPOS_LEVELUP, FONT_SCREEN, 2);
+                AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_SneakP_03_01");
+                B_TEACHTHIEFTALENT(NONE_16_IVY, HERO, NPC_TALENT_SNEAK, 1);
+                AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_SneakP_03_02");
+            };
+            NPC_REMOVEINVITEMS(SELF, 0x859b, IVY_PICKPOCKET);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Pickpocket_03_01");
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, IVY_PICKPOCKET);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Pickpocket_03_02");
+            PRINTSCREEN(PRINT_LEARNPICKPOCKET, -(1), -(1), FONT_SCREEN, 2);
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Pickpocket_03_03");
+}
+
+instance DIA_IVY_TRAIN_PICKPOCKET2(C_INFO) {
+    NPC = 0xe4af;
+    NR = 7;
+    CONDITION = DIA_IVY_TRAIN_PICKPOCKET2_CONDITION;
+    INFORMATION = DIA_IVY_TRAIN_PICKPOCKET2_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = B_BUILDLEARNSTRING2(PRINT_LEARN_PICKPOCKET2, B_GETLEARNCOSTTALENT(OTHER, NPC_TALENT_PICKPOCKET, 2), IVY_PICKPOCKET2);
+}
+
+func int DIA_IVY_TRAIN_PICKPOCKET2_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14495)) && ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) == (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_TRAIN_PICKPOCKET2_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_TRAIN_Pickpocket2_15_00");
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (IVY_PICKPOCKET2)) {
+        if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+            IVYREPUTATION = (IVYREPUTATION) + (1);
+            NPC_REMOVEINVITEMS(SELF, 0x859b, IVY_PICKPOCKET2);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Pickpocket2_03_01");
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, IVY_PICKPOCKET2);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Pickpocket2_03_02");
+            PRINTSCREEN(PRINT_LEARNPICKPOCKET2, -(1), -(1), FONT_SCREEN, 2);
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Pickpocket2_03_03");
+}
+
+instance DIA_IVY_TRAIN_PICKPOCKET3(C_INFO) {
+    NPC = 0xe4af;
+    NR = 7;
+    CONDITION = DIA_IVY_TRAIN_PICKPOCKET3_CONDITION;
+    INFORMATION = DIA_IVY_TRAIN_PICKPOCKET3_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = B_BUILDLEARNSTRING2(PRINT_LEARN_PICKPOCKET3, B_GETLEARNCOSTTALENT(OTHER, NPC_TALENT_PICKPOCKET, 3), IVY_PICKPOCKET3);
+}
+
+func int DIA_IVY_TRAIN_PICKPOCKET3_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14495)) && ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_TRAIN_PICKPOCKET3_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ivy_TRAIN_Pickpocket3_15_00");
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (IVY_PICKPOCKET3)) {
+        if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) == (3)) {
+            IVYREPUTATION = (IVYREPUTATION) + (1);
+            NPC_REMOVEINVITEMS(SELF, 0x859b, IVY_PICKPOCKET3);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Pickpocket3_03_01");
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, IVY_PICKPOCKET3);
+            AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Pickpocket3_03_02");
+            PRINTSCREEN(PRINT_LEARNPICKPOCKET3, -(1), -(1), FONT_SCREEN, 2);
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ivy_TRAIN_Pickpocket3_03_03");
+}
+
+instance DIA_IVY_AMBIENT(C_INFO) {
+    NPC = 0xe4af;
+    NR = 950;
+    CONDITION = DIA_IVY_AMBIENT_CONDITION;
+    INFORMATION = DIA_IVY_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_IVY_AMBIENT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_IVY_AMBIENT_INFO() {
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew2");
+    if ((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS)) {
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        B_SAY(SELF, OTHER, "$GREETINGS_FromFriend");
+        B_SAY(SELF, OTHER, "$IMBUSY_CALM");
+    };
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    B_SAY(SELF, OTHER, "$IMBUSY_CALM");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_IVY_PICKPOCKET(C_INFO) {
+    NPC = 0xe4af;
+    NR = 900;
+    CONDITION = DIA_IVY_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_IVY_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120_FEMALE;
+}
+
+func int DIA_IVY_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_IVY_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x144d1);
+    INFO_ADDCHOICE(0x144d1, DIALOG_BACK, 0x144d5);
+    INFO_ADDCHOICE(0x144d1, DIALOG_PICKPOCKET, 0x144d4);
+}
+
+func void DIA_IVY_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        IVYREPUTATION = (IVYREPUTATION) - (2);
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x144d1);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x144d1);
+}
+
+func void DIA_IVY_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x144d1);
+}
+

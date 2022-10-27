@@ -1,0 +1,4 @@
+func void EVT_SQ316_GATE_01() {
+    WLD_SENDTRIGGER("P17_GATE_V2");
+}
+

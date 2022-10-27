@@ -1,0 +1,250 @@
+const int COOKING_MEAT_INSTANCE = -1;
+const int COOKING_MEAT_AMOUNT = -1;
+func int GETFRIEDMEATINSTANCE(var int MEATINSTANCE) {
+    if ((MEATINSTANCE) == (0x8433)) {
+        return 0x8435;
+    };
+    if ((MEATINSTANCE) == (0x8e33)) {
+        return 0x8e35;
+    };
+    if ((MEATINSTANCE) == (0x8e37)) {
+        return 0x8e39;
+    };
+    if ((MEATINSTANCE) == (0x8e3b)) {
+        return 0x8e3d;
+    };
+    if ((MEATINSTANCE) == (0x8e3f)) {
+        return 0x8e41;
+    };
+    if ((MEATINSTANCE) == (0x8e43)) {
+        return 0x8e45;
+    };
+    if ((MEATINSTANCE) == (0x8e4b)) {
+        return 0x8e4d;
+    };
+    if ((MEATINSTANCE) == (0x8e57)) {
+        return 0x8e59;
+    };
+    if ((MEATINSTANCE) == (0x8e47)) {
+        return 0x8e49;
+    };
+    if ((MEATINSTANCE) == (0x8e53)) {
+        return 0x8e55;
+    };
+    if ((MEATINSTANCE) == (0x8e4f)) {
+        return 0x8e51;
+    };
+    return -(1);
+}
+
+instance PC_COOKMEAT(C_INFO) {
+    NPC = 0xc3ab;
+    CONDITION = PC_COOKMEAT_CONDITION;
+    INFORMATION = PC_COOKMEAT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_COOKMEAT;
+}
+
+func int PC_COOKMEAT_CONDITION() {
+    if (((PLAYER_MOBSI_PRODUCTION) == (MOBSI_COOKING)) && ((COOKINGMEALS_MODE) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void PC_COOKMEAT_REFRESHCHOICES() {
+    INFO_CLEARCHOICES(0xbe6c);
+    if ((NPC_HASITEMS(HERO, 0x8433)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_MEATBUGFLESH, 0xbe82);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e33)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_RATRAW, 0xbe83);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e37)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_BOARRAW, 0xbe84);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e3b)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_SHEEPRAW, 0xbe85);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e3f)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_MOLERATRAW, 0xbe86);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e43)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_WOLFRAW, 0xbe87);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e4b)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_SCAVENGERRAW, 0xbe88);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e57)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_CRABRAW, 0xbe89);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e47)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_SHADOWRAW, 0xbe8a);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e53)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_BEARRAW, 0xbe8b);
+    };
+    if ((NPC_HASITEMS(HERO, 0x8e4f)) >= (1)) {
+        INFO_ADDCHOICE(0xbe6c, FOODNAME_TROLLRAW, 0xbe8c);
+    };
+    if ((NPC_HASITEMGROUP(HERO, 0x7e2b)) > (0)) {
+        INFO_ADDCHOICE(0xbe6c, DIALOG_ALL, 0xbe7e);
+    };
+    INFO_ADDCHOICE(0xbe6c, DIALOG_BACK, 0xbe70);
+}
+
+func void PC_COOKMEAT_INFO() {
+    PC_COOKMEAT_REFRESHCHOICES();
+}
+
+func void PC_COOKMEAT_BACK() {
+    INFO_CLEARCHOICES(0xbe6c);
+}
+
+func void PC_COOKMEAT_AMOUNTCHOICES() {
+    INFO_CLEARCHOICES(0xbe6c);
+    MAX = NPC_HASITEMS(SELF, COOKING_MEAT_INSTANCE);
+    if ((MAX) > (0)) {
+        ALL_STRING = CS4(DIALOG_ALL, " (", I2S(MAX), ")");
+        INFO_ADDCHOICE(0xbe6c, ALL_STRING, 0xbe79);
+        if ((MAX) > (9)) {
+            INFO_ADDCHOICE(0xbe6c, CHOICE_NUMBER_10, 0xbe7b);
+        };
+        if ((MAX) > (4)) {
+            INFO_ADDCHOICE(0xbe6c, CHOICE_NUMBER_5, 0xbe7c);
+        };
+        INFO_ADDCHOICE(0xbe6c, CHOICE_NUMBER_1, 0xbe7d);
+        INFO_ADDCHOICE(0xbe6c, DIALOG_BACK, 0xbe74);
+    };
+}
+
+var int PC_COOKMEAT_AMOUNTCHOICES.MAX = 0;
+var string PC_COOKMEAT_AMOUNTCHOICES.ALL_STRING = "";
+func void PC_COOKMEAT_AMOUNTBACK() {
+    INFO_CLEARCHOICES(0xbe6c);
+    COOKING_MEAT_INSTANCE = -(1);
+}
+
+func void PC_COOKMEAT_PRINT(var int INST, var int AMOUNT) {
+    NPC_GETINVITEM(SELF, INST);
+    INFO = SB_NEW();
+    SB(PRINT_FRYING);
+    if ((AMOUNT) > (1)) {
+        SBI(AMOUNT);
+        SB("x ");
+    };
+    SB(ITEM.DESCRIPTION);
+    PRINTS_EXT(SB_TOSTRING(), RGBA(50, 255, 50, 255));
+    SB_DESTROY();
+}
+
+var int PC_COOKMEAT_PRINT.INFO = 0;
+func void PC_COOKMEAT_AMOUNTALL() {
+    if ((NPC_HASITEMS(HERO, COOKING_MEAT_INSTANCE)) >= (1)) {
+        AMOUNT = NPC_HASITEMS(SELF, COOKING_MEAT_INSTANCE);
+        PC_COOKMEAT_PRINT(COOKING_MEAT_INSTANCE, AMOUNT);
+        CREATEINVITEMS(HERO, GETFRIEDMEATINSTANCE(COOKING_MEAT_INSTANCE), AMOUNT);
+    };
+    PRINT(PRINT_PRODITEMSMISSING);
+    PC_COOKMEAT_REFRESHCHOICES();
+}
+
+var int PC_COOKMEAT_AMOUNTALL.AMOUNT = 0;
+func void PC_COOKMEAT_AMOUNT10() {
+    if ((NPC_HASITEMS(HERO, COOKING_MEAT_INSTANCE)) >= (10)) {
+        PC_COOKMEAT_PRINT(COOKING_MEAT_INSTANCE, 10);
+        CREATEINVITEMS(HERO, GETFRIEDMEATINSTANCE(COOKING_MEAT_INSTANCE), 10);
+    };
+    PRINT(PRINT_PRODITEMSMISSING);
+    PC_COOKMEAT_REFRESHCHOICES();
+}
+
+func void PC_COOKMEAT_AMOUNT5() {
+    if ((NPC_HASITEMS(HERO, COOKING_MEAT_INSTANCE)) >= (5)) {
+        PC_COOKMEAT_PRINT(COOKING_MEAT_INSTANCE, 5);
+        CREATEINVITEMS(HERO, GETFRIEDMEATINSTANCE(COOKING_MEAT_INSTANCE), 5);
+    };
+    PRINT(PRINT_PRODITEMSMISSING);
+    PC_COOKMEAT_REFRESHCHOICES();
+}
+
+func void PC_COOKMEAT_AMOUNT1() {
+    if ((NPC_HASITEMS(HERO, COOKING_MEAT_INSTANCE)) >= (1)) {
+        PC_COOKMEAT_PRINT(COOKING_MEAT_INSTANCE, 1);
+        CREATEINVITEMS(HERO, GETFRIEDMEATINSTANCE(COOKING_MEAT_INSTANCE), 1);
+    };
+    PRINT(PRINT_PRODITEMSMISSING);
+    PC_COOKMEAT_REFRESHCHOICES();
+}
+
+func void PC_COOKMEAT_ALL() {
+    REPEAT(I, MAX_IG_MEATRAW);
+    INST = MEM_READINTARRAY(_@(ITEMGROUP_MEAT[0]), I);
+    AMOUNT = NPC_HASITEMS(SELF, INST);
+    if ((AMOUNT) > (0)) {
+        PC_COOKMEAT_PRINT(INST, AMOUNT);
+        CREATEINVITEMS(SELF, GETFRIEDMEATINSTANCE(INST), AMOUNT);
+        NPC_REMOVEINVITEMS(SELF, INST, AMOUNT);
+    };
+    END;
+    INFO_CLEARCHOICES(0xbe6c);
+}
+
+var int PC_COOKMEAT_ALL.I = 0;
+var int PC_COOKMEAT_ALL.INST = 0;
+var int PC_COOKMEAT_ALL.AMOUNT = 0;
+func void PC_COOKMEAT_MEATBUG() {
+    COOKING_MEAT_INSTANCE = 0x8433;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_RAT() {
+    COOKING_MEAT_INSTANCE = 0x8e33;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_BOAR() {
+    COOKING_MEAT_INSTANCE = 0x8e37;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_SHEEP() {
+    COOKING_MEAT_INSTANCE = 0x8e3b;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_MOLERAT() {
+    COOKING_MEAT_INSTANCE = 0x8e3f;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_WOLF() {
+    COOKING_MEAT_INSTANCE = 0x8e43;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_SCAVENGER() {
+    COOKING_MEAT_INSTANCE = 0x8e4b;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_CRAB() {
+    COOKING_MEAT_INSTANCE = 0x8e57;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_SHADOW() {
+    COOKING_MEAT_INSTANCE = 0x8e47;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_BEAR() {
+    COOKING_MEAT_INSTANCE = 0x8e53;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+
+func void PC_COOKMEAT_TROLL() {
+    COOKING_MEAT_INSTANCE = 0x8e4f;
+    PC_COOKMEAT_AMOUNTCHOICES();
+}
+

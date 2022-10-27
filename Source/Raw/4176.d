@@ -1,0 +1,425 @@
+instance DIA_PROXIMO_EXIT(C_INFO) {
+    NPC = 0xe548;
+    NR = 999;
+    CONDITION = DIA_PROXIMO_EXIT_CONDITION;
+    INFORMATION = DIA_PROXIMO_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_PROXIMO_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_PROXIMO_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+var int PROXIMO_Q306PAY_AMOUNT = 0;
+var int Q306_PLAYERSIGNEDIN = 0;
+instance DIA_PROXIMO_ARENAGREETINGS(C_INFO) {
+    NPC = 0xe548;
+    NR = 1;
+    CONDITION = DIA_PROXIMO_ARENAGREETINGS_CONDITION;
+    INFORMATION = DIA_PROXIMO_ARENAGREETINGS_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_PROXIMO_ARENAGREETINGS_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q306)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x14ba8))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PROXIMO_ARENAGREETINGS_INFO() {
+    if ((Q302_PLAYERDUELWITHDANSTATE) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_03_00");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_03_09");
+    INFO_CLEARCHOICES(0x1486f);
+    INFO_ADDCHOICE(0x1486f, "There was supposed to be blood and entertainment here for real men only.", 0x14872);
+}
+
+func void DIA_PROXIMO_ARENAGREETINGS_REALFIGHT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_ArenaGreetings_RealFight_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_RealFight_03_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_RealFight_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_RealFight_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_RealFight_03_03");
+    if ((Q302_PLAYERDUELWITHDANSTATE) != (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_RealFight_03_04");
+    };
+    INFO_CLEARCHOICES(0x1486f);
+    INFO_ADDCHOICE(0x1486f, "I'm ready.", 0x14874);
+}
+
+func void PROXIMO_STARTNOW() {
+    Q306_READYFORFIGHT = 2;
+}
+
+func void DIA_PROXIMO_ARENAGREETINGS_READY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_ArenaGreetings_Ready_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_Ready_03_00");
+    INFO_CLEARCHOICES(0x1486f);
+    AI_STOPPROCESSINFOS(SELF);
+    PROXIMO_PREPAREARENA();
+}
+
+func void DIA_PROXIMO_ARENAGREETINGS_NOTREADY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_ArenaGreetings_NotReady_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_ArenaGreetings_NotReady_03_00");
+    INFO_CLEARCHOICES(0x1486f);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_PROXIMO_Q306FREE(C_INFO) {
+    NPC = 0xe548;
+    NR = 1;
+    CONDITION = DIA_PROXIMO_Q306FREE_CONDITION;
+    INFORMATION = DIA_PROXIMO_Q306FREE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_PROXIMO_Q306FREE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q306)) == (LOG_RUNNING)) && ((Q306_PLAYERSIGNEDIN) == (FALSE))) && ((Q302_PLAYERDUELWITHDANSTATE) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PROXIMO_Q306FREE_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Free_03_00");
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_Q306Free_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Free_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Free_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Free_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Free_03_04");
+    INFO_CLEARCHOICES(0x14876);
+    INFO_ADDCHOICE(0x14876, "Put me on the list of participants.", 0x1487b);
+}
+
+func void DIA_PROXIMO_Q306FREE_CATCHES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_Q306Free_Catches_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Free_Catches_03_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Free_Catches_03_01");
+}
+
+func void Q306_ONTHELIST() {
+    if ((LOG_GETSTATUS(MIS_Q306)) == (LOG_RUNNING)) {
+        if ((LOG_GETSTATUS(MIS_Q302)) == (LOG_RUNNING)) {
+            LOG_SETSTATUS(_@(MIS_Q302), TOPIC_Q302, LOG_SUCCESS);
+            if ((B_COUNTDUELSQ302()) <= (2)) {
+                B_GIVEPLAYERXP((XP_Q302_FINISH) / (2));
+                AI_LOGENTRY(TOPIC_Q302, LOG_Q302_TOURNAMENTSAMEPRICE);
+            } else {
+                B_GIVEPLAYERXP(XP_Q302_FINISH);
+                AI_LOGENTRY(TOPIC_Q302, LOG_Q302_TOURNAMENTBETTERPRICE);
+            };
+        };
+    };
+    Q306_PLAYERSIGNEDIN = TRUE;
+    Q306_INVITE_DAY = WLD_GETDAY();
+    AI_LOGENTRY(TOPIC_Q306, LOG_Q306_SIGNED);
+}
+
+func void DIA_PROXIMO_Q306FREE_SIGNIN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_Q306Free_SignIn_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Free_SignIn_03_00");
+    B_USEFAKESCROLL();
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Free_SignIn_03_01");
+    Q306_ONTHELIST();
+}
+
+instance DIA_PROXIMO_Q306PAY(C_INFO) {
+    NPC = 0xe548;
+    NR = 1;
+    CONDITION = DIA_PROXIMO_Q306PAY_CONDITION;
+    INFORMATION = DIA_PROXIMO_Q306PAY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = DIALOG_TOURNAMENTPAY;
+}
+
+func int DIA_PROXIMO_Q306PAY_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_Q306)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x1487f))) && ((Q306_PLAYERSIGNEDIN) == (FALSE))) && ((NPC_HASITEMS(OTHER, 0x859b)) >= (PROXIMO_Q306PAY_AMOUNT))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PROXIMO_Q306PAY_INFO() {
+    NPC_REMOVEINVITEMS(SELF, 0x859b, PROXIMO_Q306PAY_AMOUNT);
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    B_GIVEINVITEMS(OTHER, SELF, 0x859b, PROXIMO_Q306PAY_AMOUNT);
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Pay_03_01");
+    B_STANDUP();
+    B_USEFAKESCROLL_MARVIN();
+    AI_WAITTILLEND(SELF, OTHER);
+    B_USEFAKESCROLL();
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Pay_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Pay_03_03");
+    Q306_ONTHELIST();
+}
+
+instance DIA_PROXIMO_Q306APPLY(C_INFO) {
+    NPC = 0xe548;
+    NR = 1;
+    CONDITION = DIA_PROXIMO_Q306APPLY_CONDITION;
+    INFORMATION = DIA_PROXIMO_Q306APPLY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I would like to participate in the tournament.";
+}
+
+func int DIA_PROXIMO_Q306APPLY_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q306)) == (LOG_RUNNING)) && ((Q306_PLAYERSIGNEDIN) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PROXIMO_Q306APPLY_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_Q306Apply_15_00");
+    if ((B_COUNTDUELSQ302()) == (0)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_13_00");
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_02");
+    };
+    if ((B_COUNTDUELSQ302()) > (0)) {
+        if ((B_COUNTDUELSQ302()) < (3)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_10");
+            B_SAY(OTHER, SELF, "$SVM_15_GUILDAMBIENT_WhoYouAre_Yes");
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_19");
+        };
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_Q306Apply_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_Q306Apply_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_Q306Apply_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_08");
+    if ((B_COUNTDUELSQ302()) <= (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_09");
+        PROXIMO_Q306PAY_AMOUNT = 300;
+    };
+    if ((B_COUNTDUELSQ302()) > (2)) {
+        if ((B_COUNTDUELSQ302()) == (3)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_18");
+            PROXIMO_Q306PAY_AMOUNT = 200;
+        } else if ((B_COUNTDUELSQ302()) > (3)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_03_27");
+            PROXIMO_Q306PAY_AMOUNT = 100;
+        };
+    };
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (PROXIMO_Q306PAY_AMOUNT)) {
+        INFO_ADDCHOICE(0x1487f, "(Pay up)", 0x14882);
+    };
+    INFO_ADDCHOICE(0x1487f, "I don't have that much.", 0x14883);
+    DIA_PROXIMO_Q306PAY.DESCRIPTION = CS5(DIALOG_Q306PAY, " (", INTTOSTRING(PROXIMO_Q306PAY_AMOUNT), PRINT_SZ, ")");
+}
+
+func void DIA_PROXIMO_Q306APPLY_PAY() {
+    INFO_CLEARCHOICES(0x1487f);
+    DIA_PROXIMO_Q306PAY_INFO();
+}
+
+func void DIA_PROXIMO_Q306APPLY_NOMONEY() {
+    INFO_CLEARCHOICES(0x1487f);
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_Q306Apply_NoMoney_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_NoMoney_03_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306Apply_NoMoney_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_PROXIMO_AMBIENT(C_INFO) {
+    NPC = 0xe548;
+    NR = 997;
+    CONDITION = DIA_PROXIMO_AMBIENT_CONDITION;
+    INFORMATION = DIA_PROXIMO_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_PROXIMO_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x14887)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PROXIMO_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew4");
+    if ((Q306_TOURNAMENTSTATUS) == (0)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Ambient_13_01");
+    };
+    if ((Q306_TOURNAMENTSTATUS) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Ambient_13_04");
+    };
+    if ((Q306_TOURNAMENTSTATUS) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Ambient_13_05");
+    };
+}
+
+instance DIA_PROXIMO_HELLO(C_INFO) {
+    NPC = 0xe548;
+    NR = 1;
+    CONDITION = DIA_PROXIMO_HELLO_CONDITION;
+    INFORMATION = DIA_PROXIMO_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You don't look like the rest of the people in this place.";
+}
+
+func int DIA_PROXIMO_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_PROXIMO_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_HELLO_15_01");
+    AI_STARTFACEANI(SELF, "S_ANGRY", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_HELLO_03_02");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_HELLO_03_03");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_HELLO_03_04");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_PROXIMO_HOW(C_INFO) {
+    NPC = 0xe548;
+    NR = 1;
+    CONDITION = DIA_PROXIMO_HOW_CONDITION;
+    INFORMATION = DIA_PROXIMO_HOW_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How do you control gold trading?";
+}
+
+func int DIA_PROXIMO_HOW_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x14887)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PROXIMO_HOW_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_HOW_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_HOW_03_02");
+    if ((LOG_GETSTATUS(MIS_Q306)) == (0)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Proximo_HOW_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_HOW_03_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_HOW_03_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_HOW_03_06");
+    };
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_PROXIMO_Q306_AFTERTOURNAMENT(C_INFO) {
+    NPC = 0xe548;
+    NR = 1;
+    CONDITION = DIA_PROXIMO_Q306_AFTERTOURNAMENT_CONDITION;
+    INFORMATION = DIA_PROXIMO_Q306_AFTERTOURNAMENT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_PROXIMO_Q306_AFTERTOURNAMENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x14788)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PROXIMO_Q306_AFTERTOURNAMENT_INFO() {
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    if ((Q306_TOURNAMENTSTATUS) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306_AfterTournament_03_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306_AfterTournament_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306_AfterTournament_03_03");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306_AfterTournament_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306_AfterTournament_03_05");
+    if ((Q306_COUNTWINBATTLE) >= (1)) {
+        INFO_CLEARCHOICES(0x1488d);
+        INFO_ADDCHOICE(0x1488d, "So what's my reward going to be?", 0x14890);
+    };
+    INFO_CLEARCHOICES(0x1488d);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+func void DIA_PROXIMO_Q306_AFTERTOURNAMENT_REWARD() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Proximo_Q306_AfterTournament_Reward_15_01");
+    if ((Q306_TOURNAMENTSTATUS) == (1)) {
+        CREATEINVITEMS(SELF, 0x859b, Q306_PROXIMOREWARD_V2);
+        B_GIVEINVITEMS(SELF, OTHER, 0x859b, Q306_PROXIMOREWARD_V2);
+        CREATEINVITEMS(SELF, 0x8957, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x8957, 1);
+        AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306_AfterTournament_Reward_03_02");
+    };
+    CREATEINVITEMS(SELF, 0x859b, (Q306_PROXIMOREWARD_V1) * (Q306_COUNTWINBATTLE));
+    B_GIVEINVITEMS(SELF, OTHER, 0x859b, (Q306_PROXIMOREWARD_V1) * (Q306_COUNTWINBATTLE));
+    AI_STARTFACEANI(SELF, "S_THINK", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306_AfterTournament_Reward_03_03");
+    B_STANDUP();
+    B_USEFAKESCROLL();
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Proximo_Q306_AfterTournament_Reward_03_04");
+    INFO_CLEARCHOICES(0x1488d);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_PROXIMO_PICKPOCKET(C_INFO) {
+    NPC = 0xe548;
+    NR = 900;
+    CONDITION = DIA_PROXIMO_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_PROXIMO_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120;
+}
+
+func int DIA_PROXIMO_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PROXIMO_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x14891);
+    INFO_ADDCHOICE(0x14891, DIALOG_BACK, 0x14895);
+    INFO_ADDCHOICE(0x14891, DIALOG_PICKPOCKET, 0x14894);
+}
+
+func void DIA_PROXIMO_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        CREATEINVITEMS(SELF, 0x859f, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x859f, 1);
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x14891);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x14891);
+}
+
+func void DIA_PROXIMO_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x14891);
+}
+

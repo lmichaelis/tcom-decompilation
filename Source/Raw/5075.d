@@ -1,0 +1,45 @@
+func void RESTORENPCNAMES() {
+    if ((BDT_6289_VILLAN.AIVAR[79]) == (TRUE)) {
+        BDT_6289_VILLAN.NAME[0] = NAME_HUNTER;
+    };
+    if ((BDT_6290_BANDIT.AIVAR[79]) == (TRUE)) {
+        BDT_6290_BANDIT.NAME[0] = NAME_HUNTER;
+    };
+    if ((BDT_6288_MYRMIDON.AIVAR[79]) == (TRUE)) {
+        BDT_6288_MYRMIDON.NAME[0] = NAME_HUNTER;
+    };
+    if ((MIL_4040_RECRUIT_V2.AIVAR[79]) == (TRUE)) {
+        MIL_4040_RECRUIT_V2.NAME[0] = NPCNAME_CABI;
+    };
+    if ((MIL_4041_RECRUIT_V2.AIVAR[79]) == (TRUE)) {
+        MIL_4041_RECRUIT_V2.NAME[0] = NPCNAME_LEVE;
+    };
+    if ((MIL_4042_RECRUIT_V2.AIVAR[79]) == (TRUE)) {
+        MIL_4042_RECRUIT_V2.NAME[0] = NPCNAME_NEIR;
+    };
+    if ((BAU_2244_TERRY.AIVAR[79]) == (TRUE)) {
+        BAU_2244_TERRY.NAME[0] = NPCNAME_TERRY;
+    };
+    if ((BAU_6287_GONZALO.AIVAR[79]) == (1)) {
+        BAU_6287_GONZALO.NAME[0] = NPCNAME_GONZALO;
+    };
+    if ((BAU_6287_GONZALO.AIVAR[79]) == (2)) {
+        BAU_6287_GONZALO.NAME[0] = NPCNAME_ANTONIO;
+    };
+    if ((VLK_6126_LENA.AIVAR[79]) == (1)) {
+        VLK_6126_LENA.NAME[0] = NPCNAME_LENA;
+    };
+    if ((VLK_6126_LENA.AIVAR[79]) == (2)) {
+        VLK_6126_LENA.NAME[0] = NAME_SCAREDGIRL;
+    };
+    if ((BEAR_SQ114.AIVAR[79]) == (TRUE)) {
+        BEAR_SQ114.NAME[0] = NAME_GLUTTONOUSBEAR;
+    };
+    if ((NONE_13631_RENEGADE.AIVAR[79]) == (TRUE)) {
+        NONE_13631_RENEGADE.NAME[0] = NAME_RENEGADE;
+    };
+    if ((NONE_13630_RENEGADE.AIVAR[79]) == (TRUE)) {
+        NONE_13630_RENEGADE.NAME[0] = NAME_RENEGADE;
+    };
+}
+

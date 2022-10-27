@@ -1,0 +1,15 @@
+func void ZS_MM_HUNT() {
+    PERCEPTION_SET_MONSTER_RTN();
+    AI_STANDUP(SELF);
+    AI_TURNTONPC(SELF, OTHER);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    AI_GOTONPC(SELF, OTHER);
+}
+
+func int ZS_MM_HUNT_LOOP() {
+    return LOOP_END;
+}
+
+func void ZS_MM_HUNT_END() {
+}
+

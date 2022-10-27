@@ -1,0 +1,409 @@
+var int STONE_TEACHSTRINFO = 0;
+var int STONE_SQ202_IRONPRICE = 0;
+var int STONE_CANTEACHSTR = 0;
+var int STONE_CURRENTSTRLEVEL = 0;
+instance DIA_STONE_EXIT(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 999;
+    CONDITION = DIA_STONE_EXIT_CONDITION;
+    INFORMATION = DIA_STONE_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_STONE_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_STONE_EXIT_INFO() {
+    if ((STONE_TEACHSTRINFO) == (FALSE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_Enough_712_03");
+        TEACHER_LOGENTRY_STONE();
+        STONE_TEACHSTRINFO = TRUE;
+        STONE_CANTEACHSTR = TRUE;
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_STONE_HELLO(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 2;
+    CONDITION = DIA_STONE_HELLO_CONDITION;
+    INFORMATION = DIA_STONE_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_STONE_HELLO_CONDITION() {
+    if ((Q504_TAKEWORKERS) != (2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_STONE_HELLO_INFO() {
+    ACH_6_STONE = TRUE;
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_HELLO_712_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_HELLO_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_HELLO_712_03");
+}
+
+instance DIA_STONE_WHO(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 3;
+    CONDITION = DIA_STONE_WHO_CONDITION;
+    INFORMATION = DIA_STONE_WHO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_STONE_WHO_CONDITION() {
+    if ((Q504_TAKEWORKERS) != (2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_STONE_WHO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_Who_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Who_712_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Who_712_03");
+}
+
+instance DIA_STONE_SMITH(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 4;
+    CONDITION = DIA_STONE_SMITH_CONDITION;
+    INFORMATION = DIA_STONE_SMITH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Could you train me in blacksmithing?";
+}
+
+func int DIA_STONE_SMITH_CONDITION() {
+    if ((Q504_TAKEWORKERS) != (2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_STONE_SMITH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_Smith_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Smith_712_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Smith_712_03");
+}
+
+instance DIA_STONE_SQ202(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 1;
+    CONDITION = DIA_STONE_SQ202_CONDITION;
+    INFORMATION = DIA_STONE_SQ202_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_STONE_SQ202_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x159c9)) && ((LOG_GETSTATUS(MIS_SQ202)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_STONE_SQ202_INFO() {
+    NPC_EXCHANGEROUTINE(SELF, START);
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_712_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_712_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_712_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_712_04");
+    INFO_CLEARCHOICES(0x159ef);
+    INFO_ADDCHOICE(0x159ef, "Actually, why do you need it?", 0x159f2);
+    INFO_ADDCHOICE(0x159ef, "Let's make a deal.", 0x159f3);
+}
+
+func void DIA_STONE_SQ202_WHY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_SQ202_Why_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_Why_712_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_Why_712_03");
+    INFO_ADDCHOICE(0x159ef, "Thanks, but I'll look for another buyer.", 0x159f4);
+}
+
+func void DIA_STONE_SQ202_TRADE() {
+    STONE_SQ202_IRONPRICE = 30;
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_SQ202_Trade_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_Trade_712_02");
+    INFO_CLEARCHOICES(0x159ef);
+    INFO_ADDCHOICE(0x159ef, "You could do better than that.", 0x159f5);
+    INFO_ADDCHOICE(0x159ef, "Deal.", 0x159f6);
+}
+
+func void DIA_STONE_SQ202_WHY_THORSTEN_NO() {
+    SQ202_IRONSOLD = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_SQ202_No_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_No_712_02");
+    AI_LOGENTRY(TOPIC_SQ202, LOG_SQ202_STONE_IRON_V2);
+    INFO_CLEARCHOICES(0x159ef);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_STONE_SQ202_TRADE_MORE_1() {
+    STONE_SQ202_IRONPRICE = 60;
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_SQ202_More_1_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_More_1_712_02");
+    INFO_CLEARCHOICES(0x159ef);
+    INFO_ADDCHOICE(0x159ef, "It cost me a lot to get this iron.", 0x159f7);
+    INFO_ADDCHOICE(0x159ef, "Deal.", 0x159f6);
+}
+
+func void DIA_STONE_SQ202_TRADE_ENOUGH() {
+    SQ202_IRONSOLD = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_SQ202_Enough_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_Enough_712_02");
+    CREATEINVITEMS(SELF, 0x859b, STONE_SQ202_IRONPRICE);
+    B_GIVEINVITEMS(SELF, OTHER, 0x859b, STONE_SQ202_IRONPRICE);
+    SQ202_EARNEDGOLD = (SQ202_EARNEDGOLD) + (STONE_SQ202_IRONPRICE);
+    B_GIVEINVITEMS(OTHER, SELF, 0x9107, 1);
+    AI_LOGENTRY(TOPIC_SQ202, LOG_SQ202_STONE_IRON_V1);
+    INFO_CLEARCHOICES(0x159ef);
+}
+
+func void DIA_STONE_SQ202_TRADE_MORE_1_MORE_2() {
+    SQ202_IRONSOLD = 2;
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_SQ202_More_2_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_More_2_712_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_SQ202_More_2_712_03");
+    AI_LOGENTRY(TOPIC_SQ202, LOG_SQ202_STONE_IRON_V2);
+    INFO_CLEARCHOICES(0x159ef);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+}
+
+var string STONE_PRINTS = "";
+instance DIA_STONE_TEACHSTR(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 998;
+    CONDITION = DIA_STONE_TEACHSTR_CONDITION;
+    INFORMATION = DIA_STONE_TEACHSTR_INFO;
+    PERMANENT = 1;
+    DESCRIPTION = "I want to be stronger!";
+}
+
+func int DIA_STONE_TEACHSTR_CONDITION() {
+    if ((STONE_CANTEACHSTR) == (TRUE)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_STONE_TEACHSTR_CHOICES() {
+    STONE_GOLDCOST = 3;
+    STONE_CURRENTSTRLEVEL = OTHER.AIVAR[81];
+    INFO_CLEARCHOICES(0x159f9);
+    INFO_ADDCHOICE(0x159f9, DIALOG_BACK, 0x159fe);
+    INFO_ADDCHOICE(0x159f9, B_BUILDLEARNSTRING2(PRINT_LEARNSTR1, B_GETLEARNCOSTATTRIBUTE(OTHER, ATR_STRENGTH, 1), STONE_GOLDCOST), 0x159ff);
+    INFO_ADDCHOICE(0x159f9, B_BUILDLEARNSTRING2(PRINT_LEARNSTR5, B_GETLEARNCOSTATTRIBUTE(OTHER, ATR_STRENGTH, 5), (STONE_GOLDCOST) * (5)), 0x15a00);
+}
+
+var int DIA_STONE_TEACHSTR_CHOICES.STONE_GOLDCOST = 0;
+func void DIA_STONE_TEACHSTR_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_TeachSTR_15_00");
+    DIA_STONE_TEACHSTR_CHOICES();
+}
+
+func void DIA_STONE_TEACHSTR_BACK() {
+    if (((OTHER.AIVAR[81]) <= (24)) && ((OTHER.AIVAR[81]) >= (10))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_TeachSTR_712_01");
+    };
+    if (((OTHER.AIVAR[81]) <= (44)) && ((OTHER.AIVAR[81]) >= (25))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_TeachSTR_712_02");
+    };
+    if ((OTHER.AIVAR[81]) >= (45)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_TeachSTR_712_03");
+        STONE_CANTEACHSTR = FALSE;
+    };
+    INFO_CLEARCHOICES(0x159f9);
+}
+
+func void DIA_STONE_TEACHSTR_1() {
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (STONE_PAYMENT1)) {
+        if ((STONE_CURRENTSTRLEVEL) < (OTHER.AIVAR[81])) {
+            SND_PLAY(GELDBEUTEL);
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, STONE_PAYMENT1);
+            NPC_REMOVEINVITEMS(SELF, 0x859b, STONE_PAYMENT1);
+        };
+        B_TEACHATTRIBUTEPOINTS(SELF, OTHER, ATR_STRENGTH, 1, 45);
+        DIA_STONE_TEACHSTR_CHOICES();
+    };
+    if ((NPC_HASITEMS(OTHER, 0x859b)) < (STONE_PAYMENT1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_TeachSTR_712_04");
+        STONE_PRINTS = CONCATSTRINGS(PRINT_RGOLD, INTTOSTRING(STONE_PAYMENT1));
+        PRINTSCREEN(STONE_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_STONE_TEACHSTR_CHOICES();
+    };
+}
+
+func void DIA_STONE_TEACHSTR_5() {
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (STONE_PAYMENT5)) {
+        if ((STONE_CURRENTSTRLEVEL) < (OTHER.AIVAR[81])) {
+            SND_PLAY(GELDBEUTEL);
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, STONE_PAYMENT5);
+            NPC_REMOVEINVITEMS(SELF, 0x859b, STONE_PAYMENT5);
+        };
+        B_TEACHATTRIBUTEPOINTS(SELF, OTHER, ATR_STRENGTH, 5, 45);
+        DIA_STONE_TEACHSTR_CHOICES();
+    };
+    if ((NPC_HASITEMS(OTHER, 0x859b)) < (STONE_PAYMENT5)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_TeachSTR_712_05");
+        STONE_PRINTS = CONCATSTRINGS(PRINT_RGOLD, INTTOSTRING(STONE_PAYMENT5));
+        PRINTSCREEN(STONE_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_STONE_TEACHSTR_CHOICES();
+    };
+}
+
+instance DIA_STONE_AMBIENT(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 200;
+    CONDITION = DIA_STONE_AMBIENT_CONDITION;
+    INFORMATION = DIA_STONE_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_STONE_AMBIENT_CONDITION() {
+    if ((Q504_TAKEWORKERS) != (2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_STONE_AMBIENT_INFO() {
+    NPC_INITAMBIENTS(SELF, 3);
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_Ambient_15_01");
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        if ((NPC_GETDISTTONPC(SELF, BAU_711_THORSTEN)) < (500)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Stone_Ambient_712_06");
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Stone_Ambient_712_02");
+            AI_OUTPUT(SELF, OTHER, "DIA_Stone_Ambient_712_03");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_Ambient_712_04");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (3)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_Ambient_712_05");
+    };
+}
+
+instance DIA_STONE_BOLT(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 1;
+    CONDITION = DIA_STONE_BOLT_CONDITION;
+    INFORMATION = DIA_STONE_BOLT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What can you tell me about this bolthead?";
+}
+
+func int DIA_STONE_BOLT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q309)) == (LOG_RUNNING)) && ((NPC_HASITEMS(OTHER, 0x91ad)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_STONE_BOLT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_Bolt_15_01");
+    if ((STONE_NEWTEACHER) == (0)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_Bolt_712_02");
+    };
+    if ((STONE_NEWTEACHER) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_Bolt_712_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Stone_Bolt_712_04");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_Bolt_15_06");
+    AI_WAITTILLEND(SELF, OTHER);
+    if ((NPC_HASITEMS(SELF, 0x8ce3)) == (0)) {
+        AI_STOPLOOKAT(SELF);
+        CREATEINVITEM(SELF, 0x8ce3);
+        AI_USEITEMTOSTATE(SELF, 0x8ce3, 1);
+        AI_WAIT(SELF, 0x40400000);
+        AI_USEITEMTOSTATE(SELF, 0x8ce3, -(1));
+        AI_LOOKATNPC(SELF, OTHER);
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Bolt_712_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_Bolt_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Bolt_712_09");
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_Bolt_15_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Bolt_712_11");
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_Bolt_15_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Bolt_712_14");
+    AI_OUTPUT(OTHER, SELF, "DIA_Stone_Bolt_15_16");
+    AI_LOGENTRY(TOPIC_Q309, LOG_Q309_STONE_BOLT_V1);
+}
+
+instance DIA_STONE_Q504_FEEL(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 90;
+    CONDITION = DIA_STONE_Q504_FEEL_CONDITION;
+    INFORMATION = DIA_STONE_Q504_FEEL_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How's the morale?";
+}
+
+func int DIA_STONE_Q504_FEEL_CONDITION() {
+    if (((NPC_GETDISTTOWP(SELF, "PART5_Q505_STONE")) <= (0x7d0)) && ((Q504_TAKEWORKERS) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_STONE_Q504_FEEL_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_VolfzackMorale3");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Q504_Feel_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Stone_Q504_Feel_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_STONE_PICKPOCKET(C_INFO) {
+    NPC = 0xe0ea;
+    NR = 900;
+    CONDITION = DIA_STONE_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_STONE_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_STONE_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_STONE_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x15a0a);
+    INFO_ADDCHOICE(0x15a0a, DIALOG_BACK, 0x15a0e);
+    INFO_ADDCHOICE(0x15a0a, DIALOG_PICKPOCKET, 0x15a0d);
+}
+
+func void DIA_STONE_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        CREATEINVITEMS(SELF, 0x8c8c, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x8c8c, 1);
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x15a0a);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x15a0a);
+}
+
+func void DIA_STONE_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x15a0a);
+}
+

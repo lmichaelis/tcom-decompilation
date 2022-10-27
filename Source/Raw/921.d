@@ -1,0 +1,15 @@
+func void SQ415_RAZORDIALOG_S0() {
+    if ((MOB_HASITEMS("SQ415_RAZORBODY", 0x9a6e)) == (FALSE)) {
+        if ((SQ415_SWORDMOVER) == (0)) {
+            SQ415_SWORDMOVER = 1;
+            WLD_SENDTRIGGER("SQ415_MOVER_DEVIRSWORD");
+        };
+    };
+    if ((SQ415_SWORDMOVER) == (1)) {
+        SQ415_SWORDMOVER = 0;
+        WLD_SENDTRIGGER("SQ415_MOVER_DEVIRSWORD");
+    };
+    HERO.AIVAR[4] = FALSE;
+}
+
+var int SQ415_RAZORDIALOG_S0.SQ415_SWORDMOVER = 0;

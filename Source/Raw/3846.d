@@ -1,0 +1,370 @@
+instance DIA_TAILOR_EXIT(C_INFO) {
+    NPC = 0xcd3d;
+    NR = 999;
+    CONDITION = DIA_TAILOR_EXIT_CONDITION;
+    INFORMATION = DIA_TAILOR_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_TAILOR_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_TAILOR_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_TAILOR_HELLO(C_INFO) {
+    NPC = 0xcd3d;
+    NR = 1;
+    CONDITION = DIA_TAILOR_HELLO_CONDITION;
+    INFORMATION = DIA_TAILOR_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What do you do here?";
+}
+
+func int DIA_TAILOR_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_TAILOR_HELLO_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Tailor_Hello_15_01");
+    AI_STARTFACEANI(SELF, "S_SURPRISE", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Tailor_Hello_03_02");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Tailor_Hello_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    TRADER_LOGENTRY_TAILOR();
+}
+
+instance DIA_TAILOR_BUY(C_INFO) {
+    NPC = 0xcd3d;
+    NR = 950;
+    CONDITION = DIA_TAILOR_BUY_CONDITION;
+    INFORMATION = DIA_TAILOR_BUY_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "I'd like to buy some clothes.";
+}
+
+func int DIA_TAILOR_BUY_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x11aff)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int TAILOR_VLK_RICH_HAT = 0;
+var int TAILOR_VLK_RICH = 0;
+var int TAILOR_VLK_NORMAL = 0;
+var int TAILOR_VLK_POOR = 0;
+func void DIA_TAILOR_CHOICES() {
+    TAILOR_VLK_RICH = 0;
+    TAILOR_VLK_NORMAL = 0;
+    TAILOR_VLK_POOR = 0;
+    INFO_CLEARCHOICES(0x11b02);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_07, 0x11b0a);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_08, 0x11b12);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_09, 0x11b1a);
+    INFO_ADDCHOICE(0x11b02, DIALOG_BACK, 0x11b21);
+}
+
+func void DIA_TAILOR_BUY_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Tailor_BUY_15_01");
+    if ((((HERO.GUILD) == (GIL_VLK)) || ((HERO.GUILD) == (GIL_MIL))) || ((HERO.GUILD) == (GIL_SLD))) {
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Tailor_BUY_03_04");
+        DIA_TAILOR_CHOICES();
+    };
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Tailor_BUY_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Tailor_BUY_03_03");
+    AI_RESETFACEANI(SELF);
+}
+
+func void DIA_TAILOR_BUY_RICH_CHOICES() {
+    INFO_CLEARCHOICES(0x11b02);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_10, 0x11b0d);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_11, 0x11b0e);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_12, 0x11b0f);
+    INFO_ADDCHOICE(0x11b02, DIALOG_BACK, 0x11b08);
+}
+
+func void DIA_TAILOR_BUY_RICH_CHOICES_HAT() {
+    INFO_CLEARCHOICES(0x11b02);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_13, 0x11b10);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_14, 0x11b11);
+    INFO_ADDCHOICE(0x11b02, DIALOG_BACK, 0x11b0a);
+}
+
+func void DIA_TAILOR_BUY_RICH() {
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (VALUE_ITAR_VLK_OLDCITY)) {
+        if ((TAILOR_VLK_RICH_HAT) == (1)) {
+            if ((TAILOR_VLK_RICH) == (1)) {
+                CREATEINVITEMS(SELF, 0x8aca, 1);
+                B_GIVEINVITEMS(SELF, OTHER, 0x8aca, 1);
+                AI_EQUIPARMOR(OTHER, 0x8aca);
+            } else if ((TAILOR_VLK_RICH) == (2)) {
+                CREATEINVITEMS(SELF, 0x8ac8, 1);
+                B_GIVEINVITEMS(SELF, OTHER, 0x8ac8, 1);
+                AI_EQUIPARMOR(OTHER, 0x8ac8);
+            } else if ((TAILOR_VLK_RICH) == (3)) {
+                CREATEINVITEMS(SELF, 0x8ac9, 1);
+                B_GIVEINVITEMS(SELF, OTHER, 0x8ac9, 1);
+                AI_EQUIPARMOR(OTHER, 0x8ac9);
+            };
+        } else if ((TAILOR_VLK_RICH) == (1)) {
+            CREATEINVITEMS(SELF, 0x8acd, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8acd, 1);
+            AI_EQUIPARMOR(OTHER, 0x8acd);
+        } else if ((TAILOR_VLK_RICH) == (2)) {
+            CREATEINVITEMS(SELF, 0x8acb, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8acb, 1);
+            AI_EQUIPARMOR(OTHER, 0x8acb);
+        } else if ((TAILOR_VLK_RICH) == (3)) {
+            CREATEINVITEMS(SELF, 0x8acc, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8acc, 1);
+            AI_EQUIPARMOR(OTHER, 0x8acc);
+        };
+        NPC_REMOVEINVITEMS(SELF, 0x859b, VALUE_ITAR_VLK_OLDCITY);
+        DIA_TAILOR_BUY_RICH_CHOICES();
+    };
+    B_SAY(SELF, OTHER, "$NOGOLD");
+    DIA_TAILOR_BUY_RICH_CHOICES();
+}
+
+func void DIA_TAILOR_BUY_RICH_V1() {
+    TAILOR_VLK_RICH = 1;
+    DIA_TAILOR_BUY_RICH_CHOICES_HAT();
+}
+
+func void DIA_TAILOR_BUY_RICH_V2() {
+    TAILOR_VLK_RICH = 2;
+    DIA_TAILOR_BUY_RICH_CHOICES_HAT();
+}
+
+func void DIA_TAILOR_BUY_RICH_V3() {
+    TAILOR_VLK_RICH = 3;
+    DIA_TAILOR_BUY_RICH_CHOICES_HAT();
+}
+
+func void DIA_TAILOR_BUY_RICH_HAT_V1() {
+    TAILOR_VLK_RICH_HAT = 1;
+    DIA_TAILOR_BUY_RICH();
+}
+
+func void DIA_TAILOR_BUY_RICH_HAT_V2() {
+    TAILOR_VLK_RICH_HAT = 2;
+    DIA_TAILOR_BUY_RICH();
+}
+
+func void DIA_TAILOR_BUY_NORMAL_CHOICES() {
+    INFO_CLEARCHOICES(0x11b02);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_15, 0x11b14);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_16, 0x11b15);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_17, 0x11b16);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_18, 0x11b17);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_19, 0x11b18);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_41, 0x11b19);
+    INFO_ADDCHOICE(0x11b02, DIALOG_BACK, 0x11b08);
+}
+
+func void DIA_TAILOR_BUY_NORMAL() {
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (VALUE_ITAR_VLK_CITY)) {
+        if ((TAILOR_VLK_NORMAL) == (1)) {
+            CREATEINVITEMS(SELF, 0x8ad7, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8ad7, 1);
+            AI_EQUIPARMOR(OTHER, 0x8ad7);
+        } else if ((TAILOR_VLK_NORMAL) == (2)) {
+            CREATEINVITEMS(SELF, 0x8ad8, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8ad8, 1);
+            AI_EQUIPARMOR(OTHER, 0x8ad8);
+        } else if ((TAILOR_VLK_NORMAL) == (3)) {
+            CREATEINVITEMS(SELF, 0x8ad9, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8ad9, 1);
+            AI_EQUIPARMOR(OTHER, 0x8ad9);
+        } else if ((TAILOR_VLK_NORMAL) == (4)) {
+            CREATEINVITEMS(SELF, 0x8adc, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8adc, 1);
+            AI_EQUIPARMOR(SELF, 0x8adc);
+            AI_EQUIPARMOR(OTHER, 0x8adc);
+        } else if ((TAILOR_VLK_NORMAL) == (5)) {
+            CREATEINVITEMS(SELF, 0x8ade, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8ade, 1);
+            AI_EQUIPARMOR(OTHER, 0x8ade);
+        } else if ((TAILOR_VLK_NORMAL) == (6)) {
+            CREATEINVITEMS(SELF, 0x8ae0, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8ae0, 1);
+            AI_EQUIPARMOR(OTHER, 0x8ae0);
+        };
+        NPC_REMOVEINVITEMS(SELF, 0x859b, VALUE_ITAR_VLK_CITY);
+        DIA_TAILOR_BUY_NORMAL_CHOICES();
+    };
+    B_SAY(SELF, OTHER, "$NOGOLD");
+    DIA_TAILOR_BUY_NORMAL_CHOICES();
+}
+
+func void DIA_TAILOR_BUY_NORMAL_V1() {
+    TAILOR_VLK_NORMAL = 1;
+    DIA_TAILOR_BUY_NORMAL();
+}
+
+func void DIA_TAILOR_BUY_NORMAL_V2() {
+    TAILOR_VLK_NORMAL = 2;
+    DIA_TAILOR_BUY_NORMAL();
+}
+
+func void DIA_TAILOR_BUY_NORMAL_V3() {
+    TAILOR_VLK_NORMAL = 3;
+    DIA_TAILOR_BUY_NORMAL();
+}
+
+func void DIA_TAILOR_BUY_NORMAL_V4() {
+    TAILOR_VLK_NORMAL = 4;
+    DIA_TAILOR_BUY_NORMAL();
+}
+
+func void DIA_TAILOR_BUY_NORMAL_V5() {
+    TAILOR_VLK_NORMAL = 5;
+    DIA_TAILOR_BUY_NORMAL();
+}
+
+func void DIA_TAILOR_BUY_NORMAL_V6() {
+    TAILOR_VLK_NORMAL = 6;
+    DIA_TAILOR_BUY_NORMAL();
+}
+
+func void DIA_TAILOR_BUY_POOR_CHOICES() {
+    INFO_CLEARCHOICES(0x11b02);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_20, 0x11b1c);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_21, 0x11b1d);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_22, 0x11b1e);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_23, 0x11b1f);
+    INFO_ADDCHOICE(0x11b02, TXT_ARMORTRADE_24, 0x11b20);
+    INFO_ADDCHOICE(0x11b02, DIALOG_BACK, 0x11b08);
+}
+
+func void DIA_TAILOR_BUY_POOR() {
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (VALUE_ITAR_VLK_SLUMS)) {
+        if ((TAILOR_VLK_POOR) == (1)) {
+            CREATEINVITEMS(SELF, 0x8ad6, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8ad6, 1);
+            AI_EQUIPARMOR(OTHER, 0x8ad6);
+        } else if ((TAILOR_VLK_POOR) == (2)) {
+            CREATEINVITEMS(SELF, 0x8ada, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8ada, 1);
+            AI_EQUIPARMOR(OTHER, 0x8ada);
+        } else if ((TAILOR_VLK_POOR) == (3)) {
+            CREATEINVITEMS(SELF, 0x8add, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8add, 1);
+            AI_EQUIPARMOR(OTHER, 0x8add);
+        } else if ((TAILOR_VLK_POOR) == (4)) {
+            CREATEINVITEMS(SELF, 0x8adb, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8adb, 1);
+            AI_EQUIPARMOR(OTHER, 0x8adb);
+        } else if ((TAILOR_VLK_POOR) == (5)) {
+            CREATEINVITEMS(SELF, 0x8adf, 1);
+            B_GIVEINVITEMS(SELF, OTHER, 0x8adf, 1);
+            AI_EQUIPARMOR(OTHER, 0x8adf);
+        };
+        NPC_REMOVEINVITEMS(SELF, 0x859b, VALUE_ITAR_VLK_SLUMS);
+        DIA_TAILOR_BUY_POOR_CHOICES();
+    };
+    B_SAY(SELF, OTHER, "$NOGOLD");
+    DIA_TAILOR_BUY_POOR_CHOICES();
+}
+
+func void DIA_TAILOR_BUY_POOR_V1() {
+    TAILOR_VLK_POOR = 1;
+    DIA_TAILOR_BUY_POOR();
+}
+
+func void DIA_TAILOR_BUY_POOR_V2() {
+    TAILOR_VLK_POOR = 2;
+    DIA_TAILOR_BUY_POOR();
+}
+
+func void DIA_TAILOR_BUY_POOR_V3() {
+    TAILOR_VLK_POOR = 3;
+    DIA_TAILOR_BUY_POOR();
+}
+
+func void DIA_TAILOR_BUY_POOR_V4() {
+    TAILOR_VLK_POOR = 4;
+    DIA_TAILOR_BUY_POOR();
+}
+
+func void DIA_TAILOR_BUY_POOR_V5() {
+    TAILOR_VLK_POOR = 5;
+    DIA_TAILOR_BUY_POOR();
+}
+
+func void DIA_TAILOR_BUY_BACK() {
+    INFO_CLEARCHOICES(0x11b02);
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_TAILOR_PEON(C_INFO) {
+    NPC = 0xcd3d;
+    NR = 1;
+    CONDITION = DIA_TAILOR_PEON_CONDITION;
+    INFORMATION = DIA_TAILOR_PEON_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Can I be your apprentice?";
+}
+
+func int DIA_TAILOR_PEON_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x11aff)) {
+        if (((WHONEEDPEON) == (TRUE)) && ((IAM_PEON) == (FALSE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_TAILOR_PEON_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Tailor_Peon_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Tailor_Peon_03_02");
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_TAILOR_PICKPOCKET(C_INFO) {
+    NPC = 0xcd3d;
+    NR = 900;
+    CONDITION = DIA_TAILOR_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_TAILOR_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80;
+}
+
+func int DIA_TAILOR_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_TAILOR_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x11b25);
+    INFO_ADDCHOICE(0x11b25, DIALOG_BACK, 0x11b29);
+    INFO_ADDCHOICE(0x11b25, DIALOG_PICKPOCKET, 0x11b28);
+}
+
+func void DIA_TAILOR_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x11b25);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x11b25);
+}
+
+func void DIA_TAILOR_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x11b25);
+}
+

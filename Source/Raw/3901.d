@@ -1,0 +1,228 @@
+instance DIA_PRAWUS_EXIT(C_INFO) {
+    NPC = 0xd515;
+    NR = 999;
+    CONDITION = DIA_PRAWUS_EXIT_CONDITION;
+    INFORMATION = DIA_PRAWUS_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_PRAWUS_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_PRAWUS_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_PRAWUS_HELLO(C_INFO) {
+    NPC = 0xd515;
+    NR = 1;
+    CONDITION = DIA_PRAWUS_HELLO_CONDITION;
+    INFORMATION = DIA_PRAWUS_HELLO_INFO;
+    DESCRIPTION = "Hey, what are you doing here?";
+}
+
+func int DIA_PRAWUS_HELLO_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x12253)) == (FALSE)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PRAWUS_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_Hello_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_Hello_14_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_Hello_14_02");
+    INFO_CLEARCHOICES(0x1224e);
+    if ((FAQ003_ARNOLDBEATEN) == (FALSE)) {
+        INFO_ADDCHOICE(0x1224e, "How about I buy you something better?", 0x12251);
+    };
+    INFO_ADDCHOICE(0x1224e, "Enjoy.", 0x12252);
+}
+
+func int DIA_PRAWUS_BETTERDRINK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_BetterDrink_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_BetterDrink_14_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_BetterDrink_14_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_BetterDrink_15_03");
+    INFO_CLEARCHOICES(0x1224e);
+    return 0 /* !broken stack! */;
+}
+
+func int DIA_PRAWUS_NOTHING() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_Nothing_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_Nothing_14_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_Nothing_15_02");
+    INFO_CLEARCHOICES(0x1224e);
+    return 0 /* !broken stack! */;
+}
+
+instance DIA_PRAWUS_BLACKTROLL(C_INFO) {
+    NPC = 0xd515;
+    NR = 1;
+    CONDITION = DIA_PRAWUS_BLACKTROLL_CONDITION;
+    INFORMATION = DIA_PRAWUS_BLACKTROLL_INFO;
+    DESCRIPTION = DIALOG_GIVEBLACKTROLL;
+}
+
+func int DIA_PRAWUS_BLACKTROLL_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING)) && ((FAQ003_ARNOLDBEATEN) == (FALSE))) {
+        if (((NPC_HASITEMS(OTHER, 0x9120)) >= (1)) && ((NPC_KNOWSINFO(OTHER, 0x1224e)) == (TRUE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PRAWUS_BLACKTROLL_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_BlackTroll_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 0x9120, 1);
+    B_STANDUP();
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_BlackTroll_14_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_BlackTroll_14_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_BlackTroll_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_BlackTroll_14_07");
+    AI_STOPLOOKAT(SELF);
+    B_USEITEM(SELF, 0x9120);
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_BlackTroll_14_05");
+    CREATEINVITEMS(SELF, 0x9120, 1);
+    B_USEITEM(SELF, 0x9120);
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_BlackTroll_14_06");
+    INFO_CLEARCHOICES(0x12253);
+    if ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING)) {
+        INFO_ADDCHOICE(0x12253, "One of those guys said something about you.", 0x12257);
+    };
+}
+
+func void DIA_PRAWUS_STOP() {
+    HERO.AIVAR[4] = FALSE;
+}
+
+func void DIA_PRAWUS_YOUHAVEPROBLEM() {
+    FAQ003_PRAWUSVERSUSARNOLDSTATUS = 1;
+    VLK_3019_ARNOLD.AIVAR[96] = 10;
+    VLK_3019_ARNOLD.FLAGS = NPC_FLAG_IMPORTANT;
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_YouHaveProblem_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_YouHaveProblem_14_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_YouHaveProblem_15_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_YouHaveProblem_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_YouHaveProblem_14_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_YouHaveProblem_14_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_YouHaveProblem_14_06");
+    AI_STOPLOOKAT(SELF);
+    CREATEINVITEMS(SELF, 0x9120, 1);
+    B_USEITEM(SELF, 0x9120);
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_YouHaveProblem_14_07");
+    AI_LOGENTRY(TOPIC_FAQ003, LOG_FAQ003_PRAWUSDIDIT);
+    FAQ003_MARVINHADHELP = TRUE;
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0x12256);
+    NPC_EXCHANGEROUTINE(SELF, "FAQ003_FIGHT");
+}
+
+func void DIA_PRAWUS_ILLGO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_IllGo_15_00");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_FAQ003, LOG_FAQ003_PRAWUSNO);
+}
+
+func void DIA_PRAWUS_HELPME() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_HelpMe_15_00");
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_HelpMe_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_HelpMe_14_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_HelpMe_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_HelpMe_14_04");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_FAQ003, LOG_FAQ003_PRAWUSNO);
+}
+
+instance DIA_PRAWUS_AFTERFIGHT(C_INFO) {
+    NPC = 0xd515;
+    NR = 2;
+    CONDITION = DIA_PRAWUS_AFTERFIGHT_CONDITION;
+    INFORMATION = DIA_PRAWUS_AFTERFIGHT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_PRAWUS_AFTERFIGHT_CONDITION() {
+    if ((((FAQ003_MARVINHADHELP) == (TRUE)) && ((FAQ003_PRAWUSVERSUSARNOLDSTATUS) == (3))) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PRAWUS_AFTERFIGHT_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_AfterFight_14_00");
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_AfterFight_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_AfterFight_14_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Prawus_AfterFight_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_AfterFight_14_04");
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, TOT);
+}
+
+instance DIA_PRAWUS_AMBIENT(C_INFO) {
+    NPC = 0xd515;
+    NR = 950;
+    CONDITION = DIA_PRAWUS_AMBIENT_CONDITION;
+    INFORMATION = DIA_PRAWUS_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_PRAWUS_AMBIENT_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x1225a)) == (FALSE)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PRAWUS_AMBIENT_INFO() {
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew2");
+    AI_STARTFACEANI(SELF, "S_ANGRY", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_Ambient_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Prawus_Ambient_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_PRAWUS_PICKPOCKET(C_INFO) {
+    NPC = 0xd515;
+    NR = 900;
+    CONDITION = DIA_PRAWUS_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_PRAWUS_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_PRAWUS_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PRAWUS_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x12260);
+    INFO_ADDCHOICE(0x12260, DIALOG_BACK, 0x12264);
+    INFO_ADDCHOICE(0x12260, DIALOG_PICKPOCKET, 0x12263);
+}
+
+func void DIA_PRAWUS_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x12260);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x12260);
+}
+
+func void DIA_PRAWUS_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x12260);
+}
+

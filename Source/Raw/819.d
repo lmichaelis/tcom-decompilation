@@ -1,0 +1,22 @@
+func void ZS_WOLFSON_HOWL() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_RUN);
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_WOLFSON_HOWL_LOOP() {
+    if ((NPC_GETSTATETIME(SELF)) >= (5)) {
+        AI_ALIGNTOWP(SELF);
+        AI_PLAYANI(SELF, "T_WOLFROAR");
+        NPC_SETSTATETIME(SELF, 0);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_WOLFSON_HOWL_END() {
+}
+

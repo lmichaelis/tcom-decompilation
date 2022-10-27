@@ -1,0 +1,17 @@
+func void B_STOPLOOKAT(var C_NPC SLF) {
+    TARGET = NPC_GETLOOKATTARGET(SLF);
+    if (HLP_ISVALIDNPC(TARGET)) {
+        AI_STOPLOOKAT(SLF);
+    };
+}
+
+instance B_STOPLOOKAT.TARGET(C_NPC)
+func void B_LOOKATNPC(var C_NPC SLF, var C_NPC OTH) {
+    B_STOPLOOKAT(SLF);
+    AI_LOOKATNPC(SLF, OTH);
+}
+
+func void B_TURNTONPC(var C_NPC SLF, var C_NPC OTH) {
+    AI_TURNTONPC(SLF, OTH);
+}
+

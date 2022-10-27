@@ -1,0 +1,528 @@
+var int YANNICK_BADANWSER = 0;
+var int YANNICK_PREPARETIME = 0;
+var int YANNICK_SWAMPPOINTS = 0;
+instance DIA_YANNICK_Q208_RIDOFF(C_INFO) {
+    NPC = 0xda72;
+    NR = 1;
+    CONDITION = DIA_YANNICK_Q208_RIDOFF_CONDITION;
+    INFORMATION = DIA_YANNICK_Q208_RIDOFF_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who do you want to get rid of?";
+}
+
+func int DIA_YANNICK_Q208_RIDOFF_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING)) && ((Q208_MILITIAFINISHWAY) == (0))) && ((Q208_TALKEDWITHYANNIC) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_YANNICK_Q208_RIDOFF_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_RidOff_15_01");
+    AI_STARTFACEANI(SELF, S_NOPE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_RidOff_03_02");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_RidOff_03_03");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_YANNICK_Q208_BUSINESS(C_INFO) {
+    NPC = 0xda72;
+    NR = 3;
+    CONDITION = DIA_YANNICK_Q208_BUSINESS_CONDITION;
+    INFORMATION = DIA_YANNICK_Q208_BUSINESS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I hear you do some business here.";
+}
+
+func int DIA_YANNICK_Q208_BUSINESS_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 0x13074)) && ((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING))) && ((Q208_MILITIAFINISHWAY) == (0))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_YANNICK_Q208_BUSINESS_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Business_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_03_03");
+    INFO_CLEARCHOICES(0x13077);
+    INFO_ADDCHOICE(0x13077, "You go boating?", 0x1307a);
+    INFO_ADDCHOICE(0x13077, "Apparently, you're in the business of making people 'disappear'.", 0x1307b);
+}
+
+func void DIA_YANNICK_Q208_BUSINESS_BOAT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Business_Boat_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Boat_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Business_Boat_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Boat_03_04");
+    INFO_CLEARCHOICES(0x13077);
+    INFO_ADDCHOICE(0x13077, "'Take me where the waters are shallow and the fish are big.'", 0x1307c);
+    INFO_ADDCHOICE(0x13077, "'Take me where the waters are deep and the fish are thick.'", 0x1307d);
+    INFO_ADDCHOICE(0x13077, "'Take me where the waters are shallow and the fish are thick.'", 0x1307e);
+}
+
+func void DIA_YANNICK_Q208_BUSINESS_DISAPPEAR() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Business_Disappear_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Business_Disappear_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Disappear_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Disappear_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Disappear_03_05");
+}
+
+func void DIA_YANNICK_Q208_BUSINESS_BOAT_BIG() {
+    YANNICK_BADANWSER = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Business_Big_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Big_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Big_03_03");
+    INFO_CLEARCHOICES(0x13077);
+}
+
+func void DIA_YANNICK_Q208_BUSINESS_BOAT_FAT() {
+    YANNICK_BADANWSER = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Business_Fat_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Fat_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Fat_03_03");
+    INFO_CLEARCHOICES(0x13077);
+}
+
+func void DIA_YANNICK_Q208_BUSINESS_BOAT_RIGHT() {
+    Q208_MILITIABEACH = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Business_Right_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Right_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Right_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Right_03_04");
+    INFO_CLEARCHOICES(0x13077);
+    INFO_ADDCHOICE(0x13077, "Why?", 0x1307f);
+    INFO_CLEARCHOICES(0x13080);
+    INFO_ADDCHOICE(0x13080, "Why?", 0x1307f);
+}
+
+func void DIA_YANNICK_Q208_BUSINESS_WHY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Business_Why_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Why_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Business_Why_03_03");
+    INFO_CLEARCHOICES(0x13077);
+    INFO_CLEARCHOICES(0x13080);
+    AI_LOGENTRY(TOPIC_Q208, LOG_Q208_YANNICK_PROBLEM);
+    if ((YANNICK_BADANWSER) == (FALSE)) {
+        B_GIVEPLAYERXP(XP_Q208_GOODANWSERYANNICK);
+    };
+    if (NPC_ISDEAD(MIL_6352_RANDHAL)) {
+        WLD_INSERTNPC(0xda30, MIL_6352_RANDHAL.WP);
+    };
+    if (NPC_ISDEAD(MIL_6353_MILITIA)) {
+        WLD_INSERTNPC(0xda39, MIL_6353_MILITIA.WP);
+    };
+}
+
+instance DIA_YANNICK_Q208_GOODANWSER(C_INFO) {
+    NPC = 0xda72;
+    NR = 1;
+    CONDITION = DIA_YANNICK_Q208_GOODANWSER_CONDITION;
+    INFORMATION = DIA_YANNICK_Q208_GOODANWSER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "'Take me where the waters are shallow and the fish are thick.'";
+}
+
+func int DIA_YANNICK_Q208_GOODANWSER_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 0x13077)) && ((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING))) && ((YANNICK_BADANWSER) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_YANNICK_Q208_GOODANWSER_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_GoodAnwser_15_01");
+    DIA_YANNICK_Q208_BUSINESS_BOAT_RIGHT();
+}
+
+instance DIA_YANNICK_Q208_MILITIAGONE(C_INFO) {
+    NPC = 0xda72;
+    NR = 1;
+    CONDITION = DIA_YANNICK_Q208_MILITIAGONE_CONDITION;
+    INFORMATION = DIA_YANNICK_Q208_MILITIAGONE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I managed to get rid of the guards.";
+}
+
+func int DIA_YANNICK_Q208_MILITIAGONE_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING)) && ((Q208_MILITIAFINISHWAY) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_HAVEN() {
+    B_GIVEPLAYERXP(XP_Q208_YANNICK_HAVEN);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_03_16");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_03_17");
+    INFO_CLEARCHOICES(0x13083);
+    INFO_ADDCHOICE(0x13083, "What do you mean by that?", 0x1308a);
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_15_01");
+    B_STANDUP();
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_03_02");
+    if ((Q208_MILITIAFINISHWAY) == (2)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_15_03");
+        AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_15_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_03_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_03_06");
+        AI_LOGENTRY(TOPIC_Q208, LOG_Q208_YANNICK_MILITIA_V3);
+        DIA_YANNICK_Q208_MILITIAGONE_HAVEN();
+    };
+    if ((Q208_MILITIAFINISHWAY) == (3)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_15_07");
+        AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_15_08");
+        AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_15_09");
+        AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_03_10");
+        AI_LOGENTRY(TOPIC_Q208, LOG_Q208_YANNICK_MILITIA_V1);
+        DIA_YANNICK_Q208_MILITIAGONE_HAVEN();
+    };
+    if ((Q208_MILITIAFINISHWAY) == (1)) {
+        AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+        AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_15_11");
+        AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_03_12");
+        AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_15_13");
+        AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_03_14");
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_03_15");
+        INFO_CLEARCHOICES(0x13083);
+        INFO_ADDCHOICE(0x13083, "I have my ways.", 0x13088);
+        INFO_ADDCHOICE(0x13083, "It wasn't difficult.", 0x13089);
+    };
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_PACKETGIVEN() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_1000IQ_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_1000IQ_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_1000IQ_03_06");
+    INFO_CLEARCHOICES(0x13083);
+    AI_LOGENTRY(TOPIC_Q208, LOG_Q208_YANNICK_MILITIA_V2);
+    DIA_YANNICK_Q208_MILITIAGONE_HAVEN();
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_1000IQ() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_1000IQ_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_1000IQ_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_1000IQ_15_03");
+    DIA_YANNICK_Q208_MILITIAGONE_PACKETGIVEN();
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_HARD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_Hard_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_Hard_03_02");
+    DIA_YANNICK_Q208_MILITIAGONE_PACKETGIVEN();
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_WHAT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_What_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_What_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_What_03_03");
+    INFO_CLEARCHOICES(0x13083);
+    INFO_ADDCHOICE(0x13083, "I'll manage somehow.", 0x1308c);
+    INFO_ADDCHOICE(0x13083, "This is great news!", 0x1308d);
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_READY() {
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_Good_03_02");
+    AI_LOGENTRY(TOPIC_Q208, LOG_Q208_YANNICK_HAVENPREPARE);
+    INFO_CLEARCHOICES(0x13083);
+    INFO_ADDCHOICE(0x13083, "I need to get ready.", 0x1308e);
+    INFO_ADDCHOICE(0x13083, "There's no time to waste!", 0x13090);
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_WHAT_HANDLE() {
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_Handle_15_01");
+    DIA_YANNICK_Q208_MILITIAGONE_READY();
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_WHAT_GOOD() {
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_Good_15_01");
+    DIA_YANNICK_Q208_MILITIAGONE_READY();
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_WHAT_GOOD_PREPARE() {
+    YANNICK_PREPARETIME = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_Prepare_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_Prepare_03_02");
+    INFO_CLEARCHOICES(0x13083);
+    NPC_EXCHANGEROUTINE(SELF, START);
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_BOAT() {
+    YANNICK_PREPARETIME = 2;
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_LetsGo_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_MilitiaGone_LetsGo_03_03");
+    INFO_CLEARCHOICES(0x13083);
+    INFO_CLEARCHOICES(0x13091);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, "BOAT");
+}
+
+func void DIA_YANNICK_Q208_MILITIAGONE_WHAT_GOOD_LETSGO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_MilitiaGone_LetsGo_15_01");
+    DIA_YANNICK_Q208_MILITIAGONE_BOAT();
+}
+
+instance DIA_YANNICK_READYBOAT(C_INFO) {
+    NPC = 0xda72;
+    NR = 1;
+    CONDITION = DIA_YANNICK_READYBOAT_CONDITION;
+    INFORMATION = DIA_YANNICK_READYBOAT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Let's go!";
+}
+
+func int DIA_YANNICK_READYBOAT_CONDITION() {
+    if ((((YANNICK_PREPARETIME) == (TRUE)) && (NPC_KNOWSINFO(OTHER, 0x13083))) && ((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_YANNICK_READYBOAT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_LETSGO");
+    DIA_YANNICK_Q208_MILITIAGONE_BOAT();
+}
+
+instance DIA_YANNICK_Q208_SAIL(C_INFO) {
+    NPC = 0xda72;
+    NR = 1;
+    CONDITION = DIA_YANNICK_Q208_SAIL_CONDITION;
+    INFORMATION = DIA_YANNICK_Q208_SAIL_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_YANNICK_Q208_SAIL_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING)) && ((NPC_GETDISTTOWP(SELF, "PART4_FISHERMAN_106")) <= (500))) && ((YANNICK_PREPARETIME) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_YANNICK_Q208_SAIL_INFO() {
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Sail_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Sail_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Sail_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Sail_15_04");
+    AI_FUNCTION(SELF, 0x13097);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void YANNICK_SAILTOHAVEN() {
+    FADESCREENTOBLACKF(1, 0x13098, 1000);
+}
+
+func void YANNICK_SAILTOHAVEN_FADESCREEN() {
+    YANNICK_PREPARETIME = 3;
+    WLD_SENDTRIGGER("Q208_YANNICKBOAT");
+    TELEPORTNPCTOWP(0xda72, "PART17_SWAMPBLOOD_02");
+    TELEPORTNPCTOWP(0x71b, "PART17_SWAMPBLOOD_03");
+    NPC_EXCHANGEROUTINE(BAU_6348_YANNICK, "SWAMP");
+    NPC_REFRESH(BAU_6348_YANNICK);
+    HERO.AIVAR[4] = FALSE;
+    FADESCREENFROMBLACK(1);
+}
+
+instance DIA_YANNICK_Q208_SWAMP(C_INFO) {
+    NPC = 0xda72;
+    NR = 1;
+    CONDITION = DIA_YANNICK_Q208_SWAMP_CONDITION;
+    INFORMATION = DIA_YANNICK_Q208_SWAMP_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_YANNICK_Q208_SWAMP_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 0x13094)) && ((NPC_GETDISTTOWP(SELF, "PART17_SWAMPBLOOD_02")) <= (500))) && ((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_YANNICK_Q208_SWAMP_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Swamp_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_03_04");
+    INFO_CLEARCHOICES(0x13099);
+    INFO_ADDCHOICE(0x13099, "How do I get to this 'Haven'?", 0x1309d);
+    INFO_ADDCHOICE(0x13099, "Do you have any more advice for me?", 0x1309e);
+}
+
+func void DIA_YANNICK_Q208_SWAMP_DEAL_WHY() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Why_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Why_03_02");
+    INFO_CLEARCHOICES(0x13099);
+    INFO_ADDCHOICE(0x13099, "I'm looking for my brother.", 0x130a0);
+    INFO_ADDCHOICE(0x13099, "I'd rather keep it to myself.", 0x130a1);
+}
+
+func void DIA_YANNICK_Q208_SWAMP_HAVEN() {
+    YANNICK_SWAMPPOINTS = (YANNICK_SWAMPPOINTS) + (1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Swamp_Haven_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Haven_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Haven_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Haven_03_04");
+    if ((YANNICK_SWAMPPOINTS) == (2)) {
+        DIA_YANNICK_Q208_SWAMP_DEAL_WHY();
+    };
+}
+
+func void DIA_YANNICK_Q208_SWAMP_ADVICE() {
+    YANNICK_SWAMPPOINTS = (YANNICK_SWAMPPOINTS) + (1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Swamp_Advice_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Advice_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Advice_03_03");
+    if ((YANNICK_SWAMPPOINTS) == (2)) {
+        DIA_YANNICK_Q208_SWAMP_DEAL_WHY();
+    };
+}
+
+func void DIA_YANNICK_Q208_SWAMP_DEAL_WHY_FORME_GO() {
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Go_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Go_03_02");
+    AI_LOGENTRY(TOPIC_Q208, LOG_Q208_YANNICK_SWAMP);
+    INFO_CLEARCHOICES(0x13099);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_YANNICK_Q208_SWAMP_DEAL_WHY_BROTHER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Swamp_Brother_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Swamp_Brother_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Brother_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Brother_03_04");
+    DIA_YANNICK_Q208_SWAMP_DEAL_WHY_FORME_GO();
+}
+
+func void DIA_YANNICK_Q208_SWAMP_DEAL_WHY_FORME() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Yannick_Q208_Swamp_Forme_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Q208_Swamp_Forme_03_02");
+    DIA_YANNICK_Q208_SWAMP_DEAL_WHY_FORME_GO();
+}
+
+instance DIA_YANNICK_AMBIENT(C_INFO) {
+    NPC = 0xda72;
+    NR = 980;
+    CONDITION = DIA_YANNICK_AMBIENT_CONDITION;
+    INFORMATION = DIA_YANNICK_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_YANNICK_AMBIENT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_YANNICK_AMBIENT_NORMAL() {
+    if (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_MIL)) {
+        NPC_INITAMBIENTS(SELF, 2);
+        if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+            AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_04");
+        } else if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+            AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_07");
+        };
+    };
+    NPC_INITAMBIENTS(SELF, 2);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_01");
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_02");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_03");
+    };
+}
+
+func void DIA_YANNICK_AMBIENT_INFO() {
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew2");
+    if ((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING)) {
+        if ((NPC_KNOWSINFO(OTHER, 0x13094)) && ((NPC_GETDISTTOWP(SELF, "PART17_SWAMPBLOOD_02")) <= (0xbb8))) {
+            NPC_INITAMBIENTS(SELF, 3);
+            if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+                AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+                AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_06");
+            } else if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+                AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+                AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_10");
+            } else if ((NPC_GETLASTAMBIENT(SELF)) == (3)) {
+                AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_09");
+            };
+        } else if (((Q208_MILITIABEACH) == (2)) && ((Q208_MILITIAFINISHWAY) == (0))) {
+            AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_05");
+        } else {
+            DIA_YANNICK_AMBIENT_NORMAL();
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    if ((LOG_GETSTATUS(MIS_Q208)) == (LOG_SUCCESS)) {
+        NPC_INITAMBIENTS(SELF, 2);
+        if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+            AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_11");
+        } else if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+            AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Yannick_Ambient_03_12");
+        };
+    };
+    DIA_YANNICK_AMBIENT_NORMAL();
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_YANNICK_PICKPOCKET(C_INFO) {
+    NPC = 0xda72;
+    NR = 900;
+    CONDITION = DIA_YANNICK_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_YANNICK_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80;
+}
+
+func int DIA_YANNICK_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_YANNICK_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x130a6);
+    INFO_ADDCHOICE(0x130a6, DIALOG_BACK, 0x130aa);
+    INFO_ADDCHOICE(0x130a6, DIALOG_PICKPOCKET, 0x130a9);
+}
+
+func void DIA_YANNICK_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x130a6);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x130a6);
+}
+
+func void DIA_YANNICK_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x130a6);
+}
+

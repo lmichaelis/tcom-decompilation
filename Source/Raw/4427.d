@@ -1,0 +1,280 @@
+var int BROTHELSECRETSTATUS = 0;
+func void EVT_BROTHEL_SECRET() {
+    if ((BROTHELSECRETSTATUS) == (0)) {
+        BROTHELSECRETSTATUS = 1;
+    };
+    if ((BROTHELSECRETSTATUS) == (1)) {
+        BROTHELSECRETSTATUS = 0;
+    };
+    WLD_SENDTRIGGER("BROTHEL_SECRET");
+}
+
+func void EVT_KQ404_BLOCKPLAYER() {
+    if ((KQ404_FINISHWAY) == (0)) {
+        if ((KQ404_BLOCKPLAYERMOVMENT) == (FALSE)) {
+            if ((BROTHELSECRETSTATUS) == (1)) {
+                PRINTD("Gracz nie ucieknie");
+                KQ404_BLOCKPLAYERMOVMENT = TRUE;
+                BROTHELSECRETSTATUS = 0;
+                WLD_SENDTRIGGER("BROTHEL_SECRET");
+                MUSIC_OVERRIDETRACK(0x55b3);
+                MIL_13382_HUXLAY.AIVAR[15] = TRUE;
+                NONE_1396_INEXTREMO_FLEX.AIVAR[15] = TRUE;
+            };
+        };
+    };
+    if ((KQ404_BLOCKPLAYERMOVMENT) == (TRUE)) {
+        if ((BROTHELSECRETSTATUS) == (0)) {
+            PRINTD("Gracz ucieknie");
+            KQ404_BLOCKPLAYERMOVMENT = FALSE;
+            BROTHELSECRETSTATUS = 1;
+            WLD_SENDTRIGGER("BROTHEL_SECRET");
+            MUSIC_DISABLEOVERRIDE();
+        };
+    };
+}
+
+var int EVT_KQ404_BLOCKPLAYER.KQ404_BLOCKPLAYERMOVMENT = 0;
+func void CITY_BATHHEALAPPLY() {
+    if ((((CITY_BATHS) == (FALSE)) || (NPC_ISDEAD(HERO))) || ((NPC_GETDISTTOWP(HERO, "PARTM4_BATHS_ENTRY")) >= (0x7d0))) {
+        PRINTD("Remove heal");
+        FF_REMOVE(0x1662d);
+    };
+    if ((CITY_BATHS) == (TRUE)) {
+        PRINTD("Heal");
+        HERO.AIVAR[19] += 1;
+        if (((HERO.ATTRIBUTE[0]) < (HERO.ATTRIBUTE[1])) && ((HERO.AIVAR[19]) >= (2))) {
+            HERO.ATTRIBUTE[0] += 1;
+            HERO.AIVAR[19] = 0;
+        };
+    };
+}
+
+func void CITY_BATHHEAL_FUNCTION() {
+    NPC = HLP_GETNPC(0x71b);
+    NPCPTR = _@(0x1662f);
+    FF_APPLYEXTDATAGT(0x1662d, 75, -(1), NPCPTR);
+}
+
+instance CITY_BATHHEAL_FUNCTION.NPC(C_NPC)
+var int CITY_BATHHEAL_FUNCTION.NPCPTR = 0;
+func void EVT_CITY_BATHHEAL() {
+    if ((CITYENTERED) == (TRUE)) {
+        if ((CITY_BATHS) == (FALSE)) {
+            CITY_BATHS = TRUE;
+            PRINTSCREEN(PRINT_CITYBATHHEAL, -(1), -(1), FONT_SCREEN, 2);
+            CITY_BATHHEAL_FUNCTION();
+        };
+    };
+}
+
+func void EVT_CITY_BATHHEAL_REMOVE() {
+    CITY_BATHS = FALSE;
+}
+
+func void EVT_RATCATCHER_SPAWN() {
+    if ((RATCATCHER_SPAWNRATS) == (FALSE)) {
+        RATCATCHER_SPAWNRATS = TRUE;
+        WLD_INSERTNPC(0xc534, "PARTM3_HOUSE1_RATSPAWN01");
+        WLD_INSERTNPC(0xc535, "PARTM3_HOUSE1_RATSPAWN02");
+        WLD_INSERTNPC(0xc536, "PARTM3_HOUSE1_RATSPAWN03");
+        WLD_INSERTNPC(0xc537, "PARTM3_HOUSE1_RATSPAWN04");
+        WLD_INSERTNPC(0xc538, "PARTM3_HOUSE1_RATSPAWN05");
+        VLK_6218_RATCATCHER.AIVAR[4] = TRUE;
+        NPC = HLP_GETNPC(0x71b);
+        NPCPTR = _@(0x16635);
+        FF_APPLYEXTDATAGT(0x16637, 0, -(1), NPCPTR);
+    };
+}
+
+var int EVT_RATCATCHER_SPAWN.RATCATCHER_SPAWNRATS = 0;
+instance EVT_RATCATCHER_SPAWN.NPC(C_NPC)
+var int EVT_RATCATCHER_SPAWN.NPCPTR = 0;
+func void RATCATCHER_SPAWN_APPLY() {
+    if ((CURRENTLEVEL) == (ARCHOLOS_ZEN)) {
+        if (((((NPC_ISDEAD(RAT_RATCATCHER_01)) && (NPC_ISDEAD(RAT_RATCATCHER_02))) && (NPC_ISDEAD(RAT_RATCATCHER_03))) && (NPC_ISDEAD(RAT_RATCATCHER_04))) && (NPC_ISDEAD(RAT_RATCATCHER_05))) {
+            FF_REMOVE(0x16637);
+            B_STARTOTHERROUTINE(VLK_6218_RATCATCHER, "AFTERRATS");
+            NPC_REFRESH(VLK_6218_RATCATCHER);
+            VLK_6218_RATCATCHER.AIVAR[4] = FALSE;
+        } else {
+            PRINTD("Zabij szczury!");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    if (((CURRENTLEVEL) == (ARCHOLOS_ENDGAME_ZEN)) || ((CURRENTLEVEL) == (ARCHOLOS_VOLFZACKE_ZEN))) {
+        PRINTD("I tak nie zobaczysz efektów");
+        FF_REMOVE(0x16637);
+    };
+    PRINTD("Mogê funkcjê wykonaæ tylko w zenie Archolos! - RATCATCHER_SPAWN_APPLY");
+}
+
+func void EVT_RATCATCHER() {
+    if ((RATCATCHER_SPAWNRATS_AFTERDEATH) == (FALSE)) {
+        RATCATCHER_SPAWNRATS_AFTERDEATH = TRUE;
+        WLD_INSERTNPC(0xc524, "PARTM3_HOUSE1_RATSPAWN05");
+        WLD_INSERTNPC(0xc524, "PARTM3_HOUSE1_RATSPAWN03");
+        WLD_SENDTRIGGER("RATCATCHER_MOVER_SCRIPT");
+    };
+}
+
+var int EVT_RATCATCHER.RATCATCHER_SPAWNRATS_AFTERDEATH = 0;
+func void EVT_TOMASHISTORY_01() {
+    if ((TOMAS_CHANGERTN) == (FALSE)) {
+        PRINTD("Trigger - 01");
+        TOMAS_CHANGERTN = TRUE;
+        B_STARTOTHERROUTINE(VLK_915_TOMAS, "BEER_02");
+        NPC_REFRESH(VLK_915_TOMAS);
+        CHANGEVOBCOLLISION("TOMASHISTORY_SCRIPT_01", FALSE, FALSE, FALSE, FALSE);
+    };
+}
+
+var int EVT_TOMASHISTORY_01.TOMAS_CHANGERTN = 0;
+func void EVT_TOMASHISTORY_02() {
+    if ((TOMAS_READYTOTOLDHISTORY) == (FALSE)) {
+        PRINTD("Trigger - 02");
+        TOMAS_READYTOTOLDHISTORY = TRUE;
+        B_STARTOTHERROUTINE(VLK_915_TOMAS, "WAITBEER");
+        NPC_REFRESH(VLK_915_TOMAS);
+        CHANGEVOBCOLLISION("TOMASHISTORY_SCRIPT_02", FALSE, FALSE, FALSE, FALSE);
+    };
+}
+
+var int M7_NOVIZECORPSE_REMOVE = 0;
+var int M7_NOVIZECORPSE_REMOVE_DAY = 0;
+var int M7_NOVIZECORPSE_REMOVE_HOURS = 0;
+func void EVT_M7_NOVIZECORPSE() {
+    if ((M7_NOVIZECORPSE_CHECKED) == (FALSE)) {
+        M7_NOVIZECORPSE_CHECKED = TRUE;
+        M7_NOVIZECORPSE_REMOVE = TRUE;
+        M7_NOVIZECORPSE_REMOVE_DAY = WLD_GETDAY();
+        M7_NOVIZECORPSE_REMOVE_HOURS = WLD_GETHOUR();
+        NPC = HLP_GETNPC(0x71b);
+        NPCPTR = _@(0x16642);
+        FF_APPLYEXTDATAGT(0x16648, 75, -(1), NPCPTR);
+        WLD_INSERTNPC(0xd647, "SLUMS_PATH_39");
+    };
+}
+
+var int EVT_M7_NOVIZECORPSE.M7_NOVIZECORPSE_CHECKED = 0;
+instance EVT_M7_NOVIZECORPSE.NPC(C_NPC)
+var int EVT_M7_NOVIZECORPSE.NPCPTR = 0;
+func void M7_NOVIZECORPSE_REMOVECORPSE() {
+    if ((M7_NOVIZECORPSE_REMOVECORPSE_COUNT) == (0)) {
+        PRINTD("Rozpoczynam - M7_NOVIZECORPSE_RemoveCorpse");
+        MOVPTR1 = MEM_SEARCHVOBBYNAME("M7_MOVER_NOVIZECORPSE");
+        MOVER1 = MEM_PTRTOINST(MOVPTR1);
+        CHANGEVOBCOLLISION("M7_NOVIZECORPSE", FALSE, FALSE, FALSE, TRUE);
+        WLD_SENDTRIGGER("M7_MOVER_NOVIZECORPSE");
+        M7_NOVIZECORPSE_REMOVECORPSE_COUNT = 1;
+    };
+    if (((MOVER1.MOVERSTATE) != (MOVER_STATE_OPENING)) && ((MOVER1.MOVERSTATE) != (MOVER_STATE_CLOSING))) {
+        PRINTD("Skoñczy³em - M7_NOVIZECORPSE_RemoveCorpse");
+        CHANGEVOBCOLLISION("M7_NOVIZECORPSE", TRUE, TRUE, TRUE, TRUE);
+        FF_REMOVE(0x16644);
+        M7_NOVIZECORPSE_REMOVECORPSE_COUNT = 0;
+    };
+}
+
+var int M7_NOVIZECORPSE_REMOVECORPSE.M7_NOVIZECORPSE_REMOVECORPSE_COUNT = 0;
+instance M7_NOVIZECORPSE_REMOVECORPSE.MOVER1(ZCMOVER)
+var int M7_NOVIZECORPSE_REMOVECORPSE.MOVPTR1 = 0;
+func void EVT_M7_NOVIZECORPSE_APPLY() {
+    if ((CURRENTLEVEL) == (ARCHOLOS_ZEN)) {
+        if ((NPC_GETDISTTOWP(HERO, RNG_M7TRAP_WAYPOINT)) >= (0x1388)) {
+            if ((M7_NOVIZECORPSE_REMOVE) == (TRUE)) {
+                if (((M7_NOVIZECORPSE_REMOVE_HOURS) <= ((WLD_GETHOUR()) - (2))) || ((M7_NOVIZECORPSE_REMOVE_DAY) != (WLD_GETDAY()))) {
+                    M7_NOVIZECORPSE_REMOVE = 2;
+                    PRINTD("Remove nowicjusza");
+                    FF_REMOVE(0x16648);
+                    FF_APPLYONCEEXTGT(0x16644, 0, -(1));
+                } else {
+                    PRINTD("Poczekaj 2godz lub do innego dnia");
+                };
+            };
+        } else {
+            PRINTD("Oddal siê to usunê cia³o");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    if (((CURRENTLEVEL) == (ARCHOLOS_ENDGAME_ZEN)) || ((CURRENTLEVEL) == (ARCHOLOS_VOLFZACKE_ZEN))) {
+        PRINTD("I tak nie zobaczysz efektów");
+        FF_REMOVE(0x16648);
+    };
+    PRINTD("Mogê funkcjê wykonaæ tylko w zenie Archolos! - EVT_M7_NOVIZECORPSE_APPLY");
+}
+
+func void EVT_MAILORCHEST() {
+    HER = HLP_GETNPC(0xc3ab);
+    if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(HER))) {
+        if (HLP_ISVALIDNPC(VLK_6254_MAILOR)) {
+            if (((NPC_GETDISTTONPC(HERO, VLK_6254_MAILOR)) <= (800)) && ((NPC_ISINSTATE(VLK_6254_MAILOR, 0xf0a3)) == (FALSE))) {
+                PRINTD("Mailor atakuje!");
+                B_IMMEDIATEATTACKPLAYER(VLK_6254_MAILOR, AR_THEFT);
+                B_ADDPETZCRIME(VLK_6254_MAILOR, CRIME_THEFT);
+                NPC_REFRESH(VLK_6254_MAILOR);
+                AI_TURNTONPC(VLK_6254_MAILOR, HERO);
+            };
+        };
+    };
+}
+
+instance EVT_MAILORCHEST.HER(C_NPC)
+func void EVT_GROENCHEST() {
+    HER = HLP_GETNPC(0xc3ab);
+    if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(HER))) {
+        if (HLP_ISVALIDNPC(VLK_6300_GROEN)) {
+            if (((NPC_GETDISTTONPC(HERO, VLK_6300_GROEN)) <= (800)) && ((NPC_ISINSTATE(VLK_6300_GROEN, 0xf0a3)) == (FALSE))) {
+                PRINTD("Groen atakuje!");
+                B_IMMEDIATEATTACKPLAYER(VLK_6300_GROEN, AR_THEFT);
+                B_ADDPETZCRIME(VLK_6300_GROEN, CRIME_THEFT);
+                NPC_REFRESH(VLK_6300_GROEN);
+                AI_TURNTONPC(VLK_6300_GROEN, HERO);
+            };
+        };
+    };
+}
+
+instance EVT_GROENCHEST.HER(C_NPC)
+func void EVT_REMUZCHEST() {
+    HER = HLP_GETNPC(0xc3ab);
+    if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(HER))) {
+        if (HLP_ISVALIDNPC(VLK_6317_REMUZ)) {
+            if (((NPC_GETDISTTONPC(HERO, VLK_6317_REMUZ)) <= (800)) && ((NPC_ISINSTATE(VLK_6317_REMUZ, 0xf0a3)) == (FALSE))) {
+                PRINTD("Groen atakuje!");
+                B_IMMEDIATEATTACKPLAYER(VLK_6317_REMUZ, AR_THEFT);
+                B_ADDPETZCRIME(VLK_6317_REMUZ, CRIME_THEFT);
+                NPC_REFRESH(VLK_6317_REMUZ);
+                AI_TURNTONPC(VLK_6317_REMUZ, HERO);
+            };
+        };
+    };
+}
+
+instance EVT_REMUZCHEST.HER(C_NPC)
+func void EVT_ARAXOS_SECRET() {
+    FF_APPLYONCEEXTGT(0x16650, 0, -(1));
+}
+
+func void ARAXOS_SECRET_APPLY() {
+    if ((ARAXOS_SECRET_COUNT) == (0)) {
+        PRINTD("Rozpoczynam - ARAXOS_SECRET_APPLY");
+        MOVPTR1 = MEM_SEARCHVOBBYNAME("ARAXOS_SECRET");
+        MOVER1 = MEM_PTRTOINST(MOVPTR1);
+        CHANGEVOBCOLLISION("ARAXOS_SECRET", FALSE, FALSE, FALSE, TRUE);
+        WLD_SENDTRIGGER("ARAXOS_SECRET");
+        ARAXOS_SECRET_COUNT = 1;
+    };
+    if (((MOVER1.MOVERSTATE) != (MOVER_STATE_OPENING)) && ((MOVER1.MOVERSTATE) != (MOVER_STATE_CLOSING))) {
+        PRINTD("Skoñczy³em - ARAXOS_SECRET_APPLY");
+        CHANGEVOBCOLLISION("ARAXOS_SECRET", TRUE, TRUE, TRUE, TRUE);
+        FF_REMOVE(0x16650);
+        ARAXOS_SECRET_COUNT = 0;
+    };
+}
+
+var int ARAXOS_SECRET_APPLY.ARAXOS_SECRET_COUNT = 0;
+instance ARAXOS_SECRET_APPLY.MOVER1(ZCMOVER)
+var int ARAXOS_SECRET_APPLY.MOVPTR1 = 0;

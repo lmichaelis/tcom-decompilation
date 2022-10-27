@@ -1,0 +1,20 @@
+func void ZS_Q602_WOUNDED() {
+    PERCEPTION_SET_NONE();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_RUN);
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_Q602_WOUNDED_LOOP() {
+    if ((SELF.AIVAR[19]) == (NOTINPOS)) {
+        AI_STANDUP(SELF);
+        AI_PLAYANI(SELF, "T_STAND_2_WOUNDEDB");
+        SELF.AIVAR[19] = ISINPOS;
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_Q602_WOUNDED_END() {
+    AI_PLAYANI(SELF, "T_WOUNDEDB_2_STAND");
+}
+

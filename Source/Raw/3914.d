@@ -1,0 +1,426 @@
+instance DIA_ARMAR_EXIT(C_INFO) {
+    NPC = 0xcd19;
+    NR = 999;
+    CONDITION = DIA_ARMAR_EXIT_CONDITION;
+    INFORMATION = DIA_ARMAR_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ARMAR_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ARMAR_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ARMAR_TRADE(C_INFO) {
+    NPC = 0xcd19;
+    NR = 850;
+    CONDITION = DIA_ARMAR_TRADE_CONDITION;
+    INFORMATION = DIA_ARMAR_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Let's trade!";
+}
+
+func int DIA_ARMAR_TRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12565)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARMAR_TRADE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_Trade_15_01");
+    B_GIVETRADEINV(SELF);
+}
+
+instance DIA_ARMAR_FAQ004(C_INFO) {
+    NPC = 0xcd19;
+    NR = 1;
+    CONDITION = DIA_ARMAR_FAQ004_CONDITION;
+    INFORMATION = DIA_ARMAR_FAQ004_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ARMAR_FAQ004_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12565)) {
+        if (((LOG_GETSTATUS(MIS_Q204)) == (LOG_RUNNING)) || ((OTHER.GUILD) == (GIL_SLD))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARMAR_FAQ004_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_FAQ004_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_FAQ004_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_FAQ004_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_FAQ004_03_04");
+}
+
+instance DIA_ARMAR_QUEST(C_INFO) {
+    NPC = 0xcd19;
+    NR = 2;
+    CONDITION = DIA_ARMAR_QUEST_CONDITION;
+    INFORMATION = DIA_ARMAR_QUEST_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Tell me what's going on.";
+}
+
+func int DIA_ARMAR_QUEST_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12545)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARMAR_QUEST_POINT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Point_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Point_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Point_03_03");
+    INFO_CLEARCHOICES(0x12548);
+    INFO_ADDCHOICE(0x12548, "Let's get to the point: the reward.", 0x12552);
+    INFO_ADDCHOICE(0x12548, "Why don't you do it yourself?", 0x12551);
+    INFO_ADDCHOICE(0x12548, "How do I get to this beach?", 0x12550);
+}
+
+func void DIA_ARMAR_QUEST_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_03_03");
+    INFO_CLEARCHOICES(0x12548);
+    INFO_ADDCHOICE(0x12548, "Can you get to the point?", 0x1254c);
+    INFO_ADDCHOICE(0x12548, "(Continue listening)", 0x1254d);
+}
+
+func void DIA_ARMAR_QUEST_SKIP() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_Skip_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Skip_03_02");
+    DIA_ARMAR_QUEST_POINT();
+}
+
+func void DIA_ARMAR_QUEST_LISTEN() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Listen_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Listen_03_02");
+    INFO_CLEARCHOICES(0x12548);
+    INFO_ADDCHOICE(0x12548, "Please be specific.", 0x1254e);
+    INFO_ADDCHOICE(0x12548, "(Continue listening)", 0x1254f);
+}
+
+func void DIA_ARMAR_QUEST_LISTEN_SKIP2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_Skip2_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Skip2_03_02");
+    DIA_ARMAR_QUEST_POINT();
+}
+
+func void DIA_ARMAR_QUEST_LISTEN_LISTEN2() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Listen2_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Listen2_03_02");
+    DIA_ARMAR_QUEST_POINT();
+}
+
+func void DIA_ARMAR_QUEST_POINT_BEACH() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_Beach_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Beach_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Beach_03_03");
+}
+
+func void DIA_ARMAR_QUEST_POINT_WHY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_Why_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Why_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_Why_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Why_03_04");
+}
+
+func void DIA_ARMAR_QUEST_POINT_REWARD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_Reward_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Reward_03_02");
+    if ((LOG_GETSTATUS(MIS_Q204)) == (LOG_RUNNING)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Reward_03_03");
+        AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_Reward_15_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Reward_03_05");
+        LOG_CREATETOPIC(TOPIC_FAQ004, LOG_MISSION);
+        LOG_SETSTATUS(_@(MIS_FAQ004), TOPIC_FAQ004, LOG_RUNNING);
+        AI_LOGENTRY(TOPIC_FAQ004, LOG_FAQ004_ARAXOSSTART);
+    };
+    if ((OTHER.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Reward_03_06");
+        AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_Reward_15_07");
+        LOG_CREATETOPIC(TOPIC_FAQ004, LOG_MISSION);
+        LOG_SETSTATUS(_@(MIS_FAQ004), TOPIC_FAQ004, LOG_RUNNING);
+        AI_LOGENTRY(TOPIC_FAQ004, LOG_FAQ004_START);
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_Quest_Reward_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Quest_Reward_03_09");
+    INFO_CLEARCHOICES(0x12548);
+    AI_STOPPROCESSINFOS(SELF);
+    B_STARTOTHERROUTINE(NONE_6261_LATHI, "FAQ004_WAIT");
+    NPC_REFRESH(NONE_6261_LATHI);
+    TELEPORTNPCTOWP(0xd976, NONE_6261_LATHI.WP);
+}
+
+instance DIA_ARMAR_QUESTDONE(C_INFO) {
+    NPC = 0xcd19;
+    NR = 1;
+    CONDITION = DIA_ARMAR_QUESTDONE_CONDITION;
+    INFORMATION = DIA_ARMAR_QUESTDONE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Liman agreed to work with the Guild.";
+}
+
+func int DIA_ARMAR_QUESTDONE_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x12f9e)) && ((LOG_GETSTATUS(MIS_FAQ004)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARMAR_QUESTDONE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QuestDone_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QuestDone_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QuestDone_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QuestDone_03_04");
+    if ((LOG_GETSTATUS(MIS_Q204)) == (LOG_RUNNING)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_QuestDone_03_05");
+        Q204_ARAXOSGUILDREPUTATION = (Q204_ARAXOSGUILDREPUTATION) + (1);
+        AI_LOGENTRY(TOPIC_FAQ004, LOG_FAQ004_GOODJOBARAXOS);
+        if ((((Q204_WEGOTENTRY) == (FALSE)) && ((Q204_ARAXOSGUILDREPUTATION) >= (Q204_ARAXOSGUILDREPUTATION_REQUIRED))) && ((LOG_GETSTATUS(MIS_Q204)) == (LOG_RUNNING))) {
+            AI_LOGENTRY(TOPIC_Q204, LOG_Q204_ITHINKIDONEENOUGH);
+            Q204_WEGOTENTRY = TRUE;
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QuestDone_03_06");
+    AI_LOGENTRY(TOPIC_FAQ004, LOG_FAQ004_GOODJOB);
+    CREATEINVITEMS(SELF, 0x859b, FAQ004_REWARD);
+    B_GIVEINVITEMS(SELF, OTHER, 0x859b, FAQ004_REWARD);
+    B_GIVEPLAYERXP(XP_FAQ004_FINISH);
+    LOG_SETSTATUS(_@(MIS_FAQ004), TOPIC_FAQ004, LOG_SUCCESS);
+    B_STARTOTHERROUTINE(NONE_6261_LATHI, START);
+    NPC_REFRESH(NONE_6261_LATHI);
+    TELEPORTNPCTOWP(0xd976, NONE_6261_LATHI.WP);
+}
+
+instance DIA_ARMAR_SQ225_GERHARD(C_INFO) {
+    NPC = 0xcd19;
+    NR = 1;
+    CONDITION = DIA_ARMAR_SQ225_GERHARD_CONDITION;
+    INFORMATION = DIA_ARMAR_SQ225_GERHARD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you know Gerhard?";
+}
+
+func int DIA_ARMAR_SQ225_GERHARD_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING)) && ((SQ225_HOLDWIGWAY_AGREED) == (TRUE))) && ((SQ225_FOUNDGERHARD) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARMAR_SQ225_GERHARD_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_SQ225_Gerhard_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_SQ225_Gerhard_03_02");
+    AI_LOGENTRY(TOPIC_SQ225, LOG_SQ225_LOOKINGFORGERHARD_INN);
+}
+
+var int QA401_ARMAR_FIGHT = 0;
+var int QA401_ARMAR_MONEY = 0;
+var int QA401_ARMAR_OTMAR = 0;
+instance DIA_ARMAR_QA401_WHO(C_INFO) {
+    NPC = 0xcd19;
+    NR = 1;
+    CONDITION = DIA_ARMAR_QA401_WHO_CONDITION;
+    INFORMATION = DIA_ARMAR_QA401_WHO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ARMAR_QA401_WHO_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_QA401)) == (LOG_RUNNING)) && ((NPC_GETDISTTOWP(SELF, SELF.WP)) <= (700))) && (WLD_ISTIME(21, 0, 6, 0))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARMAR_QA401_WHO_INFO() {
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QA401_Who_03_01");
+    INFO_CLEARCHOICES(0x1255c);
+    INFO_ADDCHOICE(0x1255c, "Your contract is over. (attack)", 0x12560);
+    INFO_ADDCHOICE(0x1255c, "I could ask you the same thing.", 0x1255f);
+}
+
+func void DIA_ARMAR_QA401_WHO_SAME() {
+    AI_STARTFACEANI(OTHER, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QA401_Who_Same_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_STARTFACEANI(SELF, S_FRIGHTENED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QA401_Who_Same_03_02");
+    INFO_ADDCHOICE(0x1255c, "The Merchant's Guild is taking over the business.", 0x12561);
+}
+
+func void DIA_ARMAR_QA401_WHO_LETSFIGHT() {
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QA401_Who_LetsFight_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_DRAWWEAPON(OTHER);
+    INFO_CLEARCHOICES(0x1255c);
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0xf5b4);
+    QA401_ARMAR_FIGHT = TRUE;
+}
+
+func void DIA_ARMAR_QA401_WHO_SAME_ARAXOS() {
+    AI_STARTFACEANI(OTHER, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QA401_Who_Araxos_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QA401_Who_Araxos_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QA401_Who_Araxos_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QA401_Who_Araxos_15_04");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QA401_Who_Araxos_03_05");
+    AI_RESETFACEANI(OTHER);
+    INFO_ADDCHOICE(0x1255c, "Would you rather deal with outlaws?", 0x12563);
+    if (NPC_KNOWSINFO(OTHER, 0x13121)) {
+        INFO_ADDCHOICE(0x1255c, "You want to end up like Otmar?", 0x12564);
+    };
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (QA401_ARMAR)) {
+        INFO_ADDCHOICE(0x1255c, "The guild can be generous to its associates (300 GP)", 0x12562);
+    };
+}
+
+func void DIA_ARMAR_QA401_WHO_SAME_ARAXOS_PAY() {
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QA401_Who_Pay_15_01");
+    B_MARVIN_USEFAKEBAG_THROW();
+    B_GIVEINVITEMS(OTHER, SELF, 0x859b, QA401_ARMAR);
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QA401_Who_Pay_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_LOGENTRY(TOPIC_QA401, LOG_QA401_ARMAR_PAY);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0xf5b6);
+    AI_FUNCTION(SELF, 0xf5b3);
+}
+
+func void DIA_ARMAR_QA401_WHO_SAME_ARAXOS_BANDITS() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QA401_Who_Bandits_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QA401_Who_Bandits_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QA401_Who_Bandits_03_03");
+    AI_RESETFACEANI(OTHER);
+}
+
+func void DIA_ARMAR_QA401_WHO_SAME_ARAXOS_OTMAR() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Armar_QA401_Who_Otmar_15_01");
+    AI_STARTFACEANI(SELF, S_FRIGHTENED, 1, -(1));
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_QA401_Who_Otmar_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_QA401, LOG_QA401_ARMAR_OTMAR);
+    AI_FUNCTION(SELF, 0xf5b6);
+    AI_FUNCTION(SELF, 0xf5b3);
+}
+
+instance DIA_ARMAR_HELLO(C_INFO) {
+    NPC = 0xcd19;
+    NR = 1;
+    CONDITION = DIA_ARMAR_HELLO_CONDITION;
+    INFORMATION = DIA_ARMAR_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What do you do?";
+}
+
+func int DIA_ARMAR_HELLO_CONDITION() {
+    if (!(NPC_KNOWSINFO(OTHER, 0x1255c))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARMAR_HELLO_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatIsYourJob");
+    AI_OUTPUT(SELF, OTHER, "DIA_Armar_Hello_09_01");
+}
+
+instance DIA_ARMAR_AMBIENT(C_INFO) {
+    NPC = 0xcd19;
+    NR = 950;
+    CONDITION = DIA_ARMAR_AMBIENT_CONDITION;
+    INFORMATION = DIA_ARMAR_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_ARMAR_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12565)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARMAR_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew2");
+    if ((((LOG_GETSTATUS(MIS_FAQ004)) != (LOG_RUNNING)) && ((LOG_GETSTATUS(MIS_FAQ004)) != (LOG_SUCCESS))) && (!(NPC_KNOWSINFO(OTHER, 0x1255c)))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_Ambient_03_01");
+    };
+    if (((LOG_GETSTATUS(MIS_FAQ004)) == (LOG_RUNNING)) && (!(NPC_KNOWSINFO(OTHER, 0x1255c)))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_Ambient_03_02");
+    };
+    if (((LOG_GETSTATUS(MIS_FAQ004)) == (LOG_SUCCESS)) && (!(NPC_KNOWSINFO(OTHER, 0x1255c)))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_Ambient_03_03");
+    };
+    if ((NPC_KNOWSINFO(OTHER, 0x1255c)) && ((QA401_ARMAR_FIGHT) == (TRUE))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_Ambient_03_04");
+        AI_STOPPROCESSINFOS(SELF);
+    };
+    if ((NPC_KNOWSINFO(OTHER, 0x1255c)) && ((QA401_ARMAR_MONEY) == (TRUE))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_Ambient_03_05");
+    };
+    if ((NPC_KNOWSINFO(OTHER, 0x1255c)) && ((QA401_ARMAR_OTMAR) == (TRUE))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Armar_Ambient_03_06");
+    };
+}
+
+instance DIA_ARMAR_PICKPOCKET(C_INFO) {
+    NPC = 0xcd19;
+    NR = 900;
+    CONDITION = DIA_ARMAR_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_ARMAR_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_ARMAR_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARMAR_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x1256b);
+    INFO_ADDCHOICE(0x1256b, DIALOG_BACK, 0x1256f);
+    INFO_ADDCHOICE(0x1256b, DIALOG_PICKPOCKET, 0x1256e);
+}
+
+func void DIA_ARMAR_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x1256b);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x1256b);
+}
+
+func void DIA_ARMAR_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x1256b);
+}
+

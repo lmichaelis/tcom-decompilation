@@ -1,0 +1,25 @@
+func void ZS_CRYINGFORHELP() {
+    PERCEPTION_SET_NORMAL();
+    NPC_PERCDISABLE(SELF, PERC_ASSESSQUIETSOUND);
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    AI_GOTOWP(SELF, SELF.WP);
+    AI_ALIGNTOWP(SELF);
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_CRYINGFORHELP_LOOP() {
+    if ((NPC_GETSTATETIME(SELF)) >= (3)) {
+        if ((SELF.AIVAR[19]) > (3)) {
+            SELF.AIVAR[19] = 0;
+        };
+        B_CRYINGFORHELP(SELF.AIVAR[19]);
+        SELF.AIVAR[19] = (SELF.AIVAR[19]) + (1);
+        NPC_SETSTATETIME(SELF, 0);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_CRYINGFORHELP_END() {
+}
+

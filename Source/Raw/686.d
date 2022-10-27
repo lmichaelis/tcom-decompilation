@@ -1,0 +1,37 @@
+func void ZS_READ_BOOKSTAND_FP() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+}
+
+func int ZS_READ_BOOKSTAND_FP_LOOP() {
+    if (NPC_ISONFP(SELF, "BOOK")) {
+        AI_ALIGNTOFP(SELF);
+        if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+            SELF.AIVAR[19] = NOTINPOS;
+        };
+    };
+    if (WLD_ISFPAVAILABLE(SELF, "BOOK")) {
+        AI_GOTOFP(SELF, "BOOK");
+        AI_STANDUP(SELF);
+        AI_ALIGNTOFP(SELF);
+        SELF.AIVAR[19] = NOTINPOS_WALK;
+    };
+    AI_ALIGNTOWP(SELF);
+    if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+        SELF.AIVAR[19] = NOTINPOS;
+    };
+    if ((SELF.AIVAR[19]) == (NOTINPOS)) {
+        AI_PLAYANI(SELF, "S_BOOK_S1");
+        SELF.AIVAR[19] = ISINPOS;
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_READ_BOOKSTAND_FP_END() {
+    AI_PLAYANI(SELF, "T_BOOK_S1_2_S0");
+}
+

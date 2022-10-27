@@ -1,0 +1,41 @@
+func void ZS_FLEE() {
+    NPC_PERCENABLE(SELF, PERC_ASSESSMAGIC, 0xa92d);
+    B_VALIDATEOTHER();
+    if ((SELF.AIVAR[65]) == (FALSE)) {
+        B_SAY_OVERLAY(SELF, OTHER, "$RUNAWAY");
+    };
+    AI_REMOVEWEAPON(SELF);
+    AI_SETWALKMODE(SELF, NPC_RUN);
+    if (NPC_HASEQUIPPEDARMOR(SELF)) {
+        ARMOR = NPC_GETEQUIPPEDARMOR(SELF);
+        if (((((((((((HLP_ISITEM(ARMOR, 0x8ae2)) || (HLP_ISITEM(ARMOR, 0x8ae3))) || (HLP_ISITEM(ARMOR, 0x8ae4))) || (HLP_ISITEM(ARMOR, 0x8ae5))) || (HLP_ISITEM(ARMOR, 0x8ae6))) || (HLP_ISITEM(ARMOR, 0x8ae7))) || (HLP_ISITEM(ARMOR, 0x8ae8))) || (HLP_ISITEM(ARMOR, 0x8ae9))) || (HLP_ISITEM(ARMOR, 0x8aea))) || (HLP_ISITEM(ARMOR, 0x8aeb))) || (HLP_ISITEM(ARMOR, 0x8aec))) {
+            MDL_APPLYOVERLAYMDS(SELF, "HumanS_Broken_Flee.MDS");
+        } else if ((HLP_ISITEM(ARMOR, 0x8afe)) == (FALSE)) {
+            MDL_APPLYOVERLAYMDS(SELF, HUMANSFLEEMDS);
+        };
+    };
+    MDL_APPLYOVERLAYMDS(SELF, HUMANSFLEEMDS);
+}
+
+instance ZS_FLEE.ARMOR(C_ITEM)
+func int ZS_FLEE_LOOP() {
+    if ((NPC_GETDISTTONPC(SELF, OTHER)) > (FIGHT_DIST_CANCEL)) {
+        NPC_CLEARAIQUEUE(SELF);
+        return LOOP_END;
+    };
+    if (C_NPCISDOWN(OTHER)) {
+        NPC_CLEARAIQUEUE(SELF);
+        return LOOP_END;
+    };
+    NPC_GETTARGET(SELF);
+    AI_FLEE(SELF);
+    return LOOP_CONTINUE;
+}
+
+func void ZS_FLEE_END() {
+    MDL_REMOVEOVERLAYMDS(SELF, HUMANSFLEEMDS);
+    MDL_REMOVEOVERLAYMDS(SELF, "HumanS_Broken_Flee.MDS");
+    AI_STANDUP(SELF);
+    AI_STARTSTATE(SELF, 0xf08b, 1, "");
+}
+

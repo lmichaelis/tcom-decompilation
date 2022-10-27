@@ -1,0 +1,187 @@
+instance DIA_ADRIEN_EXIT(C_INFO) {
+    NPC = 0xd23b;
+    NR = 999;
+    CONDITION = DIA_ADRIEN_EXIT_CONDITION;
+    INFORMATION = DIA_ADRIEN_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ADRIEN_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ADRIEN_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ADRIEN_HELLO(C_INFO) {
+    NPC = 0xd23b;
+    NR = 1;
+    CONDITION = DIA_ADRIEN_HELLO_CONDITION;
+    INFORMATION = DIA_ADRIEN_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What are you doing here?";
+}
+
+func int DIA_ADRIEN_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ADRIEN_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Adrien_HELLO_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_03_06");
+    INFO_CLEARCHOICES(0x12cf2);
+    INFO_ADDCHOICE(0x12cf2, "Are you saying I'm in danger?", 0x12cf6);
+}
+
+func void DIA_ADRIEN_HELLO_CHOICES() {
+    INFO_CLEARCHOICES(0x12cf2);
+    INFO_ADDCHOICE(0x12cf2, "I'm sorry.", 0x12cf7);
+    INFO_ADDCHOICE(0x12cf2, "He was probably a weakling.", 0x12cf8);
+}
+
+func void DIA_ADRIEN_HELLO_THREAT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Adrien_HELLO_Threat_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_Threat_03_02");
+    AI_PLAYANI(SELF, R_SCRATCHHEAD);
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_Threat_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_Threat_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Adrien_HELLO_Threat_15_05");
+    INFO_CLEARCHOICES(0x12cf2);
+}
+
+func void DIA_ADRIEN_HELLO_CHILL_SORRY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Adrien_HELLO_Sorry_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_Sorry_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_Sorry_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_Sorry_03_04");
+    INFO_CLEARCHOICES(0x12cf2);
+}
+
+func void DIA_ADRIEN_HELLO_CHILL_WEAK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Adrien_HELLO_Weak_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_Weak_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Adrien_HELLO_Weak_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_HELLO_Weak_03_04");
+    INFO_CLEARCHOICES(0x12cf2);
+}
+
+instance DIA_ADRIEN_CANTRADE(C_INFO) {
+    NPC = 0xd23b;
+    NR = 10;
+    CONDITION = DIA_ADRIEN_CANTRADE_CONDITION;
+    INFORMATION = DIA_ADRIEN_CANTRADE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Susanne said you were selling your wares.";
+}
+
+func int DIA_ADRIEN_CANTRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12cdb)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ADRIEN_CANTRADE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Adrien_CanTrade_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adrien_CanTrade_03_02");
+}
+
+instance DIA_ADRIEN_TRADE(C_INFO) {
+    NPC = 0xd23b;
+    NR = 950;
+    CONDITION = DIA_ADRIEN_TRADE_CONDITION;
+    INFORMATION = DIA_ADRIEN_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Show me your wares.";
+}
+
+func int DIA_ADRIEN_TRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12cf9)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ADRIEN_TRADE_INFO() {
+    NPC_INITAMBIENTS(SELF, 3);
+    AI_OUTPUT(OTHER, SELF, "DIA_Adrien_TRADE_15_01");
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Adrien_TRADE_03_02");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Adrien_TRADE_03_03");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (3)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Adrien_TRADE_03_04");
+    };
+    B_GIVETRADEINV(SELF);
+}
+
+instance DIA_ADRIEN_AMBIENT(C_INFO) {
+    NPC = 0xd23b;
+    NR = 980;
+    CONDITION = DIA_ADRIEN_AMBIENT_CONDITION;
+    INFORMATION = DIA_ADRIEN_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "What's going on in the world of goldsmiths?";
+}
+
+func int DIA_ADRIEN_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12cf2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ADRIEN_AMBIENT_INFO() {
+    NPC_INITAMBIENTS(SELF, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Adrien_Ambient_15_01");
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Adrien_Ambient_03_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Adrien_Ambient_03_07");
+    };
+}
+
+instance DIA_ADRIEN_PICKPOCKET(C_INFO) {
+    NPC = 0xd23b;
+    NR = 900;
+    CONDITION = DIA_ADRIEN_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_ADRIEN_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_ADRIEN_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ADRIEN_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x12d02);
+    INFO_ADDCHOICE(0x12d02, DIALOG_BACK, 0x12d06);
+    INFO_ADDCHOICE(0x12d02, DIALOG_PICKPOCKET, 0x12d05);
+}
+
+func void DIA_ADRIEN_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        CREATEINVITEMS(SELF, 0x859f, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x859f, 1);
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x12d02);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x12d02);
+}
+
+func void DIA_ADRIEN_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x12d02);
+}
+

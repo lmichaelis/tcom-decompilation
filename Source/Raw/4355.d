@@ -1,0 +1,227 @@
+instance DIA_SAMBOR_Q602_EXIT(C_INFO) {
+    NPC = 0xe9a2;
+    NR = 999;
+    CONDITION = DIA_SAMBOR_Q602_EXIT_CONDITION;
+    INFORMATION = DIA_SAMBOR_Q602_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_SAMBOR_Q602_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_SAMBOR_Q602_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_SAMBOR_Q602_STOP(C_INFO) {
+    NPC = 0xe9a2;
+    NR = 1;
+    CONDITION = DIA_SAMBOR_Q602_STOP_CONDITION;
+    INFORMATION = DIA_SAMBOR_Q602_STOP_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_SAMBOR_Q602_STOP_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q602)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_SAMBOR_Q602_STOP_INFO() {
+    B_STOPLOOKAT(SELF);
+    AI_READYRANGEDWEAPON(SELF);
+    AI_AIMAT(SELF, OTHER);
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_03_01");
+    INFO_CLEARCHOICES(0x16135);
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        INFO_ADDCHOICE(0x16135, "Sambor, it's Marvin! Put the damn thing down!", 0x16143);
+    };
+    INFO_ADDCHOICE(0x16135, "Relax, I'm not one of them!", 0x16141);
+}
+
+func void SAMBOR_Q602_KILLMARVIN_SHOOT() {
+    MDL_APPLYOVERLAYMDS(HERO, "HUMANS_SUDDENDEATH.MDS");
+    AI_PLAYANI(MIL_6385_SAMBOR_Q602, "T_CBOWAIM_2_CBOWSHOOT");
+    AI_WAIT(HERO, 0x3e4ccccd);
+    AI_PLAYANI(HERO, T_DEAD);
+    SND_PLAY("CrossbowShoot");
+    SND_PLAY("SVM_15_DEAD");
+    AI_REMOVEWEAPON(MIL_6385_SAMBOR_Q602);
+    HERO.ATTRIBUTE[1] = -(1);
+    HERO.ATTRIBUTE[0] = -(1);
+    HERO.AIVAR[4] = FALSE;
+}
+
+func void SAMBOR_Q602_KILLMARVIN() {
+    AI_FUNCTION(SELF, 0x16138);
+    INFO_CLEARCHOICES(0x16135);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_SAMBOR_Q602_STOP_END() {
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_End_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_End_03_02");
+    INFO_CLEARCHOICES(0x16135);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+var int SAMBOR_Q602_VOLKER = 0;
+var int SAMBOR_Q602_OTHERS = 0;
+var int SAMBOR_Q602_WOUND = 0;
+func void DIA_SAMBOR_Q602_CHOICES() {
+    AI_RESETFACEANI(SELF);
+    if ((((SAMBOR_Q602_VOLKER) == (TRUE)) && ((SAMBOR_Q602_OTHERS) == (TRUE))) && ((SAMBOR_Q602_WOUND) == (TRUE))) {
+        DIA_SAMBOR_Q602_STOP_END();
+    };
+    INFO_CLEARCHOICES(0x16135);
+    if ((SAMBOR_Q602_VOLKER) == (FALSE)) {
+        INFO_ADDCHOICE(0x16135, "The Usurer's men attacked the barracks?", 0x16145);
+    };
+    if ((SAMBOR_Q602_OTHERS) == (FALSE)) {
+        INFO_ADDCHOICE(0x16135, "How are the others holding up?", 0x16149);
+    };
+    if ((SAMBOR_Q602_WOUND) == (FALSE)) {
+        INFO_ADDCHOICE(0x16135, "How's your wound?", 0x1614c);
+    };
+}
+
+func void DIA_SAMBOR_Q602_WHY_CHOICE() {
+    AI_RESETFACEANI(SELF);
+    AI_REMOVEWEAPON(MIL_6385_SAMBOR_Q602);
+    INFO_CLEARCHOICES(0x16135);
+    INFO_ADDCHOICE(0x16135, "Why did you close the gate?", 0x16144);
+}
+
+func void DIA_SAMBOR_Q602_STOP_REALLY() {
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_NotEnemy_03_02");
+    DIA_SAMBOR_Q602_WHY_CHOICE();
+}
+
+func void DIA_SAMBOR_Q602_STOP_NOTENEMY() {
+    ITM = NPC_GETEQUIPPEDARMOR(OTHER);
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Q602_Stop_NotEnemy_15_01");
+    AI_WAITTILLEND(SELF, OTHER);
+    if ((NPC_HASEQUIPPEDARMOR(OTHER)) == (TRUE)) {
+        if ((HLP_ISITEM(ITM, 0x8a97)) == (TRUE)) {
+            SAMBOR_Q602_KILLMARVIN();
+        } else {
+            DIA_SAMBOR_Q602_STOP_REALLY();
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    DIA_SAMBOR_Q602_STOP_REALLY();
+}
+
+instance DIA_SAMBOR_Q602_STOP_NOTENEMY.ITM(C_ITEM)
+func void DIA_SAMBOR_Q602_STOP_ITSME() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Q602_Stop_ItsMe_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_ItsMe_03_02");
+    DIA_SAMBOR_Q602_WHY_CHOICE();
+}
+
+func void DIA_SAMBOR_Q602_STOP_ITSME_WHY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Q602_Stop_Why_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Why_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Why_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Why_03_04");
+    DIA_SAMBOR_Q602_CHOICES();
+}
+
+func void DIA_SAMBOR_Q602_STOP_ITSME_WHY_VOLKER() {
+    SAMBOR_Q602_VOLKER = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Q602_Stop_Volker_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Volker_03_02");
+    DIA_SAMBOR_Q602_CHOICES();
+}
+
+var int SAMBOR_Q602_OTHERS_FIGHT = 0;
+var int SAMBOR_Q602_OTHERS_KILLS = 0;
+func void DIA_SAMBOR_Q602_OTHERS_CHOICES() {
+    if (((SAMBOR_Q602_OTHERS_FIGHT) == (TRUE)) && ((SAMBOR_Q602_OTHERS_KILLS) == (TRUE))) {
+        DIA_SAMBOR_Q602_CHOICES();
+    };
+    INFO_CLEARCHOICES(0x16135);
+    if ((SAMBOR_Q602_OTHERS_FIGHT) == (FALSE)) {
+        INFO_ADDCHOICE(0x16135, "The Guardians, the Fire Mages as well as the Merchant's Guild are defending themselves.", 0x1614a);
+    };
+    if ((SAMBOR_Q602_OTHERS_KILLS) == (FALSE)) {
+        INFO_ADDCHOICE(0x16135, "Usurer's and Ulryk's men are murdering citizens all over the city.", 0x1614b);
+    };
+}
+
+func void DIA_SAMBOR_Q602_STOP_ITSME_WHY_OTHERS() {
+    SAMBOR_Q602_OTHERS = TRUE;
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Q602_Stop_Others_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Others_03_02");
+    if ((Q504_RUUDVOLFZACKE) == (0)) {
+        if (NPC_ISDEAD(VLK_6282_RUUD_Q602)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Others_03_03");
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Others_03_04");
+        };
+    };
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Others_03_05");
+    DIA_SAMBOR_Q602_OTHERS_CHOICES();
+}
+
+func void DIA_SAMBOR_Q602_STOP_ITSME_WHY_OTHERS_FIGHT() {
+    SAMBOR_Q602_OTHERS_FIGHT = TRUE;
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Q602_Stop_Fight_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Q602_Stop_Fight_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Fight_03_03");
+    DIA_SAMBOR_Q602_OTHERS_CHOICES();
+}
+
+func void DIA_SAMBOR_Q602_STOP_ITSME_WHY_OTHERS_KILLS() {
+    SAMBOR_Q602_OTHERS_KILLS = TRUE;
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Q602_Stop_Kills_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Kills_03_02");
+    DIA_SAMBOR_Q602_OTHERS_CHOICES();
+}
+
+func void DIA_SAMBOR_Q602_STOP_ITSME_WHY_WOUND() {
+    SAMBOR_Q602_WOUND = TRUE;
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Q602_Stop_Wound_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Wound_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Stop_Wound_03_03");
+    DIA_SAMBOR_Q602_CHOICES();
+}
+
+instance DIA_SAMBOR_Q602_AMBIENT(C_INFO) {
+    NPC = 0xe9a2;
+    NR = 1;
+    CONDITION = DIA_SAMBOR_Q602_AMBIENT_CONDITION;
+    INFORMATION = DIA_SAMBOR_Q602_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_SAMBOR_Q602_AMBIENT_CONDITION() {
+    if ((NPC_ISINSTATE(SELF, 0xf09f)) && (NPC_KNOWSINFO(OTHER, 0x16135))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_SAMBOR_Q602_AMBIENT_INFO() {
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Sambor_Q602_Ambient_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+}
+

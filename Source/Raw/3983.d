@@ -1,0 +1,43 @@
+instance DIA_ADI_EXIT(C_INFO) {
+    NPC = 0xd991;
+    NR = 999;
+    CONDITION = DIA_ADI_EXIT_CONDITION;
+    INFORMATION = DIA_ADI_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ADI_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ADI_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ADI_EASTEREGG(C_INFO) {
+    NPC = 0xd991;
+    NR = 1;
+    CONDITION = DIA_ADI_EASTEREGG_CONDITION;
+    INFORMATION = DIA_ADI_EASTEREGG_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ADI_EASTEREGG_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x12dc9)) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ADI_EASTEREGG_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Adi_EasterEgg_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adi_EasterEgg_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adi_EasterEgg_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Adi_EasterEgg_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adi_EasterEgg_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Adi_EasterEgg_03_06");
+    AI_STOPPROCESSINFOS(SELF);
+}
+

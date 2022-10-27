@@ -1,0 +1,40 @@
+instance DIA_GUARD02_EXIT(C_INFO) {
+    NPC = 0xd11a;
+    NR = 999;
+    CONDITION = DIA_GUARD02_EXIT_CONDITION;
+    INFORMATION = DIA_GUARD02_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_GUARD02_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_GUARD02_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_GUARD02_SQ413_GOAWAY(C_INFO) {
+    NPC = 0xd11a;
+    NR = 1;
+    CONDITION = DIA_GUARD02_SQ413_GOAWAY_CONDITION;
+    INFORMATION = DIA_GUARD02_SQ413_GOAWAY_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GUARD02_SQ413_GOAWAY_CONDITION() {
+    if (NPC_ISINSTATE(SELF, 0xf09f)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GUARD02_SQ413_GOAWAY_INFO() {
+    if ((SQ413_SNAKE) == (2)) {
+        SQ413_SNAKE = 3;
+    };
+    SQ413_GOAWAY();
+}
+

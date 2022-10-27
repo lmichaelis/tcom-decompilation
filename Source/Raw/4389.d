@@ -1,0 +1,915 @@
+instance DIA_EZEKIEL_FORWHOLELIFE(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_FORWHOLELIFE_CONDITION;
+    INFORMATION = DIA_EZEKIEL_FORWHOLELIFE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_EZEKIEL_FORWHOLELIFE_CONDITION() {
+    if (((NPC_ISINSTATE(SELF, 0xf09f)) && ((Q101_AFTERJUMP) == (TRUE))) && (!(NPC_KNOWSINFO(OTHER, 0x16301)))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_FORWHOLELIFE_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_03_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_03_03");
+    INFO_CLEARCHOICES(0x163aa);
+    INFO_ADDCHOICE(0x163aa, "Don't beat yourself up. It's not your fault.", 0x163ad);
+    INFO_ADDCHOICE(0x163aa, "The rest is in the hands of the gods.", 0x163ae);
+    INFO_ADDCHOICE(0x163aa, "Each of us gets lessons from life.", 0x163af);
+}
+
+func void DIA_EZEKIEL_FORWHOLELIFE_FAULT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_Forwholelife_fault_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_fault_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_fault_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_fault_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_fault_03_04");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_EZEKIEL_FORWHOLELIFE_GOD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_Forwholelife_god_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_god_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_god_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_god_03_03");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_EZEKIEL_FORWHOLELIFE_LESSON() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_Forwholelife_lesson_15_00");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_Forwholelife_lesson_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_lesson_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_lesson_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_lesson_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Forwholelife_lesson_03_05");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_EZEKIEL_SQ118_WHAT(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ118_WHAT_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ118_WHAT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_EZEKIEL_SQ118_WHAT_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x16301)) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void EZEKIEL_SQ118_GO() {
+    AI_LOGENTRY(TOPIC_Q102, LOG_Q102_EZEKIEL_GO);
+    AI_FUNCTION(SELF, 0x163b9);
+}
+
+func void EZEKIEL_SQ118_REFUSE() {
+    Q102_EZEKIELREFUSED = 1;
+    AI_LOGENTRY(TOPIC_Q102, LOG_Q102_EZEKIEL_REFUSE);
+}
+
+func void DIA_EZEKIEL_SQ118_WHAT_INFO() {
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_What_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_15_02");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_What_03_03");
+    INFO_CLEARCHOICES(0x163b0);
+    INFO_ADDCHOICE(0x163b0, "In that case, good luck. Goodbye.", 0x163b8);
+    INFO_ADDCHOICE(0x163b0, "You're coming with us or I'll drag you in by force.", 0x163b7);
+    INFO_ADDCHOICE(0x163b0, "Your daughter would certainly be delighted if her father was eaten by lurkers.", 0x163b6);
+    INFO_ADDCHOICE(0x163b0, "We don't have time for this.", 0x163b5);
+}
+
+func void DIA_EZEKIEL_SQ118_WHAT_NOTIME() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_NoTime_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_What_NoTime_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_NoTime_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_What_NoTime_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_NoTime_15_05");
+    EZEKIEL_SQ118_REFUSE();
+    INFO_CLEARCHOICES(0x163b0);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_EZEKIEL_SQ118_WHAT_FLORA() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_Flora_15_01");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_What_Flora_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_Flora_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_What_Flora_03_04");
+    B_STANDUP();
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_Flora_15_05");
+    EZEKIEL_SQ118_GO();
+    INFO_CLEARCHOICES(0x163b0);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_EZEKIEL_SQ118_WHAT_FORCE() {
+    AI_DRAWWEAPON(OTHER);
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_Force_15_01");
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_What_Force_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_Force_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_What_Force_03_04");
+    AI_REMOVEWEAPON(OTHER);
+    EZEKIEL_SQ118_GO();
+    INFO_CLEARCHOICES(0x163b0);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_EZEKIEL_SQ118_WHAT_GOODBYE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_What_Goodbye_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_What_Goodbye_03_02");
+    EZEKIEL_SQ118_REFUSE();
+    INFO_CLEARCHOICES(0x163b0);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void EZEKIEL_SQ118_CHANGERTN() {
+    Q102_EZEKIELSURVIVED = 1;
+    B_STARTOTHERROUTINE(NONE_1_JORN, "GUIDE01");
+    NPC_REFRESH(NONE_1_JORN);
+    NPC_EXCHANGEROUTINE(NONE_3_EZEKIEL, "WAIT");
+    MDL_APPLYOVERLAYMDSTIMED(NONE_3_EZEKIEL, HUMANSTIREDMDS, 0x493e0);
+}
+
+instance DIA_EZEKIEL_FEEL(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_FEEL_CONDITION;
+    INFORMATION = DIA_EZEKIEL_FEEL_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How are you feeling?";
+}
+
+func int DIA_EZEKIEL_FEEL_CONDITION() {
+    if ((HARRYGATETESTPASSED) == (1)) {
+        if (((LOG_GETSTATUS(MIS_SQ103)) != (LOG_SUCCESS)) || ((LOG_GETSTATUS(MIS_SQ103)) != (LOG_FAILED))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_NEEDREST() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_FEEL_03_02");
+}
+
+func void DIA_EZEKIEL_FEEL_INFO() {
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_FEEL_15_01");
+    DIA_EZEKIEL_NEEDREST();
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_FEEL_03_03");
+}
+
+instance DIA_EZEKIEL_OKAY(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_OKAY_CONDITION;
+    INFORMATION = DIA_EZEKIEL_OKAY_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_EZEKIEL_OKAY_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ103)) == (LOG_SUCCESS)) || ((LOG_GETSTATUS(MIS_SQ103)) == (0))) {
+        if ((SQ103_FINISHQUEST) == (1)) {
+            if ((SQ103_FINISHQUEST_DAY) <= ((WLD_GETDAY()) - (1))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_OKAY_INFO() {
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Okay_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Okay_03_04");
+}
+
+instance DIA_EZEKIEL_GOOD(C_INFO) {
+    NPC = 0xc924;
+    NR = 10;
+    CONDITION = DIA_EZEKIEL_GOOD_CONDITION;
+    INFORMATION = DIA_EZEKIEL_GOOD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I see they treat you well here.";
+}
+
+func int DIA_EZEKIEL_GOOD_CONDITION() {
+    if (((SILBACHSLEEP) == (2)) && ((LOG_GETSTATUS(MIS_SQ118)) == (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_GOOD_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_Good_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Good_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Good_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Good_03_04");
+}
+
+instance DIA_EZEKIEL_SQ118_START(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ118_START_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ118_START_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Why don't I go get your daughter?";
+}
+
+func int DIA_EZEKIEL_SQ118_START_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x163be)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ118_START_NEEDREST() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Start_03_06");
+}
+
+func void DIA_EZEKIEL_SQ118_START_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_Start_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Start_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Start_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Start_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Start_03_05");
+    DIA_EZEKIEL_SQ118_START_NEEDREST();
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_Start_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Start_03_08");
+    LOG_CREATETOPIC(TOPIC_SQ118, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_SQ118), TOPIC_SQ118, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_SQ118, LOG_SQ118_START);
+}
+
+instance DIA_EZEKIEL_SQ118_PAY(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ118_PAY_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ118_PAY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You have to pay for a spot at the cemetery.";
+}
+
+func int DIA_EZEKIEL_SQ118_PAY_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ118)) == (LOG_RUNNING)) && ((SQ118_MARVINKNOWABOUTPAYMENT) == (1))) && ((SQ118_LOKVAR_PAYED) == (0))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int EZEKIEL_GIVERUBY = 0;
+func void DIA_EZEKIEL_NOGOLD() {
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Pay_03_02");
+}
+
+func void DIA_EZEKIEL_GIVERUBY() {
+    EZEKIEL_GIVERUBY = TRUE;
+    DIA_EZEKIEL_NOGOLD();
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Pay_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Pay_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_Pay_03_05");
+    CREATEINVITEMS(SELF, 0x859a, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x859a, 1);
+}
+
+func void DIA_EZEKIEL_SQ118_PAY_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_Pay_15_01");
+    DIA_EZEKIEL_GIVERUBY();
+}
+
+instance DIA_EZEKIEL_SQ118_GRAVEREADY(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ118_GRAVEREADY_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ118_GRAVEREADY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I arranged for Flora to be interred in a local cemetery.";
+}
+
+func int DIA_EZEKIEL_SQ118_GRAVEREADY_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ118)) == (LOG_RUNNING)) && ((SQ118_LOKVAR_PAYED) == (1))) && ((SQ118_LOKVAR_CLEANED) == (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ118_GRAVEREADY_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_GraveReady_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GraveReady_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GraveReady_03_03");
+    INFO_CLEARCHOICES(0x163ce);
+    INFO_ADDCHOICE(0x163ce, "What do you mean?", 0x163d3);
+    INFO_ADDCHOICE(0x163ce, "I'd be happy to go with you.", 0x163d2);
+}
+
+func void DIA_EZEKIEL_SQ118_GRAVEREADY_NEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GraveReady_Next_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GraveReady_Next_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GraveReady_Next_03_03");
+    INFO_CLEARCHOICES(0x163ce);
+    INFO_ADDCHOICE(0x163ce, "Maybe some other time.", 0x163d5);
+    INFO_ADDCHOICE(0x163ce, "I'll help you convince the sentries to help.", 0x163d4);
+}
+
+func void DIA_EZEKIEL_SQ118_GRAVEREADY_GO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_GraveReady_Go_15_01");
+    DIA_EZEKIEL_SQ118_GRAVEREADY_NEXT();
+}
+
+func void DIA_EZEKIEL_SQ118_GRAVEREADY_WHAT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_GraveReady_What_15_01");
+    DIA_EZEKIEL_SQ118_GRAVEREADY_NEXT();
+}
+
+func void DIA_EZEKIEL_SQ118_GRAVEREADY_WHAT_NEXT_YES() {
+    SQ118_EZEKIEL_GUARDHELP = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_GraveReady_Yes_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GraveReady_Yes_03_02");
+    AI_LOGENTRY(TOPIC_SQ118, LOG_SQ118_EZEKIEL_NEEDGUARDS);
+    INFO_CLEARCHOICES(0x163ce);
+}
+
+func void DIA_EZEKIEL_SQ118_GRAVEREADY_WHAT_NEXT_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_GraveReady_No_15_01");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GraveReady_No_03_02");
+    INFO_CLEARCHOICES(0x163ce);
+}
+
+instance DIA_EZEKIEL_SQ118_WILLHELP(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ118_WILLHELP_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ118_WILLHELP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I'll help you convince the sentries to help.";
+}
+
+func int DIA_EZEKIEL_SQ118_WILLHELP_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ118)) == (LOG_RUNNING)) && ((SQ118_EZEKIEL_GUARDHELP) == (0))) && (NPC_KNOWSINFO(OTHER, 0x163ce))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ118_WILLHELP_INFO() {
+    DIA_EZEKIEL_SQ118_GRAVEREADY_WHAT_NEXT_YES();
+}
+
+instance DIA_EZEKIEL_SQ118_GUARDSREADY(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ118_GUARDSREADY_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ118_GUARDSREADY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I managed to convince two sentries to help you.";
+}
+
+func int DIA_EZEKIEL_SQ118_GUARDSREADY_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ118)) == (LOG_RUNNING)) && ((SQ118_GUARDSCOUNT) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ118_GUARDSREADY_INFO() {
+    SQ118_EZEKIEL_SEARCHFLORA = 1;
+    SQ118_EZEKIEL_SEARCHFLORA_DAY = WLD_GETDAY();
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ118_GuardsReady_15_01");
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GuardsReady_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GuardsReady_03_03");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_GuardsReady_03_04");
+    AI_LOGENTRY(TOPIC_SQ118, LOG_SQ118_EZEKIEL_SEARCHFLORA);
+    LOG_SETSTATUS(_@(MIS_SQ118), TOPIC_SQ118, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_SQ118_FINISH);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, "SQ118_GUARD");
+}
+
+instance DIA_EZEKIEL_SQ118_THANKYOU(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ118_THANKYOU_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ118_THANKYOU_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_EZEKIEL_SQ118_THANKYOU_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ118)) == (LOG_SUCCESS)) && ((SQ118_EZEKIEL_SEARCHFLORA) == (3))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ118_THANKYOU_INFO() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ118_ThankYou_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_EZEKIEL_GQ001_WHEREISJORN(C_INFO) {
+    NPC = 0xc924;
+    NR = 10;
+    CONDITION = DIA_EZEKIEL_GQ001_WHEREISJORN_CONDITION;
+    INFORMATION = DIA_EZEKIEL_GQ001_WHEREISJORN_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Have you heard anything about Kurt's break-in?";
+}
+
+func int DIA_EZEKIEL_GQ001_WHEREISJORN_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x1575a)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_GQ001_WHEREISJORN_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_GQ001_WhereIsJorn_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_GQ001_WhereIsJorn_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_GQ001_WhereIsJorn_03_03");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_EZEKIEL_SQ227_WHATNEXT(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_WHATNEXT_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_WHATNEXT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What are you going to do now?";
+}
+
+func int DIA_EZEKIEL_SQ227_WHATNEXT_CONDITION() {
+    if (((KAPITEL) >= (2)) && ((LOG_GETSTATUS(MIS_SQ118)) == (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_WHATNEXT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_WhatNext_15_01");
+    AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_WhatNext_03_02");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_WhatNext_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_WhatNext_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_WhatNext_03_05");
+}
+
+instance DIA_EZEKIEL_SQ227_START(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_START_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_START_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Maybe, I could help you get back to your old trade?";
+}
+
+func int DIA_EZEKIEL_SQ227_START_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x163e2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_START_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_Start_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_Start_03_02");
+    LOG_CREATETOPIC(TOPIC_SQ227, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_SQ227), TOPIC_SQ227, LOG_RUNNING);
+    if (NPC_KNOWSINFO(OTHER, 0x15e10)) {
+        AI_LOGENTRY(TOPIC_SQ227, LOG_SQ227_START_V1);
+    };
+    AI_LOGENTRY(TOPIC_SQ227, LOG_SQ227_START_V2);
+}
+
+instance DIA_EZEKIEL_SQ227_VEIT(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_VEIT_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_VEIT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Would you like to replace merchant Veit in the village?";
+}
+
+func int DIA_EZEKIEL_SQ227_VEIT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ227)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x15e24))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_VEIT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_Veit_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_Veit_03_02");
+}
+
+instance DIA_EZEKIEL_SQ227_VEITNEEDGOLD(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_VEITNEEDGOLD_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_VEITNEEDGOLD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Veit could sell you contacts to his suppliers.";
+}
+
+func int DIA_EZEKIEL_SQ227_VEITNEEDGOLD_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ227)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x163e8))) && ((SQ227_BOUGHTVEITLIST) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_VEITNEEDGOLD_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_VeitNeedGold_15_01");
+    if ((EZEKIEL_GIVERUBY) == (FALSE)) {
+        DIA_EZEKIEL_GIVERUBY();
+    };
+    DIA_EZEKIEL_NOGOLD();
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_VeitNeedGold_03_02");
+}
+
+instance DIA_EZEKIEL_SQ227_GOTLISTVEIT(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_GOTLISTVEIT_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_GOTLISTVEIT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I paid off Veit, he'll send his men to you.";
+}
+
+func int DIA_EZEKIEL_SQ227_GOTLISTVEIT_CONDITION() {
+    if ((SQ227_BOUGHTVEITLIST) == (TRUE)) {
+        if (((NPC_KNOWSINFO(OTHER, 0x163e8)) && ((LOG_GETSTATUS(MIS_SQ227)) == (LOG_RUNNING))) || ((LOG_GETSTATUS(MIS_SQ227)) == (LOG_SUCCESS))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_GOTLISTVEIT_INFO() {
+    SQ227_BOUGHTVEITLIST = 2;
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_GotListVeit_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_GotListVeit_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_GotListVeit_03_03");
+    B_GIVEPLAYERXP(SQ227_EZEKIELGOTVEITLIST);
+}
+
+instance DIA_EZEKIEL_SQ227_WORK(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_WORK_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_WORK_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Albyn wants you to do some work at the inn first.";
+}
+
+func int DIA_EZEKIEL_SQ227_WORK_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ227)) == (LOG_RUNNING)) && ((SQ227_ALBYNDECISION) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_WORK_INFO() {
+    SQ227_EZEKIELWORK = 1;
+    SQ227_EZEKIELWORK_DAY = WLD_GETDAY();
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_Work_15_01");
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_Work_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_Work_03_03");
+    AI_LOGENTRY(TOPIC_SQ227, LOG_SQ227_EZEKIEL_WORKFORBASTIAN);
+    NPC_EXCHANGEROUTINE(SELF, "SQ227_WORKFORBASTIAN");
+}
+
+instance DIA_EZEKIEL_SQ227_HOWSWORK(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_HOWSWORK_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_HOWSWORK_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_EZEKIEL_SQ227_HOWSWORK_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ227)) == (LOG_RUNNING)) && ((SQ227_EZEKIELWORK) == (2))) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_HOWSWORK_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_HowsWork_15_01");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_HowsWork_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_HowsWork_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_HowsWork_03_04");
+    AI_STARTFACEANI(OTHER, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_HowsWork_15_05");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_HowsWork_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_HowsWork_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_HowsWork_03_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_HowsWork_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_HowsWork_03_10");
+    AI_LOGENTRY(TOPIC_SQ227, LOG_SQ227_EZEKIEL_NEEDSTUFF);
+    NPC_EXCHANGEROUTINE(SELF, "SQ227_WORKFORBASTIAN");
+}
+
+instance DIA_EZEKIEL_SQ227_GOTBEER(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_GOTBEER_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_GOTBEER_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "I have beers.";
+}
+
+func int DIA_EZEKIEL_SQ227_GOTBEER_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ227)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x163f4))) && ((EZEKIEL_SQ227_GOTBEER) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_GOTBEER_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_GotBeer_15_01");
+    SQ227_CHECKMARVINBEER();
+}
+
+instance DIA_EZEKIEL_SQ227_GOTPARSLEY(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_GOTPARSLEY_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_GOTPARSLEY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I have parsley.";
+}
+
+func int DIA_EZEKIEL_SQ227_GOTPARSLEY_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ227)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x163f4))) && ((NPC_HASITEMS(OTHER, 0x8e1c)) >= (10))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_GOTPARSLEY_INFO() {
+    EZEKIEL_SQ227_GOTPARSLEY = TRUE;
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_GotParsley_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 0x8e1c, 10);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_GotParsley_03_02");
+    AI_LOGENTRY(TOPIC_SQ227, LOG_SQ227_EZEKIEL_GOTPARSLEY);
+    DIA_EZEKIEL_SQ227_GOTEVERYTHING();
+}
+
+instance DIA_EZEKIEL_SQ227_GOTDOC(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_GOTDOC_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_GOTDOC_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Please, here's a permit to trade in the village.";
+}
+
+func int DIA_EZEKIEL_SQ227_GOTDOC_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ227)) == (LOG_RUNNING)) && ((SQ227_ALBYNDECISION) == (1))) && ((NPC_HASITEMS(OTHER, 0x90f1)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_GOTDOC_INFO() {
+    SQ227_EZEKIELMARKET = 1;
+    SQ227_EZEKIELMARKET_DAY = WLD_GETDAY();
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    NPC_REMOVEINVITEMS(SELF, 0x90f1, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_GotDoc_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 0x90f1, 1);
+    B_STANDUP();
+    B_USEFAKESCROLL();
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_GotDoc_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_GotDoc_03_03");
+    AI_LOGENTRY(TOPIC_SQ227, LOG_SQ227_FINISH);
+    LOG_SETSTATUS(_@(MIS_SQ227), TOPIC_SQ227, LOG_SUCCESS);
+    B_GIVEPLAYERXP(SQ227_FINISH);
+    NPC_EXCHANGEROUTINE(SELF, START);
+}
+
+instance DIA_EZEKIEL_SQ227_SWORD(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_SQ227_SWORD_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_SWORD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How is working with Veit's people going?";
+}
+
+func int DIA_EZEKIEL_SQ227_SWORD_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_SQ227)) == (LOG_SUCCESS)) && ((SQ227_EZEKIELMARKET) == (2))) && ((SQ227_BOUGHTVEITLIST) == (2))) && ((KAPITEL) >= (3))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_SWORD_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_SQ227_Sword_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_Sword_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_Sword_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_SQ227_Sword_03_04");
+}
+
+instance DIA_EZEKIEL_SQ227_BUYSWORD(C_INFO) {
+    NPC = 0xc924;
+    NR = 940;
+    CONDITION = DIA_EZEKIEL_SQ227_BUYSWORD_CONDITION;
+    INFORMATION = DIA_EZEKIEL_SQ227_BUYSWORD_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "(Buy a cheap master sword for 900 GP)";
+}
+
+var int EZEKIEL_BOUGHTSWORD = 0;
+func int DIA_EZEKIEL_SQ227_BUYSWORD_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x16400)) && ((EZEKIEL_BOUGHTSWORD) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_SQ227_BUYSWORD_INFO() {
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= ((VALUE_MEISTERDEGEN_2) / (2))) {
+        EZEKIEL_BOUGHTSWORD = TRUE;
+        NPC_REMOVEINVITEMS(SELF, 0x859b, (VALUE_MEISTERDEGEN_2) / (2));
+        CREATEINVITEMS(SELF, 0x852f, 1);
+    };
+    B_SAY(SELF, OTHER, "$NOGOLD");
+}
+
+instance DIA_EZEKIEL_AMBIENT(C_INFO) {
+    NPC = 0xc924;
+    NR = 900;
+    CONDITION = DIA_EZEKIEL_AMBIENT_CONDITION;
+    INFORMATION = DIA_EZEKIEL_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How's business going?";
+}
+
+func int DIA_EZEKIEL_AMBIENT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ227)) == (LOG_SUCCESS)) && ((SQ227_EZEKIELMARKET) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_AMBIENT_INFO() {
+    NPC_INITAMBIENTS(SELF, 1);
+    B_SAY(OTHER, SELF, "$MARVIN_TellMeAboutBusiness");
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_AMBIENT_03_02");
+    };
+}
+
+instance DIA_EZEKIEL_TRADE(C_INFO) {
+    NPC = 0xc924;
+    NR = 950;
+    CONDITION = DIA_EZEKIEL_TRADE_CONDITION;
+    INFORMATION = DIA_EZEKIEL_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Show me your wares.";
+}
+
+func int DIA_EZEKIEL_TRADE_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ227)) == (LOG_SUCCESS)) && ((SQ227_EZEKIELMARKET) == (2))) {
+        if (WLD_ISTIME(8, 0, 22, 0)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_TRADE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_TRADE_15_01");
+    B_GIVETRADEINV(SELF);
+}
+
+instance DIA_EZEKIEL_Q505_HELP(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_Q505_HELP_CONDITION;
+    INFORMATION = DIA_EZEKIEL_Q505_HELP_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_EZEKIEL_Q505_HELP_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q505)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x13974))) {
+        if (((LOG_GETSTATUS(MIS_SQ227)) == (LOG_SUCCESS)) && ((SQ227_EZEKIELMARKET) == (2))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_Q505_HELP_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_TellMeAboutBusiness");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Q505_Help_03_01");
+    AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Q505_Help_03_02");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Q505_Help_03_03");
+    if ((NPC_KNOWSINFO(OTHER, 0x16400)) && ((EZEKIEL_BOUGHTSWORD) == (FALSE))) {
+        EZEKIEL_BOUGHTSWORD = TRUE;
+        AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Q505_Help_03_04");
+        CREATEINVITEMS(SELF, 0x852f, 1);
+    };
+    CREATEINVITEMS(SELF, 0x92e3, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x92e3, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Q505_Help_03_05");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_EZEKIEL_AMBIENT_FIRST(C_INFO) {
+    NPC = 0xc924;
+    NR = 997;
+    CONDITION = DIA_EZEKIEL_AMBIENT_FIRST_CONDITION;
+    INFORMATION = DIA_EZEKIEL_AMBIENT_FIRST_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Are you okay?";
+}
+
+func int DIA_EZEKIEL_AMBIENT_FIRST_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ227)) != (LOG_SUCCESS)) && ((SQ227_EZEKIELMARKET) != (2))) && ((LOG_GETSTATUS(MIS_Q103)) == (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_AMBIENT_FIRST_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ezekiel_Ambient_First_15_00");
+    if ((LOG_GETSTATUS(MIS_SQ118)) != (LOG_SUCCESS)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Ambient_First_13_01");
+    };
+    if ((LOG_GETSTATUS(MIS_SQ118)) == (LOG_SUCCESS)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ezekiel_Ambient_First_13_02");
+    };
+}
+
+instance DIA_EZEKIEL_Q104_WORKFORALBYN(C_INFO) {
+    NPC = 0xc924;
+    NR = 1;
+    CONDITION = DIA_EZEKIEL_Q104_WORKFORALBYN_CONDITION;
+    INFORMATION = DIA_EZEKIEL_Q104_WORKFORALBYN_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "The Elder needs hands for work.";
+}
+
+func int DIA_EZEKIEL_Q104_WORKFORALBYN_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q104)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x1568f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EZEKIEL_Q104_WORKFORALBYN_INFO() {
+    DIA_JORN_Q104_ALBYNNEEDHELP();
+    DIA_EZEKIEL_NEEDREST();
+    DIA_EZEKIEL_SQ118_START_NEEDREST();
+    AI_LOGENTRY(TOPIC_Q104, LOG_Q104_EZEKIEL);
+}
+

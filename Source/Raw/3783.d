@@ -1,0 +1,207 @@
+instance DIA_KOLG_EXIT(C_INFO) {
+    NPC = 0xccf7;
+    NR = 999;
+    CONDITION = DIA_KOLG_EXIT_CONDITION;
+    INFORMATION = DIA_KOLG_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_KOLG_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_KOLG_EXIT_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_EXIT_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+    if ((TRADER_LOGENTRY_CITY_MAPARAXOS) == (FALSE)) {
+        TRADER_LOGENTRY_CITY_MAPARAXOS = TRUE;
+        LOG_CREATETOPIC(TOPIC_CITYTRADER, LOG_NOTE);
+        AI_LOGENTRY(TOPIC_CITYTRADER, LOG_TRADER_CITY_ARAXOSMAPS);
+    };
+}
+
+instance DIA_KOLG_HELLO(C_INFO) {
+    NPC = 0xccf7;
+    NR = 1;
+    CONDITION = DIA_KOLG_HELLO_CONDITION;
+    INFORMATION = DIA_KOLG_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_KOLG_HELLO_CONDITION() {
+    if (((HERO.GUILD) == (GIL_NONE)) || ((HERO.GUILD) == (GIL_VLK))) {
+        if ((FMQ001_INSTRUCTORRUN) == (0)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KOLG_HELLO_INFO() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_HELLO_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_HELLO_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_HELLO_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_HELLO_03_05");
+    LOG_CREATETOPIC(TOPIC_CITYTRADER, LOG_NOTE);
+    AI_LOGENTRY(TOPIC_CITYTRADER, LOG_TRADER_CITY_KOLG);
+}
+
+instance DIA_KOLG_TRADE(C_INFO) {
+    NPC = 0xccf7;
+    NR = 850;
+    CONDITION = DIA_KOLG_TRADE_CONDITION;
+    INFORMATION = DIA_KOLG_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Show me your maps.";
+}
+
+func int DIA_KOLG_TRADE_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_KOLG_TRADE_INFO() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_AraxosCityGuide_TRADE_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_TRADE_03_02");
+    B_GIVETRADEINV(SELF);
+}
+
+instance DIA_KOLG_PLACE(C_INFO) {
+    NPC = 0xccf7;
+    NR = 2;
+    CONDITION = DIA_KOLG_PLACE_CONDITION;
+    INFORMATION = DIA_KOLG_PLACE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "There's a place I need to get to...";
+}
+
+func int DIA_KOLG_PLACE_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_KOLG_PLACE_INFO() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_AraxosCityGuide_Place_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_Place_03_02");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_Place_03_03");
+    INFO_CLEARCHOICES(0x11460);
+    INFO_ADDCHOICE(0x11460, "Slums?", 0x11463);
+}
+
+func void DIA_KOLG_PLACE_SLUMS() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_AraxosCityGuide_Place_Slums_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_Place_Slums_03_02");
+    if (((LOG_GETSTATUS(MIS_Q209)) == (LOG_RUNNING)) && ((Q209_INFOABOUTSLDGUIDE) == (FALSE))) {
+        Q209_INFOABOUTSLDGUIDE = TRUE;
+        AI_LOGENTRY(TOPIC_Q209, LOG_Q209_GUIDE);
+    };
+    FASTTRAVEL_CITYGUIDES_LOGENTRY();
+}
+
+var int DIA_KOLG_PLACE_SLUMS.Q209_INFOABOUTSLDGUIDE = 0;
+instance DIA_KOLG_TELLABOUT(C_INFO) {
+    NPC = 0xccf7;
+    NR = 3;
+    CONDITION = DIA_KOLG_TELLABOUT_CONDITION;
+    INFORMATION = DIA_KOLG_TELLABOUT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Can you tell me more about you?";
+}
+
+func int DIA_KOLG_TELLABOUT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_KOLG_TELLABOUT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_AraxosCityGuide_TellAbout_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_TellAbout_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_TellAbout_03_03");
+}
+
+instance DIA_KOLG_CITY(C_INFO) {
+    NPC = 0xccf7;
+    NR = 4;
+    CONDITION = DIA_KOLG_CITY_CONDITION;
+    INFORMATION = DIA_KOLG_CITY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Any advice on the city?";
+}
+
+func int DIA_KOLG_CITY_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_KOLG_CITY_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_AraxosCityGuide_City_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_AraxosCityGuide_City_03_02");
+}
+
+instance DIA_KOLG_AMBIENT(C_INFO) {
+    NPC = 0xccf7;
+    NR = 998;
+    CONDITION = DIA_KOLG_AMBIENT_CONDITION;
+    INFORMATION = DIA_KOLG_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_KOLG_AMBIENT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_KOLG_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew4");
+    if (((HERO.GUILD) == (GIL_NONE)) || ((HERO.GUILD) == (GIL_VLK))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Kolg_Ambient_03_01");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Kolg_Ambient_03_02");
+    };
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Kolg_Ambient_03_03");
+    };
+}
+
+instance DIA_KOLG_PICKPOCKET(C_INFO) {
+    NPC = 0xccf7;
+    NR = 900;
+    CONDITION = DIA_KOLG_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_KOLG_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_KOLG_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KOLG_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x1146e);
+    INFO_ADDCHOICE(0x1146e, DIALOG_BACK, 0x11472);
+    INFO_ADDCHOICE(0x1146e, DIALOG_PICKPOCKET, 0x11471);
+}
+
+func void DIA_KOLG_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x1146e);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x1146e);
+}
+
+func void DIA_KOLG_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x1146e);
+}
+

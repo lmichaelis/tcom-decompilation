@@ -1,0 +1,12 @@
+const int LANG_INVALID = 0;
+const int LANG_POLISH = 1;
+const int LANG_ENGLISH = 2;
+const int LANG_GERMAN = 3;
+const int LANG_ITALIAN = 4;
+const int LANG_CZECH = 5;
+const int LANG_RUSSIAN = 6;
+const int LANG_RESERVE1 = 7;
+const int LANG_RESERVE2 = 8;
+const int LANG_RESERVE3 = 9;
+const int LANG_RESERVE4 = 10;
+const int GAME_LANGUAGE = 2;

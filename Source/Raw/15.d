@@ -1,0 +1,16 @@
+class OCSPAWNMANAGER {
+	var int SPAWNLIST_ARRAY;
+	var int SPAWNLIST_NUMALLOC;
+	var int SPAWNLIST_NUMINARRAY;
+	var int SPAWNINGENABLED;
+	var int CAMPOS[3];
+	var int INSERTTIME;
+	var int SPAWNFLAGS;
+};
+
+
+
+
+
+
+

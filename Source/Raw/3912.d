@@ -1,0 +1,273 @@
+instance DIA_RENE_EXIT(C_INFO) {
+    NPC = 0xd742;
+    NR = 999;
+    CONDITION = DIA_RENE_EXIT_CONDITION;
+    INFORMATION = DIA_RENE_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_RENE_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_RENE_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RENE_AMBIENT(C_INFO) {
+    NPC = 0xd742;
+    NR = 990;
+    CONDITION = DIA_RENE_AMBIENT_CONDITION;
+    INFORMATION = DIA_RENE_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_RENE_AMBIENT_CONDITION() {
+    if (((((NPC_ISINSTATE(SELF, 0xf09f)) && (NPC_KNOWSINFO(OTHER, 0x124f2))) && ((PQ106_CAGEOPENED) == (TRUE))) && ((PQ106_RENESAWTHAT) == (FALSE))) && ((PQ106_ALICEMAD) != (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RENE_AMBIENT_INFO() {
+    NPC_INITAMBIENTS(SELF, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_Ambient_15_00");
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Rene_Ambient_13_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Rene_Ambient_13_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Rene_Ambient_13_03");
+    };
+}
+
+instance DIA_RENE_HELLO(C_INFO) {
+    NPC = 0xd742;
+    NR = 1;
+    CONDITION = DIA_RENE_HELLO_CONDITION;
+    INFORMATION = DIA_RENE_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What do you do?";
+}
+
+func int DIA_RENE_HELLO_CONDITION() {
+    if (NPC_ISINSTATE(SELF, 0xf09f)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RENE_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_Hello_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_Hello_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_Hello_03_03");
+    TRADER_LOGENTRY_ALICE();
+}
+
+instance DIA_RENE_PQ106_CAGEOPENED(C_INFO) {
+    NPC = 0xd742;
+    NR = 10;
+    CONDITION = DIA_RENE_PQ106_CAGEOPENED_CONDITION;
+    INFORMATION = DIA_RENE_PQ106_CAGEOPENED_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RENE_PQ106_CAGEOPENED_CONDITION() {
+    if (((PQ106_CAGEOPENED) == (TRUE)) && ((PQ106_RENESAWTHAT) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RENE_PQ106_CAGEOPENED_INFO() {
+    PQ106_ALICEMAD = TRUE;
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ106_CageOpened_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_PQ106_CageOpened_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ106_CageOpened_03_03");
+    AI_STOPPROCESSINFOS(SELF);
+    if ((LOG_GETSTATUS(MIS_PQ106)) == (LOG_RUNNING)) {
+        AI_LOGENTRY(TOPIC_PQ106, LOG_PQ106_ALICEHARPY);
+    };
+}
+
+instance DIA_RENE_LEAVEMEALONE(C_INFO) {
+    NPC = 0xd742;
+    NR = 1;
+    CONDITION = DIA_RENE_LEAVEMEALONE_CONDITION;
+    INFORMATION = DIA_RENE_LEAVEMEALONE_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RENE_LEAVEMEALONE_CONDITION() {
+    if (((NPC_ISINSTATE(SELF, 0xf09f)) && ((LOG_GETSTATUS(MIS_PQ107)) == (0))) && ((PQ106_ALICEMAD) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RENE_LEAVEMEALONE_INFO() {
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    B_SAY(SELF, OTHER, "$RUDE_GOODBYE");
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (BORR_SORRY)) {
+        INFO_CLEARCHOICES(0x124f8);
+        INFO_ADDCHOICE(0x124f8, "(Apologize - 200 GP)", 0x124fb);
+        INFO_ADDCHOICE(0x124f8, "(Move along)", 0x124ee);
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_RENE_LEAVEMEALONE_SORRY() {
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    MARVIN_SVM_RND = HLP_RANDOM(3);
+    if ((MARVIN_SVM_RND) == (0)) {
+        B_SAY(OTHER, SELF, "$MARVIN_GiveItem");
+    };
+    if ((MARVIN_SVM_RND) == (1)) {
+        B_SAY(OTHER, SELF, "$MARVIN_GiveItem2");
+    };
+    if ((MARVIN_SVM_RND) == (2)) {
+        B_SAY(OTHER, SELF, "$MARVIN_GiveItem4");
+    };
+    B_MARVIN_USEFAKEBAG_THROW();
+    NPC_REMOVEINVITEMS(SELF, 0x859b, BORR_SORRY);
+    AI_RESETFACEANI(OTHER);
+    B_GIVEINVITEMS(OTHER, SELF, 0x859b, BORR_SORRY);
+    INFO_CLEARCHOICES(0x124f8);
+    PQ106_ALICEMAD = 2;
+}
+
+var int DIA_RENE_LEAVEMEALONE_SORRY.MARVIN_SVM_RND = 0;
+instance DIA_RENE_PQ107(C_INFO) {
+    NPC = 0xd742;
+    NR = 1;
+    CONDITION = DIA_RENE_PQ107_CONDITION;
+    INFORMATION = DIA_RENE_PQ107_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Apparently, you have something you shouldn't.";
+}
+
+func int DIA_RENE_PQ107_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_PQ107)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RENE_PQ107_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_PQ107_15_01");
+    if ((PEON_BORIS) == (TRUE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ107_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ107_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_PQ107_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ107_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_PQ107_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ107_03_07");
+}
+
+instance DIA_RENE_PQ107_QUESTION(C_INFO) {
+    NPC = 0xd742;
+    NR = 1;
+    CONDITION = DIA_RENE_PQ107_QUESTION_CONDITION;
+    INFORMATION = DIA_RENE_PQ107_QUESTION_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "And what will you get out of destroying Frida?";
+}
+
+func int DIA_RENE_PQ107_QUESTION_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_PQ107)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x124fd))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RENE_PQ107_QUESTION_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_PQ107_Question_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ107_Question_03_02");
+    INFO_CLEARCHOICES(0x12500);
+    INFO_ADDCHOICE(0x12500, "I'll buy that paper back from you.", 0x12503);
+    INFO_ADDCHOICE(0x12500, "Give that paper back or you'll regret it!", 0x12504);
+    INFO_ADDCHOICE(0x12500, "In exchange for what would you give the paper away?", 0x12505);
+}
+
+func void DIA_RENE_PQ107_QUESTION_BUY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_PQ107_Question_Buy_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ107_Question_Buy_03_02");
+}
+
+func void DIA_RENE_PQ107_QUESTION_FIGHT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_PQ107_Question_Fight_15_01");
+    if ((HERO.GUILD) != (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ107_Question_Fight_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ107_Question_Fight_03_03");
+}
+
+func void DIA_RENE_PQ107_QUESTION_WHAT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rene_PQ107_Question_What_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rene_PQ107_Question_What_03_02");
+    AI_LOGENTRY(TOPIC_PQ107, LOG_PQ107_ASKALICE);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RENE_TRADE(C_INFO) {
+    NPC = 0xd742;
+    NR = 800;
+    CONDITION = DIA_RENE_TRADE_CONDITION;
+    INFORMATION = DIA_RENE_TRADE_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Show me your wares.";
+    TRADE = TRUE;
+}
+
+func int DIA_RENE_TRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x124f2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RENE_TRADE_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_LetsTrade2");
+    B_GIVETRADEINV(SELF);
+}
+
+instance DIA_RENE_PICKPOCKET(C_INFO) {
+    NPC = 0xd742;
+    NR = 900;
+    CONDITION = DIA_RENE_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_RENE_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80_FEMALE;
+}
+
+func int DIA_RENE_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RENE_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x12509);
+    INFO_ADDCHOICE(0x12509, DIALOG_BACK, 0x1250d);
+    INFO_ADDCHOICE(0x12509, DIALOG_PICKPOCKET, 0x1250c);
+}
+
+func void DIA_RENE_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x12509);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x12509);
+}
+
+func void DIA_RENE_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x12509);
+}
+

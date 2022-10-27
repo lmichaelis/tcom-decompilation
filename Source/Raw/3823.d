@@ -1,0 +1,129 @@
+instance DIA_ELDERLYWOMAN_EXIT(C_INFO) {
+    NPC = 0xd87b;
+    NR = 999;
+    CONDITION = DIA_ELDERLYWOMAN_EXIT_CONDITION;
+    INFORMATION = DIA_ELDERLYWOMAN_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ELDERLYWOMAN_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ELDERLYWOMAN_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ELDERLYWOMAN_HELLO(C_INFO) {
+    NPC = 0xd87b;
+    NR = 1;
+    CONDITION = DIA_ELDERLYWOMAN_HELLO_CONDITION;
+    INFORMATION = DIA_ELDERLYWOMAN_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ELDERLYWOMAN_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ELDERLYWOMAN_HELLO_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_Hello_03_01");
+}
+
+instance DIA_ELDERLYWOMAN_HUSBAND(C_INFO) {
+    NPC = 0xd87b;
+    NR = 2;
+    CONDITION = DIA_ELDERLYWOMAN_HUSBAND_CONDITION;
+    INFORMATION = DIA_ELDERLYWOMAN_HUSBAND_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Are you looking for your husband?";
+}
+
+func int DIA_ELDERLYWOMAN_HUSBAND_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x1199e)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ELDERLYWOMAN_HUSBAND_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_ElderlyWoman_Husband_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_Husband_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_Husband_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_Husband_03_04");
+}
+
+instance DIA_ELDERLYWOMAN_WHAT(C_INFO) {
+    NPC = 0xd87b;
+    NR = 3;
+    CONDITION = DIA_ELDERLYWOMAN_WHAT_CONDITION;
+    INFORMATION = DIA_ELDERLYWOMAN_WHAT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What's that?";
+}
+
+func int DIA_ELDERLYWOMAN_WHAT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x119a1)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ELDERLYWOMAN_WHAT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_ElderlyWoman_What_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_What_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_What_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_What_03_04");
+    INFO_CLEARCHOICES(0x119a4);
+    INFO_ADDCHOICE(0x119a4, "I can't take a family heirloom.", 0x119a7);
+    INFO_ADDCHOICE(0x119a4, "I'll make good use of it.", 0x119a8);
+}
+
+func void DIA_ELDERLYWOMAN_FAMILYHEIRLOOM() {
+    AI_OUTPUT(OTHER, SELF, "DIA_ElderlyWoman_FamilyHeirloom_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_FamilyHeirloom_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_FamilyHeirloom_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_FamilyHeirloom_03_04");
+    CREATEINVITEMS(SELF, 0x8f6e, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x8f6e, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_FamilyHeirloom_03_05");
+    B_GIVEPLAYERXP(XP_EVENT_ELDERLYWOMAN_V1);
+    NPC_EXCHANGEROUTINE(SELF, TOT);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_ELDERLYWOMAN_USEINAGOODWAY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_ElderlyWoman_UseInAGoodWay_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_UseInAGoodWay_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_UseInAGoodWay_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_ElderlyWoman_UseInAGoodWay_15_04");
+    CREATEINVITEMS(SELF, 0x894a, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x894a, 1);
+    B_GIVEPLAYERXP(XP_EVENT_ELDERLYWOMAN_V2);
+    NPC_EXCHANGEROUTINE(SELF, TOT);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ELDERLYWOMAN_AMBIENTTALK(C_INFO) {
+    NPC = 0xd87b;
+    NR = 5;
+    CONDITION = DIA_ELDERLYWOMAN_AMBIENTTALK_CONDITION;
+    INFORMATION = DIA_ELDERLYWOMAN_AMBIENTTALK_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ELDERLYWOMAN_AMBIENTTALK_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x119a4)) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ELDERLYWOMAN_AMBIENTTALK_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_ElderlyWoman_AmbientTalk_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+

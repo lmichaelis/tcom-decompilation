@@ -1,0 +1,1738 @@
+instance DIA_GRAYSON_EXIT(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 999;
+    CONDITION = DIA_GRAYSON_EXIT_CONDITION;
+    INFORMATION = DIA_GRAYSON_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_GRAYSON_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_GRAYSON_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_GRAYSON_KQ401_HELLO(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ401_HELLO_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ401_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GRAYSON_KQ401_HELLO_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_KQ401)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_STARTQUESTWITHOUTGUILD() {
+    KQ405_READYTOSTART = TRUE;
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Start_03_06");
+    if ((KQ402_DECISION) == (2)) {
+        KQ402_FINISHQUEST();
+    };
+    if ((KQ403_DECISION) == (2)) {
+        KQ403_FINISHQUEST();
+    };
+    if ((INEXTREMO_CANPLAYCONCERT) == (FALSE)) {
+        KQ404_SPAWNNPC();
+        KQ404_PREPAREHOUSE();
+    };
+}
+
+func void DIA_GRAYSON_KQ401_HELLO_KQ402_START() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_KQ402_Start_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_KQ402_Start_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_KQ402_Start_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_KQ402_Start_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_KQ402_Start_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_KQ402_Start_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_KQ402_Start_03_07");
+    INFO_CLEARCHOICES(0x108c4);
+    INFO_ADDCHOICE(0x108c4, "There may be a problem with that...", 0x108c8);
+}
+
+func void DIA_GRAYSON_KQ401_HELLO_KQ402_START_PROBLEM() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_HELLO_Problem_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_Problem_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_HELLO_Problem_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_HELLO_Problem_15_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_HELLO_Problem_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_Problem_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_Problem_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_Problem_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_HELLO_Problem_03_09");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_HELLO_Problem_15_10");
+    LOG_CREATETOPIC(TOPIC_KQ402, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_KQ402), TOPIC_KQ402, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_MILITIAFIRSTTASK);
+    AI_LOGENTRY(TOPIC_KQ402, LOG_KQ402_START);
+    INFO_CLEARCHOICES(0x108c4);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_GRAYSON_KQ401_HELLO_INFO() {
+    INFO_CLEARCHOICES(0x108c4);
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_02");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_04");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_07");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_08");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_09");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_10");
+        INFO_ADDCHOICE(0x108c4, "Why are you asking the city guard for help?", 0x108ce);
+        INFO_ADDCHOICE(0x108c4, "Roger that.", 0x108d0);
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_11");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_12");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_13");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_14");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_15");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_16");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_17");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_18");
+        if (NPC_KNOWSINFO(OTHER, 0x10609)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_19");
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_20");
+        };
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_21");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_22");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_23");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_24");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_25");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_26");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_27");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_28");
+        LOG_CREATETOPIC(TOPIC_KQ403, LOG_MISSION);
+        LOG_SETSTATUS(_@(MIS_KQ403), TOPIC_KQ403, LOG_RUNNING);
+        AI_LOGENTRY(TOPIC_KQ403, LOG_KQ403_START);
+        AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_ARAXOSFIRSTTASK);
+        INFO_CLEARCHOICES(0x108c4);
+        AI_STOPPROCESSINFOS(SELF);
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_29");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_30");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_15_31");
+    B_USEFAKESCROLL();
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_32");
+    if ((MARVIN_LOSTGUILDMILITA) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_33");
+    };
+    if ((MARVIN_LOSTGUILDARAXOS) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_34");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_03_35");
+    INFO_ADDCHOICE(0x108c4, "I hear you know how to appreciate talented people.", 0x108cd);
+}
+
+var int GRAYSON_KQ404_READYTOSTARTQUEST = 0;
+var int GRAYSON_TOLDABOUTYOURBROTHER = 0;
+func void DIA_GRAYSON_KQ404_FUTURE() {
+    if ((LOG_GETSTATUS(MIS_Q405)) != (LOG_SUCCESS)) {
+        GRAYSON_TOLDABOUTYOURBROTHER = TRUE;
+    };
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    if ((LOG_GETSTATUS(MIS_Q405)) == (LOG_SUCCESS)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_Help_15_21");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_Help_15_10");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_Help_15_11");
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_12");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_Help_15_13");
+    if ((LOG_GETSTATUS(MIS_Q405)) == (LOG_SUCCESS)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_Help_15_22");
+        AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_23");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_Help_15_14");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_15");
+    if ((LOG_GETSTATUS(MIS_Q405)) != (LOG_SUCCESS)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_Help_15_16");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_17");
+    };
+    if (((MARVIN_LOSTGUILDARAXOS) == (1)) || ((MARVIN_LOSTGUILDMILITA) == (1))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_18");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_19");
+        if ((LOG_GETSTATUS(MIS_Q405)) == (LOG_RUNNING)) {
+            AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_START_NOGUILD_V1);
+        } else {
+            AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_START_NOGUILD_V2);
+        };
+    };
+    AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_20");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Start_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Start_03_02");
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Start_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Start_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Start_03_05");
+    AI_RESETFACEANI(OTHER);
+    GRAYSON_KQ404_READYTOSTARTQUEST = TRUE;
+}
+
+func void DIA_GRAYSON_KQ401_HELLO_HELP() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_Help_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Hello_Help_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Hello_Help_03_07");
+    DIA_GRAYSON_STARTQUESTWITHOUTGUILD();
+}
+
+func void DIA_GRAYSON_KQ401_HELLO_QUESTION() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Question_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Question_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Question_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Question_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Question_03_05");
+    if (NPC_KNOWSINFO(OTHER, 0x10609)) {
+        INFO_ADDCHOICE(0x108c4, "I had the pleasure of meeting Lutz in person.", 0x108cf);
+    };
+}
+
+func void DIA_GRAYSON_KQ401_HELLO_LUTZ() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Lutz_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Lutz_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Lutz_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Lutz_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Lutz_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Lutz_15_06");
+}
+
+func void DIA_GRAYSON_KQ401_HELLO_YES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Yes_03_02");
+    DIA_GRAYSON_KQ401_HELLO_KQ402_START();
+}
+
+instance DIA_GRAYSON_BROTHER(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_BROTHER_CONDITION;
+    INFORMATION = DIA_GRAYSON_BROTHER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I wanted to talk to you about my missing brother.";
+}
+
+func int DIA_GRAYSON_BROTHER_CONDITION() {
+    if (((GRAYSON_KQ404_READYTOSTARTQUEST) == (TRUE)) && ((LOG_GETSTATUS(MIS_Q405)) != (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_BROTHER_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_Brother_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Brother_03_02");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Brother_03_03");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_GRAYSON_VOLKERKILLED(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_VOLKERKILLED_CONDITION;
+    INFORMATION = DIA_GRAYSON_VOLKERKILLED_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I know who is responsible for my brother's death.";
+}
+
+func int DIA_GRAYSON_VOLKERKILLED_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q405)) == (LOG_SUCCESS)) && (NPC_KNOWSINFO(OTHER, 0x108d1))) && ((GRAYSON_TOLDABOUTYOURBROTHER) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int GRAYSON_TALKWITHVOLKER = 0;
+var int GRAYSON_TALKWITHVOLKER_DAY = 0;
+func void DIA_GRAYSON_WILLTALKWITHVOLKER() {
+    GRAYSON_TALKWITHVOLKER = TRUE;
+    GRAYSON_TALKWITHVOLKER_DAY = WLD_GETDAY();
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_VolkerKilled_03_09");
+    if ((LOG_GETSTATUS(MIS_KQ407)) != (LOG_SUCCESS)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_VolkerKilled_03_10");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_VolkerKilled_03_11");
+}
+
+func void DIA_GRAYSON_VOLKERKILLED_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_VolkerKilled_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_VolkerKilled_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_VolkerKilled_15_03");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_VolkerKilled_03_04");
+    AI_RESETFACEANI(SELF);
+    if ((LOG_GETSTATUS(MIS_KQ407)) != (LOG_SUCCESS)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_VolkerKilled_03_06");
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_VolkerKilled_03_07");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_VolkerKilled_03_08");
+    };
+    DIA_GRAYSON_WILLTALKWITHVOLKER();
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_GRAYSON_WATERCIRCLE(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_WATERCIRCLE_CONDITION;
+    INFORMATION = DIA_GRAYSON_WATERCIRCLE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Volker's men tried to get me, too.";
+}
+
+func int DIA_GRAYSON_WATERCIRCLE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q406)) == (LOG_SUCCESS)) && (NPC_KNOWSINFO(OTHER, 0x108d4))) && ((GRAYSON_TALKWITHVOLKER) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_WATERCIRCLE_INFO() {
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_WaterCircle_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_WaterCircle_15_02");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_WaterCircle_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_WaterCircle_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_WaterCircle_03_05");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_GRAYSON_AFTERVOLKER(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_AFTERVOLKER_CONDITION;
+    INFORMATION = DIA_GRAYSON_AFTERVOLKER_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GRAYSON_AFTERVOLKER_CONDITION() {
+    if ((GRAYSON_TALKWITHVOLKER) == (1)) {
+        if ((GRAYSON_TALKWITHVOLKER_DAY) <= ((WLD_GETDAY()) - (1))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_AFTERVOLKER_INFO() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_AfterVolker_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_AfterVolker_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_AfterVolker_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_AfterVolker_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_AfterVolker_03_05");
+    INFO_CLEARCHOICES(0x108dd);
+    INFO_ADDCHOICE(0x108dd, "Do you really believe that?", 0x108e0);
+    INFO_ADDCHOICE(0x108dd, "That damn bastard must be kidding!", 0x108e1);
+}
+
+func void DIA_GRAYSON_AFTERVOLKER_REALLY() {
+    AI_STARTFACEANI(OTHER, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_AfterVolker_Really_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_AfterVolker_Really_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_AfterVolker_Really_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_AfterVolker_Really_03_04");
+    INFO_CLEARCHOICES(0x108dd);
+}
+
+func void DIA_GRAYSON_AFTERVOLKER_JOKE() {
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_AfterVolker_Joke_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_AfterVolker_Joke_03_02");
+    INFO_CLEARCHOICES(0x108dd);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_GRAYSON_KQ402_NEWS(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ402_NEWS_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ402_NEWS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "As for the new equipment thing...";
+}
+
+func int DIA_GRAYSON_KQ402_NEWS_CONDITION() {
+    if (((KQ402_FINISH) == (FALSE)) || ((KQ405_READYTOSTART) == (FALSE))) {
+        if ((((((LOG_GETSTATUS(MIS_KQ402)) == (LOG_RUNNING)) && ((KQ402_RAPORTABOUTARMORS) == (2))) && ((NPC_HASITEMS(OTHER, 0x91cc)) >= (1))) || ((KQ402_DECISION) == (2))) || ((((LOG_GETSTATUS(MIS_KQ402)) == (LOG_FAILED)) && ((MARVIN_LOSTGUILDMILITA) == (TRUE))) && ((KQ402_DECISION) == (2)))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ402_NEWS_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_01");
+    if ((KQ402_DECISION) == (2)) {
+        AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_02");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_04");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_05");
+        AI_RESETFACEANI(SELF);
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_06");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_07");
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_08");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_09");
+        AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_10");
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_11");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_12");
+        if ((LOG_GETSTATUS(MIS_KQ402)) == (LOG_RUNNING)) {
+            AI_LOGENTRY(TOPIC_KQ402, LOG_KQ402_GRAYSON_FINISH);
+        };
+        AI_LOGENTRY(TOPIC_KQ401, LOG_KQ402_GRAYSON_FINISH);
+        AI_RESETFACEANI(SELF);
+        DIA_GRAYSON_STARTQUESTWITHOUTGUILD();
+    };
+    AI_STARTFACEANI(SELF, S_DOUBT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_16");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_17");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    B_STANDUP();
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_18");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_19");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_20");
+    KQ402_UGLYARMOR_SHOW();
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_21");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_22");
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_23");
+    KQ402_UGLYARMOR_HIDE();
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_24");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_25");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_26");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_27");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_28");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_29");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_30");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_31");
+    INFO_CLEARCHOICES(0x108e2);
+    INFO_ADDCHOICE(0x108e2, "How about I get a blacksmith? I have some connections in town...", 0x108e5);
+}
+
+func void DIA_GRAYSON_KQ402_NEWS_SMITH() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_Smith_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_Smith_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_Smith_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_Smith_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_Smith_15_05");
+    AI_PLAYANI(OTHER, T_GREETGRD);
+    INFO_CLEARCHOICES(0x108e2);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_KQ402, LOG_KQ402_GRAYSON_UGLYARMOR);
+}
+
+instance DIA_GRAYSON_KQ402_ODGAR(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ402_ODGAR_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ402_ODGAR_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I talked to Odgar.";
+}
+
+func int DIA_GRAYSON_KQ402_ODGAR_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_KQ402)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x10f4f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ402_ODGAR_INFO() {
+    KQ402_RAPORTABOUTARMORS = 3;
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_Odgar_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_Odgar_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_Odgar_15_04");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_STARTFACEANI(OTHER, S_DOUBT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_Odgar_15_06");
+    AI_PLAYANI(OTHER, T_GREETGRD);
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_09");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_Odgar_15_10");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_13");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_14");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_Odgar_15_15");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_16");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_17");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_Odgar_03_18");
+    AI_RESETFACEANI(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_KQ402, LOG_KQ402_GRAYSON_ODGAR);
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_AFTER_GUILDQUEST);
+    KQ402_BRINKARWIDLENNARTBACK();
+}
+
+var int KQ403_ARX_AMBIENT = 0;
+instance DIA_GRAYSON_KQ403_LORENZO(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ403_LORENZO_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ403_LORENZO_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Back to my assignment...";
+}
+
+func int DIA_GRAYSON_KQ403_LORENZO_CONDITION() {
+    if (((KQ403_FINISH) == (FALSE)) || ((KQ405_READYTOSTART) == (FALSE))) {
+        if (((LOG_GETSTATUS(MIS_KQ403)) == (LOG_RUNNING)) || ((((LOG_GETSTATUS(MIS_KQ403)) == (LOG_FAILED)) && ((MARVIN_LOSTGUILDARAXOS) == (TRUE))) && ((KQ403_DECISION) == (2)))) {
+            if ((KQ403_GRAYSONDONE) == (0)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ403_LORENZO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_21");
+    if ((NPC_KNOWSINFO(OTHER, 0x1161a)) || ((KQ403_CANTALKWITHGRAYSON) == (TRUE))) {
+        KQ403_GRAYSONDONE = 1;
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_01");
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_02");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_04");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_05");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_07");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_08");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_09");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_10");
+        AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_11");
+        AI_RESETFACEANI(OTHER);
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_12");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_15");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_16");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_17");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_18");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_19");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_20");
+        AI_RESETFACEANI(SELF);
+        AI_LOGENTRY(TOPIC_KQ403, LOG_KQ403_GRAYSON_LORENZO);
+        AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_AFTER_GUILDQUEST);
+        KQ403_ARX_AMBIENT = TRUE;
+        INFO_CLEARCHOICES(0x108ea);
+        INFO_ADDCHOICE(0x108ea, "(Go to Lorenzo)", 0x108ed);
+        INFO_ADDCHOICE(0x108ea, "(Take care of other matters)", 0x108ee);
+    };
+    if ((KQ403_DECISION) == (2)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_22");
+        AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_23");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_24");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_25");
+        AI_STARTFACEANI(SELF, S_DOUBT, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_26");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_27");
+        AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_28");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_29");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_30");
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_32");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_33");
+        AI_RESETFACEANI(SELF);
+        if ((LOG_GETSTATUS(MIS_KQ403)) == (LOG_RUNNING)) {
+            AI_LOGENTRY(TOPIC_KQ403, LOG_KQ403_GRAYSON_FINISH);
+        };
+        AI_LOGENTRY(TOPIC_KQ401, LOG_KQ403_GRAYSON_FINISH);
+        KQ403_ARX_AMBIENT = TRUE;
+        DIA_GRAYSON_STARTQUESTWITHOUTGUILD();
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_37");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_38");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_39");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_GRAYSON_KQ403_LORENZO_TELEPORT() {
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0xf1df);
+}
+
+func void DIA_GRAYSON_KQ403_LORENZO_NORMAL() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_GRAYSON_KQ404_WANTWORK(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ404_WANTWORK_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ404_WANTWORK_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I've thought about your offer, Excellency. I would like to work for you.";
+}
+
+func int DIA_GRAYSON_KQ404_WANTWORK_CONDITION() {
+    if ((KAPITEL) == (5)) {
+        if ((((LOG_GETSTATUS(MIS_KQ403)) == (LOG_SUCCESS)) || ((LOG_GETSTATUS(MIS_KQ402)) == (LOG_SUCCESS))) || ((LOG_GETSTATUS(MIS_KQ405)) == (LOG_SUCCESS))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ404_WANTWORK_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WantWork_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WantWork_03_02");
+}
+
+instance DIA_GRAYSON_KQ404_WAITASEC(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ404_WAITASEC_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ404_WAITASEC_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Not so fast! Let's get a few things straight first...";
+}
+
+func int DIA_GRAYSON_KQ404_WAITASEC_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x108ef)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ404_WAITASEC_INFO() {
+    AI_STARTFACEANI(OTHER, S_SERIOUS, 1, -(1));
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WaitASec_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WaitASec_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WaitASec_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WaitASec_03_04");
+    DIA_GRAYSON_KQ404_FUTURE();
+}
+
+instance DIA_GRAYSON_KQ404_MUSICS(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ404_MUSICS_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ404_MUSICS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I don't really understand, why these musicians are such a threat to you?";
+}
+
+func int DIA_GRAYSON_KQ404_MUSICS_CONDITION() {
+    if ((GRAYSON_KQ404_READYTOSTARTQUEST) == (TRUE)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ404_MUSICS_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Musics_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Musics_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Musics_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Musics_03_04");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Musics_03_05");
+}
+
+instance DIA_GRAYSON_KQ404_WHATDO(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ404_WHATDO_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ404_WHATDO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What exactly am I supposed to do? Kill them?";
+}
+
+func int DIA_GRAYSON_KQ404_WHATDO_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x108f5)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int GRAYSON_KQ404_WHATDO_FIRST = 0;
+var int GRAYSON_KQ404_WHATDO_SECOND = 0;
+var int GRAYSON_KQ404_WHATDO_WHEN = 0;
+func void DIA_GRAYSON_KQ404_WHATDO_NEXT() {
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Next_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Next_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WhatDo_Next_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Next_03_04");
+    LOG_CREATETOPIC(TOPIC_KQ404, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_KQ404), TOPIC_KQ404, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_KQ404, LOG_KQ404_START);
+}
+
+func void DIA_GRAYSON_KQ404_WHATDO_CHOICES() {
+    INFO_CLEARCHOICES(0x108f8);
+    if ((((GRAYSON_KQ404_WHATDO_FIRST) == (FALSE)) || ((GRAYSON_KQ404_WHATDO_SECOND) == (FALSE))) || ((GRAYSON_KQ404_WHATDO_WHEN) == (FALSE))) {
+        if ((GRAYSON_KQ404_WHATDO_WHEN) == (FALSE)) {
+            INFO_ADDCHOICE(0x108f8, "Where and when is this concert to be held?", 0x10902);
+        };
+        if ((GRAYSON_KQ404_WHATDO_SECOND) == (FALSE)) {
+            INFO_ADDCHOICE(0x108f8, "I want to hear about the other method.", 0x10901);
+        };
+        if ((GRAYSON_KQ404_WHATDO_FIRST) == (FALSE)) {
+            INFO_ADDCHOICE(0x108f8, "What's the first idea?", 0x10900);
+        };
+    };
+    DIA_GRAYSON_KQ404_WHATDO_NEXT();
+}
+
+func void DIA_GRAYSON_KQ404_WHATDO_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WhatDo_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_03_03");
+    DIA_GRAYSON_KQ404_WHATDO_CHOICES();
+}
+
+func void DIA_GRAYSON_KQ404_WHATDO_FIRST() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WhatDo_First_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_First_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_First_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_First_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_First_03_05");
+    INFO_CLEARCHOICES(0x108f8);
+    INFO_ADDCHOICE(0x108f8, "How can I be sure your people won't arrest me too?", 0x10903);
+}
+
+func void DIA_GRAYSON_KQ404_WHATDO_SECOND() {
+    GRAYSON_KQ404_WHATDO_SECOND = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WhatDo_Second_15_01");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Second_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Second_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Second_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WhatDo_Second_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Second_03_06");
+    DIA_GRAYSON_KQ404_WHATDO_CHOICES();
+}
+
+func void DIA_GRAYSON_KQ404_WHATDO_WHEN() {
+    GRAYSON_KQ404_WHATDO_WHEN = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WhatDo_When_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_When_03_02");
+    DIA_GRAYSON_KQ404_WHATDO_CHOICES();
+}
+
+func void DIA_GRAYSON_KQ404_WHATDO_FIRST_SURE() {
+    GRAYSON_KQ404_WHATDO_FIRST = TRUE;
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_WhatDo_Sure_15_01");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Sure_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Sure_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_WhatDo_Sure_03_04");
+    DIA_GRAYSON_KQ404_WHATDO_CHOICES();
+}
+
+instance DIA_GRAYSON_KQ404_HELP(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ404_HELP_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ404_HELP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I need your help.";
+}
+
+func int DIA_GRAYSON_KQ404_HELP_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_KQ404)) == (LOG_RUNNING)) && ((KQ404_UNICORNLIST_READ) == (TRUE))) && ((INEXTREMO_CANPLAYCONCERT) == (TRUE))) && ((KQ404_GUARDARMOR_WHO) == (0))) {
+        if ((KQ404_UNICORNLIST_GOTEVERYTHING) != (2)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ404_HELP_INFO() {
+    KQ404_GUARDARMOR_WHO = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Help_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Help_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Help_15_03");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Help_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Help_15_05");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Help_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Help_15_07");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Help_03_08");
+    AI_TURNTONPC(SELF, MIL_13490_RICHARD);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Help_03_09");
+    AI_LOGENTRY(TOPIC_KQ404, LOG_KQ404_GRAYSON_GIVEARMOR);
+}
+
+instance DIA_GRAYSON_KQ404_FINISH(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ404_FINISH_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ404_FINISH_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Back to the In Extremo thing...";
+}
+
+var int KQ404_GRAYSONANGRY = 0;
+func int DIA_GRAYSON_KQ404_FINISH_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_KQ404)) == (LOG_RUNNING)) {
+        if ((KQ404_GRAYSONANGRY) == (0)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ404_FINISH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_02");
+    if ((KQ404_FINISHWAY) == (0)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_03");
+        AI_STARTFACEANI(SELF, S_DOUBT, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_04");
+    };
+    if ((KQ404_FINISHWAY) == (1)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_05");
+        AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_06");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_07");
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_08");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_09");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_10");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_12");
+        AI_RESETFACEANI(SELF);
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_13");
+        if ((KQ404_GUARDARMOR_WHO) == (1)) {
+            AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_14");
+        } else if ((KQ404_GUARDARMOR_WHO) >= (2)) {
+            AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_15");
+            if ((KQ404_GUARDARMOR_WHO) == (2)) {
+                AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_16");
+                AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+                AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_17");
+            } else if ((KQ404_GUARDARMOR_WHO) == (3)) {
+                AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_18");
+                AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+                AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_19");
+            };
+            AI_RESETFACEANI(SELF);
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_20");
+        };
+        B_GIVEINVITEMS(OTHER, SELF, 0x8b1f, 1);
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_21");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_22");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_23");
+        CREATEINVITEMS(SELF, 0x859b, KQ405_REWARD);
+        B_GIVEINVITEMS(SELF, OTHER, 0x859b, KQ405_REWARD);
+        AI_LOGENTRY(TOPIC_KQ404, LOG_KQ404_FINISH_V1);
+        KQ404_FINISHQUEST();
+    };
+    if ((KQ404_FINISHWAY) == (2)) {
+        KQ404_GRAYSONANGRY = TRUE;
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_25");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_26");
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_27");
+        AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_Finish_15_28");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_29");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_30");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_31");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_32");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_33");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_34");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_35");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_Finish_03_36");
+    };
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_GRAYSON_KQ404_BADENDING(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ404_BADENDING_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ404_BADENDING_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You got a professional bandit working for you, and you're trying to get rid of a bunch of musicians?";
+}
+
+func int DIA_GRAYSON_KQ404_BADENDING_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_KQ404)) == (LOG_RUNNING)) && ((KQ404_GRAYSONANGRY) == (TRUE))) && ((KQ404_FINISHWAY) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ404_BADENDING_INFO() {
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ404_BadEnding_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_BadEnding_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_BadEnding_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_BadEnding_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ404_BadEnding_03_05");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_LOGENTRY(TOPIC_KQ404, LOG_KQ404_FINISH_V2);
+    KQ404_FINISHQUEST();
+}
+
+instance DIA_GRAYSON_KQ405_START(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ405_START_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ405_START_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Scout?";
+}
+
+func int DIA_GRAYSON_KQ405_START_CONDITION() {
+    if ((KQ405_READYTOSTART) == (TRUE)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ405_START_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Start_Scout_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Start_Scout_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Start_Scout_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Start_Scout_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Start_Scout_15_05");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Start_Scout_03_06");
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Start_Scout_15_07");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Start_Scout_03_08");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(0x1090e);
+    LOG_CREATETOPIC(TOPIC_KQ405, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_KQ405), TOPIC_KQ405, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_KQ405, LOG_KQ405_START);
+}
+
+instance DIA_GRAYSON_KQ405_QUESTIONS(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ405_QUESTIONS_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ405_QUESTIONS_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ASKABOUTSCOUT;
+}
+
+var int KQ405_QUESTIONS_WHAT = 0;
+var int KQ405_QUESTIONS_WHERE = 0;
+func int DIA_GRAYSON_KQ405_QUESTIONS_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_KQ405)) == (LOG_RUNNING)) {
+        if (((KQ405_QUESTIONS_WHERE) == (FALSE)) || ((KQ405_QUESTIONS_WHAT) == (FALSE))) {
+            if ((KQ405_FOUNDBODY) == (FALSE)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ405_QUESTIONS_INFO() {
+    INFO_CLEARCHOICES(0x10911);
+    INFO_ADDCHOICE(0x10911, DIALOG_BACK, 0x10916);
+    if ((KQ405_QUESTIONS_WHAT) == (FALSE)) {
+        INFO_ADDCHOICE(0x10911, "What should I know about Burkhard?", 0x10917);
+    };
+    if ((KQ405_QUESTIONS_WHERE) == (FALSE)) {
+        INFO_ADDCHOICE(0x10911, "Where was he last seen?", 0x10918);
+    };
+}
+
+func void DIA_GRAYSON_KQ405_QUESTIONS_BACK() {
+    INFO_CLEARCHOICES(0x10911);
+}
+
+func void DIA_GRAYSON_KQ405_QUESTIONS_WHAT() {
+    KQ405_QUESTIONS_WHAT = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Questions_What_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Questions_What_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Questions_What_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Questions_What_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Questions_What_03_05");
+    DIA_GRAYSON_KQ405_QUESTIONS_INFO();
+}
+
+func void DIA_GRAYSON_KQ405_QUESTIONS_WHERE() {
+    KQ405_QUESTIONS_WHERE = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Questions_Where_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Questions_Where_03_02");
+    AI_LOGENTRY(TOPIC_KQ405, LOG_KQ405_SILBACH);
+    DIA_GRAYSON_KQ405_QUESTIONS_INFO();
+}
+
+instance DIA_GRAYSON_KQ405_FINISH(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 2;
+    CONDITION = DIA_GRAYSON_KQ405_FINISH_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ405_FINISH_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "As for Burkhard...";
+}
+
+func int DIA_GRAYSON_KQ405_FINISH_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_KQ405)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ405_FINISH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Finish_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_02");
+    if (((NPC_HASITEMS(OTHER, 0x9246)) >= (1)) || ((NPC_HASITEMS(OTHER, 0x9248)) >= (1))) {
+        AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Finish_15_05");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Finish_15_06");
+        B_GIVEINVITEMS(OTHER, SELF, 0x9243, 1);
+        B_STANDUP();
+        B_USEFAKESCROLL();
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_07");
+        AI_RESETFACEANI(SELF);
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_08");
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Finish_15_09");
+        if ((NPC_HASITEMS(OTHER, 0x9246)) >= (1)) {
+            AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+            B_GIVEINVITEMS(OTHER, SELF, 0x9246, 1);
+            B_USEFAKEUGLYINNOSFIGURE_STATE_START();
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_10");
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_11");
+            AI_STARTFACEANI(OTHER, S_DISGUST, 1, -(1));
+            AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Finish_15_12");
+            AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_13");
+            B_USEFAKEUGLYINNOSFIGURE_STATE_REMOVE();
+            AI_LOGENTRY(TOPIC_KQ405, LOG_KQ405_FINISH_V1);
+        } else {
+            AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Finish_15_15");
+            AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_16");
+            AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_17");
+            AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_18");
+            AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+            AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Finish_15_19");
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_20");
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_21");
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_22");
+            AI_LOGENTRY(TOPIC_KQ405, LOG_KQ405_FINISH_V2);
+            NPC_REMOVEINVITEMS(SELF, 0x9248, 1);
+        } else {
+            AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_23");
+        } else if ((MARVIN_LOSTGUILDMILITA) == (TRUE)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_13");
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ402_News_03_14");
+            AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ402_News_15_15");
+        } else if ((MARVIN_LOSTGUILDARAXOS) == (TRUE)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_34");
+            AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ403_Lorenzo_03_35");
+            AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ403_Lorenzo_15_36");
+        };
+        B_GIVEINVITEMS(OTHER, SELF, 0x9248, 1);
+        LOG_SETSTATUS(_@(MIS_KQ405), TOPIC_KQ405, LOG_SUCCESS);
+        NPC_REMOVEINVITEMS(SELF, 0x9243, 1);
+        B_GIVEPLAYERXP(XP_KQ405_FINISH);
+        CREATEINVITEMS(SELF, 0x859b, KQ405_REWARD);
+        if ((LOG_GETSTATUS(MIS_Q405)) != (LOG_SUCCESS)) {
+            AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_AFTER_KQ405_V1);
+        } else {
+            AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_AFTER_KQ405_V2);
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ405_Finish_15_03");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Finish_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_GRAYSON_KQ406_START(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ406_START_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ406_START_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I'm ready for my next assignment.";
+}
+
+func int DIA_GRAYSON_KQ406_START_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_KQ404)) == (LOG_SUCCESS)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ406_START_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Start_15_01");
+    if ((KQ404_FINISHWAY) == (2)) {
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ405_Start_03_02");
+    };
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Start_03_02");
+    INFO_CLEARCHOICES(0x1091c);
+    INFO_ADDCHOICE(0x1091c, "I heard something about that...", 0x1091f);
+}
+
+func void DIA_GRAYSON_KQ406_START_HEARD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Start_Heard_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Start_Heard_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Start_Heard_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Start_Heard_03_04");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Start_Heard_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Start_Heard_03_06");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Start_Heard_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Start_Heard_03_09");
+    INFO_CLEARCHOICES(0x1091c);
+    INFO_ADDCHOICE(0x1091c, "And the second part of the task?", 0x10920);
+}
+
+func void DIA_GRAYSON_KQ406_START_HEARD_SECOND() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Start_Second_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Start_Second_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Start_Second_03_03");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_GRAYSON_KQ406_WHAT(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ406_WHAT_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ406_WHAT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Where do I start?";
+}
+
+func int DIA_GRAYSON_KQ406_WHAT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x1091c)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ406_WHAT_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_What_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_What_03_02");
+    INFO_CLEARCHOICES(0x10921);
+    if ((KQ404_FINISHWAY) == (2)) {
+        INFO_ADDCHOICE(0x10921, "Last time you weren't happy with our partnership.", 0x10925);
+    };
+    INFO_ADDCHOICE(0x10921, "We haven't worked together yet.", 0x10926);
+}
+
+func void DIA_GRAYSON_KQ406_WHAT_START() {
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_What_NotHappy_03_04");
+    LOG_CREATETOPIC(TOPIC_KQ406, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_KQ406), TOPIC_KQ406, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_KQ406, LOG_KQ406_START);
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_INEXTREMODONE);
+    INFO_CLEARCHOICES(0x10921);
+    KQ406_PREPARENPC();
+    KQ406_PREPARESCENE();
+}
+
+func void DIA_GRAYSON_KQ406_WHAT_NOTHAPPY() {
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_What_NotHappy_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_What_NotHappy_03_02");
+    DIA_GRAYSON_KQ406_WHAT_START();
+}
+
+func void DIA_GRAYSON_KQ406_WHAT_WORK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_What_Work_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_What_Work_03_02");
+    DIA_GRAYSON_KQ406_WHAT_START();
+}
+
+instance DIA_GRAYSON_KQ406_FINISH(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ406_FINISH_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ406_FINISH_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GRAYSON_KQ406_FINISH_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_KQ406)) == (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 0xf09f))) && ((KQ406_WAITFORFINISHQUEST) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ406_FINISH_INFO() {
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Finish_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Finish_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Finish_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Finish_15_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Finish_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Finish_03_06");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Finish_03_07");
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Finish_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Finish_03_09");
+    CREATEINVITEMS(SELF, 0x859b, KQ406_REWARD);
+    B_GIVEINVITEMS(SELF, OTHER, 0x859b, KQ406_REWARD);
+    INFO_CLEARCHOICES(0x10927);
+    INFO_ADDCHOICE(0x10927, "Can I ask you something? You and Anskar - how do you know each other?", 0x1092a);
+}
+
+func void DIA_GRAYSON_KQ406_FINISH_ASK() {
+    KQ407_START = TRUE;
+    KQ407_START_DAY = WLD_GETDAY();
+    AI_STARTFACEANI(OTHER, S_THINK, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Finish_Ask_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Finish_Ask_03_02");
+    AI_STARTFACEANI(OTHER, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Finish_Ask_15_03");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Finish_Ask_03_04");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Finish_Ask_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ406_Finish_Ask_03_07");
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ406_Finish_Ask_15_08");
+    INFO_CLEARCHOICES(0x10927);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_LOGENTRY(TOPIC_KQ406, LOG_KQ406_FINISH);
+    LOG_SETSTATUS(_@(MIS_KQ406), TOPIC_KQ406, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_KQ406_FINISH);
+    AI_FUNCTION(SELF, 0x87d5);
+    AI_FUNCTION(SELF, 0x1668d);
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_AFTER_KQ406);
+}
+
+instance DIA_GRAYSON_KQ407_START(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ407_START_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ407_START_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GRAYSON_KQ407_START_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_KQ406)) == (LOG_SUCCESS)) {
+        if (((KQ407_START) == (TRUE)) && ((KQ407_START_DAY) <= ((WLD_GETDAY()) - (1)))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ407_START_INFO() {
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_Start_03_01");
+    AI_STARTFACEANI(OTHER, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_Start_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_Start_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_Start_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_BEFORE_KQ407);
+    AI_STOPPROCESSINFOS(SELF);
+    CREATEINVITEMS(SELF, 0x9249, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x9249, 1);
+}
+
+instance DIA_GRAYSON_KQ407_NOTGOOD(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ407_NOTGOOD_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ407_NOTGOOD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "It doesn't look good.";
+}
+
+func int DIA_GRAYSON_KQ407_NOTGOOD_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x1092b)) && ((KQ407_READNOTE) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ407_NOTGOOD_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_NotGood_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_NotGood_03_02");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_NotGood_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_NotGood_03_04");
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_ORCS);
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_GRAYSON_KQ407_SEARCHHELP(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ407_SEARCHHELP_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ407_SEARCHHELP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Maybe we should inform the island authorities. They might be able to help.";
+}
+
+func int DIA_GRAYSON_KQ407_SEARCHHELP_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x1092e)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ407_SEARCHHELP_INFO() {
+    AI_STARTFACEANI(OTHER, S_THINK, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_SearchHelp_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_SearchHelp_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_SearchHelp_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_SearchHelp_15_04");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_SearchHelp_03_05");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_GRAYSON_KQ407_HOWHELP(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ407_HOWHELP_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ407_HOWHELP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How can I help?";
+}
+
+func int DIA_GRAYSON_KQ407_HOWHELP_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x10931)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ407_HOWHELP_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_HowHelp_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_HowHelp_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_HowHelp_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_HowHelp_03_05");
+    AI_RESETFACEANI(OTHER);
+    LOG_CREATETOPIC(TOPIC_KQ407, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_KQ407), TOPIC_KQ407, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_KQ407, LOG_KQ407_START);
+    CREATEINVITEMS(SELF, 0x924c, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x924c, 1);
+    CREATEINVITEMS(SELF, 0x924f, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x924f, 1);
+}
+
+instance DIA_GRAYSON_KQ407_GOTGUILDLEADERS(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ407_GOTGUILDLEADERS_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ407_GOTGUILDLEADERS_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Regarding the support...";
+}
+
+var int GRAYSON_KQ407_GOTGUILDLEADERS = 0;
+func int DIA_GRAYSON_KQ407_GOTGUILDLEADERS_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_KQ407)) == (LOG_RUNNING)) && ((GRAYSON_KQ407_GOTGUILDLEADERS) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ407_GOTGUILDLEADERS_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_GotGuildLeaders_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_03_02");
+    if ((KQ407_TALKEDRODERICHLORENZO) == (FALSE)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_GotGuildLeaders_15_03");
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_03_04");
+        AI_RESETFACEANI(SELF);
+    };
+    GRAYSON_KQ407_GOTGUILDLEADERS = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_GotGuildLeaders_15_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_GotGuildLeaders_15_06");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_03_07");
+    AI_STARTFACEANI(SELF, "S_THING", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_03_08");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_03_10");
+    INFO_CLEARCHOICES(0x10937);
+    INFO_ADDCHOICE(0x10937, "Where can I find this Oliver?", 0x1093b);
+}
+
+func void DIA_GRAYSON_KQ407_GOTGUILDLEADERS_WHERE() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_GotGuildLeaders_Where_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_Where_03_02");
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_Where_03_03");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_Where_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_Where_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_Where_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_Where_03_08");
+    INFO_CLEARCHOICES(0x10937);
+    INFO_ADDCHOICE(0x10937, "What about Anskar? Of all of us, he has the most experience with orcs.", 0x1093c);
+}
+
+func void DIA_GRAYSON_KQ407_GOTGUILDLEADERS_WHERE_ANSKAR() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_GotGuildLeaders_Anskar_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_Anskar_03_02");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_Anskar_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_GotGuildLeaders_Anskar_03_04");
+    INFO_CLEARCHOICES(0x10937);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_KQ407, LOG_KQ407_GRAYSON_OLIVER);
+    KQ407_PREPARENPCINMEDIC();
+    KQ407_PREPARENPCINKALEB();
+}
+
+instance DIA_GRAYSON_KQ407_NEWS(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ407_NEWS_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ407_NEWS_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GRAYSON_KQ407_NEWS_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_KQ407)) == (LOG_RUNNING)) && ((KQ407_ORCLEADER_PART6_DEAD) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ407_NEWS_INFO() {
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_News_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_News_15_02");
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_TURNTONPC(SELF, VLK_6388_MORRIS);
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_News_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_News_03_04");
+    AI_TURNTONPC(SELF, OTHER);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0x10940);
+}
+
+func void KQ407_GRAYSON_CHANGEMORRISRTN() {
+    B_STARTOTHERROUTINE(VLK_6388_MORRIS, START);
+    NPC_REFRESH(VLK_6388_MORRIS);
+}
+
+instance DIA_GRAYSON_KQ407_FINISH(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ407_FINISH_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ407_FINISH_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GRAYSON_KQ407_FINISH_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_KQ407)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x1093d))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ407_FINISH_INFO() {
+    AI_STARTFACEANI(SELF, S_NOPE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_Finish_03_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_Finish_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ407_Finish_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    CREATEINVITEMS(SELF, 0x859b, KQ407_REWARD);
+    B_GIVEINVITEMS(SELF, OTHER, 0x859b, KQ407_REWARD);
+    AI_LOGENTRY(TOPIC_KQ407, LOG_KQ407_FINISH);
+    LOG_SETSTATUS(_@(MIS_KQ407), TOPIC_KQ407, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_KQ407_FINISH);
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_AFTER_KQ407);
+    NPC_EXCHANGEROUTINE(SELF, START);
+    RESTOREROUTINE_ADELARD();
+    RESTOREROUTINE_GAROS();
+    RESTOREROUTINE_OKTAV();
+    RESTOREROUTINE_WEIGAR();
+}
+
+instance DIA_GRAYSON_KQ401_WANTTOSEE(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ401_WANTTOSEE_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ401_WANTTOSEE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "The beginning?";
+}
+
+func int DIA_GRAYSON_KQ401_WANTTOSEE_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_KQ407)) == (LOG_SUCCESS)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ401_WANTTOSEE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ407_Finish_Beginning_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_WantToSee_03_03");
+    INFO_CLEARCHOICES(0x10944);
+    INFO_ADDCHOICE(0x10944, "I understand you have another assignment for me?", 0x10947);
+}
+
+func void DIA_GRAYSON_KQ401_WANTTOSEE_QUEST() {
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_WantToSee_Quest_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_WantToSee_Quest_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_WantToSee_Quest_03_03");
+    INFO_CLEARCHOICES(0x10944);
+    INFO_ADDCHOICE(0x10944, "Excuse me?!", 0x10948);
+}
+
+func void DIA_GRAYSON_KQ401_WANTTOSEE_QUEST_WHAT() {
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_WantToSee_What_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_WantToSee_What_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_WantToSee_What_03_03");
+    AI_STARTFACEANI(OTHER, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_WantToSee_What_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_WantToSee_What_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_WantToSee_What_03_06");
+    if (((HERO.GUILD) != (GIL_MIL)) || ((HERO.GUILD) != (GIL_SLD))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_WantToSee_What_03_07");
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_WantToSee_What_03_08");
+        CREATEINVITEMS(SELF, 0x8b21, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x8b21, 1);
+        AI_WAITTILLEND(OTHER, SELF);
+        AI_EQUIPARMOR(OTHER, 0x8b21);
+    };
+}
+
+instance DIA_GRAYSON_KQ401_FINISH(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 1;
+    CONDITION = DIA_GRAYSON_KQ401_FINISH_CONDITION;
+    INFORMATION = DIA_GRAYSON_KQ401_FINISH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "When do we leave?";
+}
+
+func int DIA_GRAYSON_KQ401_FINISH_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x10944)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_KQ401_FINISH_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Finish_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Finish_03_02");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Finish_03_03");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Finish_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Grayson_KQ401_Finish_03_05");
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Grayson_KQ401_Finish_15_06");
+    DIA_GRAYSON_WILLTALKWITHVOLKER();
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_FINISH);
+    LOG_SETSTATUS(_@(MIS_KQ401), TOPIC_KQ401, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_KQ401_FINISH);
+}
+
+instance DIA_GRAYSON_AMBIENT(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 998;
+    CONDITION = DIA_GRAYSON_AMBIENT_CONDITION;
+    INFORMATION = DIA_GRAYSON_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are things going?";
+}
+
+func int DIA_GRAYSON_AMBIENT_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_KQ402)) == (1)) || ((LOG_GETSTATUS(MIS_KQ402)) == (2))) || (((LOG_GETSTATUS(MIS_KQ403)) == (1)) || ((LOG_GETSTATUS(MIS_KQ403)) == (2)))) || (((LOG_GETSTATUS(MIS_KQ405)) == (1)) || ((LOG_GETSTATUS(MIS_KQ405)) == (2)))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew3");
+    if (((LOG_GETSTATUS(MIS_KQ402)) == (LOG_RUNNING)) && (!(NPC_KNOWSINFO(OTHER, 0x108e6)))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_01");
+    };
+    if (((LOG_GETSTATUS(MIS_KQ402)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x108e6))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_02");
+    };
+    if (((LOG_GETSTATUS(MIS_KQ403)) == (LOG_RUNNING)) && ((KQ403_ARX_AMBIENT) == (FALSE))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_03");
+    };
+    if (((KQ403_ARX_AMBIENT) == (TRUE)) && ((LOG_GETSTATUS(MIS_KQ404)) != (LOG_RUNNING))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_04");
+    };
+    if ((LOG_GETSTATUS(MIS_KQ404)) == (LOG_RUNNING)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_05");
+    };
+    if ((((LOG_GETSTATUS(MIS_KQ404)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_KQ405)) != (LOG_RUNNING))) && ((LOG_GETSTATUS(MIS_KQ405)) != (LOG_SUCCESS))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_06");
+    };
+    if ((LOG_GETSTATUS(MIS_KQ405)) == (LOG_RUNNING)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_07");
+    };
+    if ((((LOG_GETSTATUS(MIS_KQ405)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_KQ406)) != (LOG_RUNNING))) && ((LOG_GETSTATUS(MIS_KQ406)) != (LOG_SUCCESS))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_08");
+    };
+    if ((LOG_GETSTATUS(MIS_KQ406)) == (LOG_RUNNING)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_09");
+    };
+    if ((((LOG_GETSTATUS(MIS_KQ406)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_KQ407)) != (LOG_RUNNING))) && ((LOG_GETSTATUS(MIS_KQ407)) != (LOG_SUCCESS))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_10");
+    };
+    if ((LOG_GETSTATUS(MIS_KQ407)) == (LOG_RUNNING)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_11");
+    };
+    if ((LOG_GETSTATUS(MIS_KQ407)) == (LOG_SUCCESS)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Grayson_Ambient_03_12");
+    };
+    B_SAY(SELF, OTHER, "$IMBUSY_CALM");
+}
+
+instance DIA_GRAYSON_PICKPOCKET(C_INFO) {
+    NPC = 0xd1f0;
+    NR = 900;
+    CONDITION = DIA_GRAYSON_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_GRAYSON_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120;
+}
+
+func int DIA_GRAYSON_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRAYSON_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x1094f);
+    INFO_ADDCHOICE(0x1094f, DIALOG_BACK, 0x10953);
+    INFO_ADDCHOICE(0x1094f, DIALOG_PICKPOCKET, 0x10952);
+}
+
+func void DIA_GRAYSON_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        CREATEINVITEMS(SELF, 0x85a4, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x85a4, 1);
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x1094f);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x1094f);
+}
+
+func void DIA_GRAYSON_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x1094f);
+}
+

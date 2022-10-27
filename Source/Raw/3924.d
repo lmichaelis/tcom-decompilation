@@ -1,0 +1,401 @@
+instance DIA_VEIGO_EXIT(C_INFO) {
+    NPC = 0xd75e;
+    NR = 999;
+    CONDITION = DIA_VEIGO_EXIT_CONDITION;
+    INFORMATION = DIA_VEIGO_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_VEIGO_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_VEIGO_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_VEIGO_CANTTALK(C_INFO) {
+    NPC = 0xd75e;
+    NR = 1;
+    CONDITION = DIA_VEIGO_CANTTALK_CONDITION;
+    INFORMATION = DIA_VEIGO_CANTTALK_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VEIGO_CANTTALK_CONDITION() {
+    if (((CQ004_RECONANDVEIGOCANTALK) == (FALSE)) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        if ((Q504_TAKEWORKERS) != (2)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_CANTTALK_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CantTalk_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_VEIGO_NOTWORKER(C_INFO) {
+    NPC = 0xd75e;
+    NR = 2;
+    CONDITION = DIA_VEIGO_NOTWORKER_CONDITION;
+    INFORMATION = DIA_VEIGO_NOTWORKER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You don't look like an ordinary worker.";
+}
+
+func int DIA_VEIGO_NOTWORKER_CONDITION() {
+    if ((Q504_TAKEWORKERS) != (2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_NOTWORKER_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_NotWorker_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_NotWorker_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_NotWorker_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_NotWorker_03_04");
+}
+
+instance DIA_VEIGO_MAGE(C_INFO) {
+    NPC = 0xd75e;
+    NR = 3;
+    CONDITION = DIA_VEIGO_MAGE_CONDITION;
+    INFORMATION = DIA_VEIGO_MAGE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Why didn't you become a mage?";
+}
+
+func int DIA_VEIGO_MAGE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12654)) {
+        if ((Q504_TAKEWORKERS) != (2)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_MAGE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_Mage_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_Mage_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_Mage_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_Mage_03_04");
+}
+
+instance DIA_VEIGO_CQ004_WHODIDTHIS(C_INFO) {
+    NPC = 0xd75e;
+    NR = 1;
+    CONDITION = DIA_VEIGO_CQ004_WHODIDTHIS_CONDITION;
+    INFORMATION = DIA_VEIGO_CQ004_WHODIDTHIS_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VEIGO_CQ004_WHODIDTHIS_CONDITION() {
+    if ((CQ004_RECONANDVEIGOCANTALK) == (TRUE)) {
+        if (((NPC_GETDISTTOWP(VLK_6231_RECON, VLK_6231_RECON.WP)) <= (500)) && ((NPC_GETDISTTOWP(VLK_6232_VEIGO, VLK_6232_VEIGO.WP)) <= (500))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_CQ004_WHODIDTHIS_INFO() {
+    TRIA_INVITE(VLK_6231_RECON);
+    TRIA_START();
+    AI_LOOKATNPC(HERO, VLK_6232_VEIGO);
+    TRIA_WAIT();
+    TRIA_NEXT(VLK_6231_RECON);
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_CQ004_WhoDidThis_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_03_02");
+    TRIA_WAIT();
+    TRIA_NEXT(VLK_6232_VEIGO);
+    AI_TURNTONPC(SELF, VLK_6231_RECON);
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_03_03");
+    TRIA_WAIT();
+    TRIA_NEXT(VLK_6231_RECON);
+    AI_TURNTONPC(SELF, VLK_6231_RECON);
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_03_06");
+    TRIA_WAIT();
+    TRIA_NEXT(VLK_6232_VEIGO);
+    AI_TURNTONPC(VLK_6232_VEIGO, HERO);
+    AI_TURNTONPC(VLK_6231_RECON, HERO);
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_03_09");
+    INFO_CLEARCHOICES(0x1265a);
+    INFO_ADDCHOICE(0x1265a, "Who do you think damaged the crane?", 0x1265f);
+    INFO_ADDCHOICE(0x1265a, "Where were you when the crane stopped working?", 0x12660);
+}
+
+func void DIA_VEIGO_CQ004_WHODIDTHIS_NEXT() {
+    CQ004_RECONANDVEIGOINFORMATION = (CQ004_RECONANDVEIGOINFORMATION) + (1);
+    if ((CQ004_RECONANDVEIGOINFORMATION) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_Who_03_05");
+        AI_OUTPUT(OTHER, SELF, "DIA_Veigo_CQ004_WhoDidThis_Who_15_06");
+        AI_OUTPUT(OTHER, SELF, "DIA_Veigo_CQ004_WhoDidThis_Who_15_07");
+        AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_Who_03_08");
+        AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_Who_03_09");
+        TRIA_FINISH();
+        AI_WAITTILLEND(SELF, OTHER);
+        AI_WAITTILLEND(OTHER, SELF);
+        AI_STOPLOOKAT(SELF);
+        AI_STOPLOOKAT(OTHER);
+        INFO_CLEARCHOICES(0x1265a);
+        AI_STOPPROCESSINFOS(SELF);
+        AI_LOGENTRY(TOPIC_CQ004, LOG_CQ004_VEIGO_SLUMS);
+        AI_FUNCTION(HERO, 0xf4d0);
+    };
+}
+
+var int DIA_VEIGO_CQ004_WHODIDTHIS_NEXT.CQ004_RECONANDVEIGOINFORMATION = 0;
+func void DIA_VEIGO_CQ004_WHODIDTHIS_WHO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_CQ004_WhoDidThis_Who_15_01");
+    TRIA_WAIT();
+    TRIA_NEXT(VLK_6231_RECON);
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_Who_03_02");
+    TRIA_WAIT();
+    TRIA_NEXT(VLK_6232_VEIGO);
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_Who_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_Who_03_04");
+    DIA_VEIGO_CQ004_WHODIDTHIS_NEXT();
+}
+
+func void DIA_VEIGO_CQ004_WHODIDTHIS_WHERE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_CQ004_WhoDidThis_Where_15_01");
+    TRIA_WAIT();
+    TRIA_NEXT(VLK_6231_RECON);
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_Where_03_02");
+    TRIA_WAIT();
+    TRIA_NEXT(VLK_6232_VEIGO);
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_Where_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_WhoDidThis_Where_03_04");
+    DIA_VEIGO_CQ004_WHODIDTHIS_NEXT();
+}
+
+instance DIA_VEIGO_CQ004_KETHLOST(C_INFO) {
+    NPC = 0xd75e;
+    NR = 1;
+    CONDITION = DIA_VEIGO_CQ004_KETHLOST_CONDITION;
+    INFORMATION = DIA_VEIGO_CQ004_KETHLOST_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VEIGO_CQ004_KETHLOST_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_CQ004)) == (LOG_SUCCESS)) {
+        if ((CQ004_RESULT) == (1)) {
+            if ((CQ004_KETHANWSER) >= (1)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_CQ004_KETHLOST_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_KethLost_03_01");
+    if ((CQ004_KETHANWSER) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_KethLost_03_02");
+    };
+    if ((CQ004_KETHANWSER) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_KethLost_03_03");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_CQ004_KethLost_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_KethLost_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_KethLost_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_KethLost_03_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_CQ004_KethLost_15_08");
+    CREATEINVITEMS(SELF, 0x859b, CQ004_VEIGOREWARD);
+    B_GIVEINVITEMS(SELF, OTHER, 0x859b, CQ004_VEIGOREWARD);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0xf4d3);
+    if ((CQ004_KETHREWARD) == (1)) {
+        AI_LOGENTRY(TOPIC_CQ004, LOG_CQ004_FINISH_V3);
+        LOG_SETSTATUS(_@(MIS_CQ004), TOPIC_CQ004, LOG_SUCCESS);
+    };
+    if ((CQ004_KETHREWARD) == (2)) {
+        AI_LOGENTRY(TOPIC_CQ004, LOG_CQ004_FINISH_V4);
+        LOG_SETSTATUS(_@(MIS_CQ004), TOPIC_CQ004, LOG_SUCCESS);
+    };
+}
+
+instance DIA_VEIGO_CQ004_FAILED(C_INFO) {
+    NPC = 0xd75e;
+    NR = 1;
+    CONDITION = DIA_VEIGO_CQ004_FAILED_CONDITION;
+    INFORMATION = DIA_VEIGO_CQ004_FAILED_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How are you and Recon doing?";
+}
+
+func int DIA_VEIGO_CQ004_FAILED_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_CQ004)) == (LOG_FAILED)) && ((CQ004_ALDERFAILED) == (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_CQ004_FAILED_INFO() {
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_CQ004_Failed_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_Failed_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_Failed_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_CQ004_Failed_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_CQ004_Failed_15_05");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_VEIGO_SQ309(C_INFO) {
+    NPC = 0xd75e;
+    NR = 1;
+    CONDITION = DIA_VEIGO_SQ309_CONDITION;
+    INFORMATION = DIA_VEIGO_SQ309_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Have you heard anything about gold Innoses being unloaded at the harbor?";
+}
+
+func int DIA_VEIGO_SQ309_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ309)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x1274d))) {
+        if (((CQ004_RESULT) == (1)) && ((LOG_GETSTATUS(MIS_CQ004)) == (LOG_RUNNING))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_SQ309_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Veigo_SQ309_15_01");
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_SQ309_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_SQ309_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_SQ309_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_SQ309_03_05");
+    AI_LOGENTRY(TOPIC_SQ309, LOG_SQ309_VEIGOINFO);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0xf3b0);
+}
+
+instance DIA_VEIGO_Q504_FEEL(C_INFO) {
+    NPC = 0xd75e;
+    NR = 90;
+    CONDITION = DIA_VEIGO_Q504_FEEL_CONDITION;
+    INFORMATION = DIA_VEIGO_Q504_FEEL_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How's the morale?";
+}
+
+func int DIA_VEIGO_Q504_FEEL_CONDITION() {
+    if ((((NPC_GETDISTTOWP(SELF, "PART5_WORKERSCAMP_STAND_01")) <= (0x7d0)) && ((Q504_VEIGOVOLFZACKE) == (1))) && ((Q504_TAKEWORKERS) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_Q504_FEEL_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_VolfzackMorale3");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_Q504_Feel_03_01");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_VEIGO_AMBIENT(C_INFO) {
+    NPC = 0xd75e;
+    NR = 1;
+    CONDITION = DIA_VEIGO_AMBIENT_CONDITION;
+    INFORMATION = DIA_VEIGO_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_VEIGO_AMBIENT_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 0x12654)) || (NPC_KNOWSINFO(OTHER, 0x12657))) || (NPC_KNOWSINFO(OTHER, 0x1265a))) {
+        if ((Q504_TAKEWORKERS) != (2)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew4");
+    if (((LOG_GETSTATUS(MIS_CQ004)) != (LOG_RUNNING)) && ((LOG_GETSTATUS(MIS_CQ004)) != (LOG_SUCCESS))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Veigo_Ambient_03_00");
+    };
+    if ((LOG_GETSTATUS(MIS_CQ004)) == (LOG_RUNNING)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Veigo_Ambient_03_01");
+    };
+    if (((LOG_GETSTATUS(MIS_CQ004)) == (LOG_SUCCESS)) && ((CQ004_RESULT) == (1))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Veigo_Ambient_03_02");
+    };
+    if (((LOG_GETSTATUS(MIS_CQ004)) == (LOG_SUCCESS)) && ((CQ004_RESULT) == (2))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Veigo_Ambient_03_03");
+        AI_STOPPROCESSINFOS(SELF);
+    };
+}
+
+instance DIA_VEIGO_LEAVEMEALONE(C_INFO) {
+    NPC = 0xd75e;
+    NR = 1;
+    CONDITION = DIA_VEIGO_LEAVEMEALONE_CONDITION;
+    INFORMATION = DIA_VEIGO_LEAVEMEALONE_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VEIGO_LEAVEMEALONE_CONDITION() {
+    if ((NPC_ISINSTATE(SELF, 0xf09f)) && ((CQ004_RESULT) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_LEAVEMEALONE_INFO() {
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Veigo_Ambient_03_03");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_VEIGO_PICKPOCKET(C_INFO) {
+    NPC = 0xd75e;
+    NR = 900;
+    CONDITION = DIA_VEIGO_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_VEIGO_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_VEIGO_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VEIGO_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x12673);
+    INFO_ADDCHOICE(0x12673, DIALOG_BACK, 0x12677);
+    INFO_ADDCHOICE(0x12673, DIALOG_PICKPOCKET, 0x12676);
+}
+
+func void DIA_VEIGO_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x12673);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x12673);
+}
+
+func void DIA_VEIGO_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x12673);
+}
+

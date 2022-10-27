@@ -1,0 +1,39 @@
+func void ZS_MILJOIN() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_MILJOIN_LOOP() {
+    if (NPC_ISONFP(SELF, "MILITIAWATCH")) {
+        AI_ALIGNTOFP(SELF);
+        if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+            SELF.AIVAR[19] = NOTINPOS;
+        };
+    };
+    if (WLD_ISFPAVAILABLE(SELF, "MILITIAWATCH")) {
+        AI_GOTOFP(SELF, "MILITIAWATCH");
+        AI_STANDUP(SELF);
+        AI_ALIGNTOFP(SELF);
+        SELF.AIVAR[19] = NOTINPOS_WALK;
+    };
+    AI_ALIGNTOWP(SELF);
+    if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+        SELF.AIVAR[19] = NOTINPOS;
+    };
+    if ((SELF.AIVAR[19]) == (NOTINPOS)) {
+        AI_PLAYANI(SELF, "T_STAND_2_MILJOIN");
+        SELF.AIVAR[19] = ISINPOS;
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_MILJOIN_END() {
+    AI_PLAYANI(SELF, "T_MILJOIN_2_STAND");
+    AI_REMOVEWEAPON(SELF);
+}
+

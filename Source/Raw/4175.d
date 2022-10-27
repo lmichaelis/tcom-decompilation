@@ -1,0 +1,698 @@
+instance DIA_RODRIGO_EXIT(C_INFO) {
+    NPC = 0xe535;
+    NR = 999;
+    CONDITION = DIA_RODRIGO_EXIT_CONDITION;
+    INFORMATION = DIA_RODRIGO_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_RODRIGO_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_RODRIGO_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RODRIGO_STAN(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_STAN_CONDITION;
+    INFORMATION = DIA_RODRIGO_STAN_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "About Stans' case...";
+}
+
+func int DIA_RODRIGO_STAN_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q303)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_STAN_INFO() {
+    DIA_RODRIGO_ABOUTSTAN();
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_13_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_13_03");
+    INFO_CLEARCHOICES(0x1481e);
+    INFO_ADDCHOICE(0x1481e, "Cortez told me to clear this up.", 0x14829);
+    if ((NPC_KNOWSINFO(OTHER, 0x14b1c)) && ((Q303_RODRIGOSTANGAMBINGCHOICE) == (0))) {
+        INFO_ADDCHOICE(0x1481e, "I found out a little about your gambling with Stan.", 0x14825);
+    };
+    if (((NPC_KNOWSINFO(OTHER, 0x14617)) && (NPC_KNOWSINFO(OTHER, 0x1461a))) && ((RODRIGODIARY_READ) == (TRUE))) {
+        INFO_ADDCHOICE(0x1481e, "I know you put dragon dust in Stan's stew.", 0x14822);
+    };
+    INFO_ADDCHOICE(0x1481e, "(Move along)", 0x14821);
+}
+
+func void DIA_RODRIGO_STAN_LEAVE() {
+    INFO_CLEARCHOICES(0x1481e);
+}
+
+func void DIA_RODRIGO_STAN_ENCOUNTER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_encounter_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_encounter_13_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_encounter_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_encounter_13_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_encounter_13_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_encounter_13_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_encounter_13_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_encounter_13_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_encounter_13_07");
+    INFO_CLEARCHOICES(0x1481e);
+    INFO_ADDCHOICE(0x1481e, "That's enough. I'll report everything to Cortez.", 0x14823);
+    INFO_ADDCHOICE(0x1481e, "So, Why do you have then wolfberries in your pouch?", 0x14824);
+}
+
+func void DIA_RODRIGO_STAN_GUILTY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_guilty_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_guilty_13_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_guilty_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_guilty_13_02");
+    Q303_STANKILLERBLAMERODRIGO = 1;
+    AI_LOGENTRY(TOPIC_Q303, LOG_Q303_RODRIGODONTKNOW);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_RODRIGO_STAN_ASKMORE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_askmore_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_askmore_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_askmore_13_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_askmore_15_02");
+    Q303_STANKILLERBLAMERODRIGO = 2;
+    AI_LOGENTRY(TOPIC_Q303, LOG_Q303_RODRIGOMAYBENOTHIM);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_RODRIGO_STAN_GAMBLING() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_gambling_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_gambling_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_gambling_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_gambling_13_02");
+    INFO_CLEARCHOICES(0x1481e);
+    INFO_ADDCHOICE(0x1481e, "Even if I believe you, you have to let me help you...", 0x14828);
+    INFO_ADDCHOICE(0x1481e, "I guess I'll have to forcibly extract the information from you...", 0x14827);
+}
+
+func void DIA_RODRIGO_STAN_CHECKSIMONISHERE() {
+    if ((NPC_GETDISTTONPC(PIR_1306_RODRIGO, PIR_1308_SIMON)) > (1000)) {
+        TELEPORTNPCTOWP(HLP_GETINSTANCEID(PIR_1308_SIMON), NPC_GETNEARESTWP(HERO));
+    };
+    B_STARTOTHERROUTINE(PIR_1308_SIMON, "SECRETMEET_FOLLOW");
+    NPC_REFRESH(PIR_1308_SIMON);
+}
+
+func void DIA_RODRIGO_STAN_FIGHT() {
+    Q303_RODRIGOSTANGAMBINGCHOICE = 1;
+    INFO_CLEARCHOICES(0x1481e);
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_fight_15_01");
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0x14826);
+}
+
+func void DIA_RODRIGO_STAN_HELP() {
+    Q303_RODRIGOSTANGAMBINGCHOICE = 2;
+    INFO_CLEARCHOICES(0x1481e);
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_help_15_02");
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 0x14826);
+}
+
+func void DIA_RODRIGO_STAN_CASE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Stan_case_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Stan_case_13_01");
+}
+
+instance DIA_RODRIGO_HOUSE(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_HOUSE_CONDITION;
+    INFORMATION = DIA_RODRIGO_HOUSE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who owns this house?";
+}
+
+func int DIA_RODRIGO_HOUSE_CONDITION() {
+    if ((NPC_GETDISTTOWP(SELF, "P17_HAVEN_UP_08")) <= (300)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_HOUSE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_House_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_House_13_01");
+}
+
+instance DIA_RODRIGO_WHOAREYOU(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_WHOAREYOU_CONDITION;
+    INFORMATION = DIA_RODRIGO_WHOAREYOU_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_RODRIGO_WHOAREYOU_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_RODRIGO_WHOAREYOU_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Whoareyou_15_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Whoareyou_13_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Whoareyou_13_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Whoareyou_13_13");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Whoareyou_13_14");
+}
+
+instance DIA_RODRIGO_DUELPROPOSAL(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_DUELPROPOSAL_CONDITION;
+    INFORMATION = DIA_RODRIGO_DUELPROPOSAL_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you fancy a little duel?";
+}
+
+func int DIA_RODRIGO_DUELPROPOSAL_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q302)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_DUELPROPOSAL_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_DuelProposal_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelProposal_13_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelProposal_13_03");
+    INFO_CLEARCHOICES(0x14830);
+    INFO_ADDCHOICE(0x14830, "I just didn't like your ugly face.", 0x14834);
+    INFO_ADDCHOICE(0x14830, "I want to get some respect here.", 0x14835);
+}
+
+func void DIA_RODRIGO_DUELPROPOSAL_BOTH() {
+    INFO_CLEARCHOICES(0x14830);
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelProposal_Both_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelProposal_Both_13_02");
+}
+
+func void DIA_RODRIGO_DUELPROPOSAL_UGLYFACE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_DuelProposal_UglyFace_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelProposal_UglyFace_13_02");
+    DIA_RODRIGO_DUELPROPOSAL_BOTH();
+}
+
+func void DIA_RODRIGO_DUELPROPOSAL_EARNRESPECT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_DuelProposal_AlwaysWantedToSpankMilitia_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelProposal_AlwaysWantedToSpankMilitia_13_02");
+    DIA_RODRIGO_DUELPROPOSAL_BOTH();
+}
+
+var int Q302_PLAYERDUELWITHRODRIGOSTATE = 0;
+func void DIA_RODRIGO_STARTDUEL() {
+    Q302_PLAYERDUELWITHRODRIGOSTATE = 3;
+    if ((NPC_HASEQUIPPEDMELEEWEAPON(SELF)) == (FALSE)) {
+        CREATEINVITEMS(SELF, 0x83ce, 1);
+        AI_EQUIPBESTMELEEWEAPON(SELF);
+    };
+    B_HEALNPC_SELF();
+    SELF.FLAGS = NPC_FLAG_IMPORTANT;
+    HERO.AIVAR[95] = TRUE;
+    HERO.AIVAR[94] = TRUE;
+    SELF.AIVAR[94] = TRUE;
+    HERO.AIVAR[96] = 10;
+    SELF.AIVAR[96] = 10;
+    SELF.AIVAR[45] = AF_RUNNING;
+    AI_STOPPROCESSINFOS(SELF);
+    B_ATTACK(SELF, HERO, AR_NONE, 1);
+}
+
+instance DIA_RODRIGO_DUEL(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_DUEL_CONDITION;
+    INFORMATION = DIA_RODRIGO_DUEL_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "I'm ready. We can fight.";
+}
+
+func int DIA_RODRIGO_DUEL_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x14830)) && ((Q302_PLAYERDUELWITHRODRIGOSTATE) != (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_DUEL_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_Duel_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Duel_13_02");
+    if ((NPC_HASITEMS(OTHER, 0x85a4)) > (0)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_DuelTrain_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelTrain_13_04");
+        NPC_REMOVEINVITEM(SELF, 0x85a4);
+        DIA_RODRIGO_STARTDUEL();
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_DuelTrain_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelTrain_13_06");
+}
+
+instance DIA_RODRIGO_DUELAFTER(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_DUELAFTER_CONDITION;
+    INFORMATION = DIA_RODRIGO_DUELAFTER_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODRIGO_DUELAFTER_CONDITION() {
+    if ((Q302_PLAYERDUELWITHRODRIGOSTATE) == (3)) {
+        if (((SELF.AIVAR[64]) == (FALSE)) && ((SELF.AIVAR[0]) != (FIGHT_NONE))) {
+            if ((SELF.AIVAR[45]) != (AF_NONE)) {
+                return TRUE;
+            };
+            if (NPC_ISINSTATE(SELF, 0xf09f)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_DUELAFTER_INFO() {
+    SELF.FLAGS = 2;
+    B_HEALNPC_SELF();
+    HERO.AIVAR[95] = FALSE;
+    HERO.AIVAR[94] = FALSE;
+    SELF.AIVAR[94] = FALSE;
+    if ((SELF.AIVAR[0]) == (FIGHT_WON)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelAfter_13_01");
+        Q302_PLAYERDUELWITHRODRIGOSTATE = 1;
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_DuelAfter_13_02");
+    CREATEINVITEMS(SELF, 0x85a4, 2);
+    B_GIVEINVITEMS(SELF, OTHER, 0x85a4, 2);
+    AI_LOGENTRY(TOPIC_Q302, LOG_Q302_RODRIGO_WEWON);
+    Q302_PLAYERDUELWITHRODRIGOSTATE = 2;
+    if ((((B_COUNTDUELSQ302()) > (2)) && ((Q302_PRICEWILLBELOWER_ENTRY) == (FALSE))) && ((LOG_GETSTATUS(MIS_Q302)) == (LOG_RUNNING))) {
+        AI_LOGENTRY(TOPIC_Q302, LOG_Q302_THEYKNOWME);
+        Q302_PRICEWILLBELOWER_ENTRY = TRUE;
+    };
+    SELF.AIVAR[45] = AF_NONE;
+    SELF.AIVAR[64] = TRUE;
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RODRIGO_BCIDEA(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_BCIDEA_CONDITION;
+    INFORMATION = DIA_RODRIGO_BCIDEA_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you have any idea how to prepare this ambush?";
+}
+
+func int DIA_RODRIGO_BCIDEA_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q304)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x148ce))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_BCIDEA_INFO() {
+    WLD_SENDTRIGGER("KM_SWAMPCHEST_DIG");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_BCIdea_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_BCIdea_15_02");
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_03_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_BCIdea_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_03_10");
+    INFO_CLEARCHOICES(0x1483e);
+    INFO_ADDCHOICE(0x1483e, "Where should I dig this hole?", 0x14841);
+}
+
+func void DIA_RODRIGO_BCIDEA_WHERE() {
+    CREATEINVITEMS(SELF, 0x84df, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x84df, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_BCIdea_Where_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_Where_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_Where_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_BCIdea_Where_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCIdea_Where_03_05");
+    INFO_CLEARCHOICES(0x1483e);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_Q304, LOG_Q304_RODRIGOIDEA);
+    NPC_EXCHANGEROUTINE(SELF, "SWAMPCAVEPLUNDER");
+    B_STARTOTHERROUTINE(PIR_1308_SIMON, "SWAMPCAVEPLUNDER");
+    if ((SIMON_Q304_NEEDMOREPPL) >= (1)) {
+        if (!(NPC_ISDEAD(PIR_1311_THIAGO))) {
+            B_STARTOTHERROUTINE(PIR_1311_THIAGO, "SWAMPCAVEPLUNDER");
+        };
+        if ((SIMON_Q304_NEEDMOREPPL) == (2)) {
+            if (!(NPC_ISDEAD(PIR_6322_GHOST))) {
+                B_STARTOTHERROUTINE(PIR_6322_GHOST, "SWAMPCAVEPLUNDER");
+            };
+        };
+    };
+}
+
+instance DIA_RODRIGO_BCDIG(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_BCDIG_CONDITION;
+    INFORMATION = DIA_RODRIGO_BCDIG_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I dug a hole, now what?";
+}
+
+func int DIA_RODRIGO_BCDIG_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q304)) == (LOG_RUNNING)) && ((Q304_DIGGING) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int RODRIGO_FARNNAME = 0;
+func void RODRIGO_CHANGEFARNNAMES() {
+    if ((RODRIGO_FARNNAME) == (1)) {
+    };
+    MOB_CHANGEFOCUSNAME("KM_Q304_FARN_14", "MOBNAME_NOTHING");
+}
+
+func void DIA_RODRIGO_BCDIG_INFO() {
+    RODRIGO_FARNNAME = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_BCDig_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCDig_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCDig_03_03");
+    AI_LOGENTRY(TOPIC_Q304, LOG_Q304_RODRIGOHIDE);
+    AI_STOPPROCESSINFOS(SELF);
+    RODRIGO_CHANGEFARNNAMES();
+}
+
+instance DIA_RODRIGO_BCGOTIT(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_BCGOTIT_CONDITION;
+    INFORMATION = DIA_RODRIGO_BCGOTIT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODRIGO_BCGOTIT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q304)) == (LOG_RUNNING)) && ((Q304_BRANCHESANDLEAVESLOGENTRY) == (TRUE))) {
+        if (((NPC_HASITEMS(OTHER, 0x9186)) >= (20)) && ((NPC_HASITEMS(OTHER, 0x9187)) >= (20))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_BCGOTIT_INFO() {
+    RODRIGO_FARNNAME = 2;
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCGotIt_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_BCGotIt_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCGotIt_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCGotIt_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCGotIt_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCGotIt_03_06");
+    AI_STOPPROCESSINFOS(SELF);
+    WLD_SENDTRIGGER("MOVER_Q304_PLUNDER");
+    RODRIGO_CHANGEFARNNAMES();
+}
+
+instance DIA_RODRIGO_BCAFTERFIGHT(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_BCAFTERFIGHT_CONDITION;
+    INFORMATION = DIA_RODRIGO_BCAFTERFIGHT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODRIGO_BCAFTERFIGHT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q304)) == (LOG_RUNNING)) && ((Q304_FINALCUTSCENE) >= (10))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_BCAFTERFIGHT_INFO() {
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCAfterFight_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCAfterFight_03_02");
+    INFO_CLEARCHOICES(0x1484a);
+    if ((Q304_SMUGGLERISDEAD) == (FALSE)) {
+        INFO_ADDCHOICE(0x1484a, "Coyote escaped.", 0x1484e);
+    };
+    if ((Q304_SMUGGLERISDEAD) == (TRUE)) {
+        INFO_ADDCHOICE(0x1484a, "I managed to get my hands on Coyote.", 0x1484f);
+    };
+}
+
+func void DIA_RODRIGO_BCAFTERFIGHT_END() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCAfterFight_Lost_03_03");
+    INFO_CLEARCHOICES(0x1484a);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    AI_LOGENTRY(TOPIC_Q304, LOG_Q304_RODRIGOGOTOCORTEZ);
+}
+
+func void DIA_RODRIGO_BCAFTERFIGHT_LOST() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_BCAfterFight_Lost_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCAfterFight_Lost_03_02");
+    DIA_RODRIGO_BCAFTERFIGHT_END();
+}
+
+func void DIA_RODRIGO_BCAFTERFIGHT_DEAD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_BCAfterFight_Dead_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_BCAfterFight_Dead_03_02");
+    DIA_RODRIGO_BCAFTERFIGHT_END();
+}
+
+instance DIA_RODRIGO_SQ408_FINISH(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_SQ408_FINISH_CONDITION;
+    INFORMATION = DIA_RODRIGO_SQ408_FINISH_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODRIGO_SQ408_FINISH_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ408)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x1467d))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_SQ408_FINISH_INFO() {
+    SQ408_CLEANUPSAUL = TRUE;
+    SQ408_CLEANUPSAUL_DAY = WLD_GETDAY();
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_SQ408_Finish_03_01");
+    if ((SQ408_BERTERHELP) == (1)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_SQ408_Finish_15_02");
+        AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_SQ408_Finish_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_SQ408_Finish_03_04");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_SQ408_Finish_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_SQ408_Finish_03_06");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_SQ408_Finish_03_07");
+    if ((SQ408_BERTERHELP) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_SQ408_Finish_03_08");
+    };
+    AI_LOGENTRY(TOPIC_SQ408, LOG_SQ408_FINISH);
+    LOG_SETSTATUS(_@(MIS_SQ408), TOPIC_SQ408, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_SQ408_FINISH);
+    NPC_EXCHANGEROUTINE(SELF, START);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RODRIGO_SQ503_WHERECORTEZ(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_SQ503_WHERECORTEZ_CONDITION;
+    INFORMATION = DIA_RODRIGO_SQ503_WHERECORTEZ_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODRIGO_SQ503_WHERECORTEZ_CONDITION() {
+    if ((KAPITEL) == (5)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_SQ503_WHERECORTEZ_INFO() {
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_SQ503_WhereCortez_03_01");
+    AI_RESETFACEANI(SELF);
+    if ((LOG_GETSTATUS(MIS_SQ503)) == (LOG_RUNNING)) {
+        AI_LOGENTRY(TOPIC_SQ503, LOG_SQ503_RODRIGO_WHERECORTEZ);
+    };
+}
+
+instance DIA_RODRIGO_AMBIENT(C_INFO) {
+    NPC = 0xe535;
+    NR = 997;
+    CONDITION = DIA_RODRIGO_AMBIENT_CONDITION;
+    INFORMATION = DIA_RODRIGO_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_RODRIGO_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x1482d)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew2");
+    NPC_INITAMBIENTS(SELF, 3);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Ambient_13_15");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Ambient_13_16");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (3)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Ambient_13_17");
+    };
+}
+
+instance DIA_RODRIGO_Q306_AFTERTOURNAMENT(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_Q306_AFTERTOURNAMENT_CONDITION;
+    INFORMATION = DIA_RODRIGO_Q306_AFTERTOURNAMENT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODRIGO_Q306_AFTERTOURNAMENT_CONDITION() {
+    if (((NPC_ISINSTATE(SELF, 0xf09f)) && ((Q301_AFTERQ306) == (TRUE))) && ((KAPITEL) < (4))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_Q306_AFTERTOURNAMENT_INFO() {
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_Q306_AfterTournament_03_01");
+    AI_RESETFACEANI(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RODRIGO_HOUSE_WHATAREYOUDOING(C_INFO) {
+    NPC = 0xe535;
+    NR = 1;
+    CONDITION = DIA_RODRIGO_HOUSE_WHATAREYOUDOING_CONDITION;
+    INFORMATION = DIA_RODRIGO_HOUSE_WHATAREYOUDOING_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What are you doing here?";
+}
+
+func int DIA_RODRIGO_HOUSE_WHATAREYOUDOING_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x1482d)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_HOUSE_WHATAREYOUDOING_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Rodrigo_House_Whatareyoudoing_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_House_Whatareyoudoing_13_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Rodrigo_House_Whatareyoudoing_13_04");
+}
+
+instance DIA_RODRIGO_PICKPOCKET(C_INFO) {
+    NPC = 0xe535;
+    NR = 900;
+    CONDITION = DIA_RODRIGO_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_RODRIGO_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80;
+}
+
+func int DIA_RODRIGO_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x1485f);
+    INFO_ADDCHOICE(0x1485f, DIALOG_BACK, 0x14863);
+    INFO_ADDCHOICE(0x1485f, DIALOG_PICKPOCKET, 0x14862);
+}
+
+func void DIA_RODRIGO_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        CREATEINVITEMS(SELF, 0x85a4, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x85a4, 1);
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x1485f);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x1485f);
+}
+
+func void DIA_RODRIGO_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x1485f);
+}
+
+instance DIA_RODRIGO_PICKPOCKET_Q303(C_INFO) {
+    NPC = 0xe535;
+    NR = 989;
+    CONDITION = DIA_RODRIGO_PICKPOCKET_Q303_CONDITION;
+    INFORMATION = DIA_RODRIGO_PICKPOCKET_Q303_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_STEALRODRIGOKEY;
+}
+
+var int RODRIGO_GOTKEY = 0;
+func int DIA_RODRIGO_PICKPOCKET_Q303_CONDITION() {
+    if (((((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && (NPC_KNOWSINFO(OTHER, 0x1489d))) && ((RODRIGODIARY_READ) == (FALSE))) && ((RODRIGO_GOTKEY) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODRIGO_PICKPOCKET_Q303_INFO() {
+    INFO_CLEARCHOICES(0x14864);
+    INFO_ADDCHOICE(0x14864, DIALOG_BACK, 0x14869);
+    INFO_ADDCHOICE(0x14864, DIALOG_PICKPOCKET, 0x14868);
+}
+
+func void DIA_RODRIGO_PICKPOCKET_Q303_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        RODRIGO_GOTKEY = TRUE;
+        CREATEINVITEMS(SELF, 0x9016, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x9016, 1);
+        INFO_CLEARCHOICES(0x14864);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x14864);
+}
+
+func void DIA_RODRIGO_PICKPOCKET_Q303_BACK() {
+    INFO_CLEARCHOICES(0x14864);
+}
+

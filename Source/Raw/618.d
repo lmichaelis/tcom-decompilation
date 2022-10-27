@@ -1,0 +1,30 @@
+func void ZS_HAMMERGROUND() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    if ((C_BODYSTATECONTAINS(SELF, BS_UNCONSCIOUS)) && (C_BODYSTATECONTAINS(SELF, BS_DEAD))) {
+        if ((NPC_HASITEMS(SELF, 0x8582)) == (1)) {
+            NPC_REMOVEINVITEM(SELF, 0x8582);
+        };
+    };
+    if ((NPC_HASITEMS(SELF, 0x8582)) == (0)) {
+        CREATEINVITEM(SELF, 0x8582);
+    };
+    if (!(C_BODYSTATECONTAINS(SELF, BS_SIT))) {
+        AI_SETWALKMODE(SELF, NPC_WALK);
+        if ((HLP_STRCMP(NPC_GETNEARESTWP(SELF), SELF.WP)) == (FALSE)) {
+            AI_GOTOWP(SELF, SELF.WP);
+        };
+    };
+}
+
+func int ZS_HAMMERGROUND_LOOP() {
+    if ((!(C_BODYSTATECONTAINS(SELF, BS_SIT))) && (WLD_ISMOBAVAILABLE(SELF, "HAMMERGROUND"))) {
+        AI_USEMOB(SELF, "HAMMERGROUND", 1);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_HAMMERGROUND_END() {
+    AI_USEMOB(SELF, "HAMMERGROUND", -(1));
+}
+

@@ -1,0 +1,664 @@
+var int GRON_WANTSSOMETHINGTODRINK = 0;
+var int GRON_NOTALK = 0;
+var int GRON_NOTALKENTIREGAME = 0;
+var int GRON_LOGENTRYQ402FAILED = 0;
+instance DIA_GRON_EXIT(C_INFO) {
+    NPC = 0xe399;
+    NR = 999;
+    CONDITION = DIA_GRON_EXIT_CONDITION;
+    INFORMATION = DIA_GRON_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_GRON_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_GRON_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_GRON_BOLT(C_INFO) {
+    NPC = 0xe399;
+    NR = 1;
+    CONDITION = DIA_GRON_BOLT_CONDITION;
+    INFORMATION = DIA_GRON_BOLT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Apparently you have some unusual bolts.";
+}
+
+func int DIA_GRON_BOLT_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x13e78)) && ((LOG_GETSTATUS(MIS_Q402)) == (LOG_RUNNING))) {
+        if ((Q402_HEROISINMINE) == (FALSE)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_BOLT_INFO() {
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Bolt_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Bolt_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Bolt_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Bolt_03_04");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_GRON_SERIOUS(C_INFO) {
+    NPC = 0xe399;
+    NR = 1;
+    CONDITION = DIA_GRON_SERIOUS_CONDITION;
+    INFORMATION = DIA_GRON_SERIOUS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "The matter is very urgent.";
+}
+
+func int DIA_GRON_SERIOUS_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x13f09)) && ((LOG_GETSTATUS(MIS_Q402)) == (LOG_RUNNING))) {
+        if ((Q402_HEROISINMINE) == (FALSE)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_SERIOUS_INFO() {
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Serious_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Serious_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Serious_03_03");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_GRON_TALK(C_INFO) {
+    NPC = 0xe399;
+    NR = 1;
+    CONDITION = DIA_GRON_TALK_CONDITION;
+    INFORMATION = DIA_GRON_TALK_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I think we can get along.";
+}
+
+func int DIA_GRON_TALK_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x13f0c)) && ((LOG_GETSTATUS(MIS_Q402)) == (LOG_RUNNING))) {
+        if ((Q402_HEROISINMINE) == (FALSE)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_TALK_INFO() {
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_03_02");
+    INFO_CLEARCHOICES(0x13f0f);
+    INFO_ADDCHOICE(0x13f0f, "Maybe a few coins will refresh your memory?", 0x13f12);
+    INFO_ADDCHOICE(0x13f0f, "I guess I'll have to forcibly untie your tongue...", 0x13f14);
+    INFO_ADDCHOICE(0x13f0f, "It's hard to talk with a dry mouth.", 0x13f16);
+}
+
+func void DIA_GRON_TALK_MONEY() {
+    GRON_NOTALK = 1;
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Money_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Money_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Money_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Money_03_04");
+    INFO_CLEARCHOICES(0x13f0f);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void GRON_ATTACKMARVIN() {
+    DJG_10011_GRON.AIVAR[0] = FIGHT_WON;
+    SND_PLAY("CS_IAI_ME_WO_A1");
+    SND_PLAY("Whoosh");
+    AI_PLAYANI(DJG_10011_GRON, "T_2HATTACKL");
+    AI_WAIT(HERO, 0x3e4ccccd);
+    AI_PLAYANI(HERO, "T_STAND_2_WOUNDEDB");
+    HERO.ATTRIBUTE[0] = 1;
+}
+
+func void DIA_GRON_TALK_FIGHT() {
+    GRON_NOTALK = 2;
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Fight_15_01");
+    B_STANDUP();
+    AI_REMOVEWEAPON(OTHER);
+    AI_GOTONPC(SELF, OTHER);
+    AI_DRAWWEAPON(SELF);
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_FUNCTION(SELF, 0x13f13);
+    INFO_CLEARCHOICES(0x13f0f);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_GRON_DRINK_CHOICES() {
+    INFO_CLEARCHOICES(0x13f0f);
+    INFO_CLEARCHOICES(0x13f1e);
+    if (C_GOTANYKINDOFBEER(HERO)) {
+        INFO_ADDCHOICE(0x13f0f, "I have beer.", 0x13f17);
+        INFO_ADDCHOICE(0x13f1e, "I have beer.", 0x13f17);
+    };
+    if (C_GOTANYKINDOFWINE(HERO)) {
+        INFO_ADDCHOICE(0x13f0f, "I have wine.", 0x13f18);
+        INFO_ADDCHOICE(0x13f1e, "I have wine.", 0x13f18);
+    };
+    if ((NPC_HASITEMS(OTHER, 0x8374)) >= (1)) {
+        INFO_ADDCHOICE(0x13f0f, "I have something really strong.", 0x13f1c);
+        INFO_ADDCHOICE(0x13f1e, "I have something really strong.", 0x13f1c);
+    };
+    INFO_ADDCHOICE(0x13f0f, "I'll be right back with something decent.", 0x13f1d);
+    INFO_ADDCHOICE(0x13f1e, "I'll be right back with something decent.", 0x13f1d);
+}
+
+func void DIA_GRON_TALK_DRINK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Drink_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Drink_03_02");
+    DIA_GRON_DRINK_CHOICES();
+}
+
+func void DIA_GRON_TALK_DRINK_BEER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Beer_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Beer_03_02");
+}
+
+func void DIA_GRON_TALK_DRINK_WINE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Wine_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Wine_03_02");
+}
+
+func void GRON_DRINKRUM_POINTS() {
+    GRON_DRUNKPOINTS = (GRON_DRUNKPOINTS) + (1);
+    if ((GRON_DRUNKPOINTS) == (4)) {
+        MDL_APPLYOVERLAYMDS(DJG_10011_GRON, HUMANSDRUNKENMDS);
+    };
+}
+
+var int GRON_DRINKRUM_POINTS.GRON_DRUNKPOINTS = 0;
+func void GRON_DRINKRUM() {
+    AI_WAITTILLEND(DJG_10011_GRON, HERO);
+    CREATEINVITEMS(DJG_10011_GRON, 0x8374, 1);
+    AI_STOPLOOKAT(DJG_10011_GRON);
+    AI_USEITEM(DJG_10011_GRON, 0x8374);
+    AI_WAITTILLEND(DJG_10011_GRON, HERO);
+}
+
+func void DIA_GRON_TALK_DRINK_BIMBER() {
+    GRON_WANTSSOMETHINGTODRINK = FALSE;
+    Q402_GRONCUTSCENESTATUS = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Bimber_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Bimber_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Bimber_15_03");
+    B_GIVEINVITEMS(OTHER, SELF, 0x8374, 1);
+    B_STANDUP();
+    GRON_DRINKRUM();
+    AI_FUNCTION(SELF, 0x13f19);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Bimber_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Bimber_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Bimber_03_06");
+    GRON_DRINKRUM();
+    AI_FUNCTION(SELF, 0x13f19);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Bimber_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Bimber_03_08");
+    GRON_DRINKRUM();
+    AI_FUNCTION(SELF, 0x13f19);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Bimber_15_09");
+    GRON_DRINKRUM();
+    AI_FUNCTION(SELF, 0x13f19);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Bimber_03_10");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Bimber_15_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Bimber_03_12");
+    GRON_DRINKRUM();
+    AI_FUNCTION(SELF, 0x13f19);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Bimber_15_13");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Bimber_03_14");
+    GRON_DRINKRUM();
+    AI_FUNCTION(SELF, 0x13f19);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Bimber_03_15");
+    AI_LOGENTRY(TOPIC_Q402, LOG_Q402_GRONDUEL);
+    INFO_CLEARCHOICES(0x13f0f);
+    INFO_CLEARCHOICES(0x13f1e);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, "DUEL");
+}
+
+func void DIA_GRON_TALK_DRINK_COMEBACK() {
+    GRON_WANTSSOMETHINGTODRINK = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Talk_Comeback_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Talk_Comeback_03_02");
+    INFO_CLEARCHOICES(0x13f0f);
+}
+
+instance DIA_GRON_DRINK(C_INFO) {
+    NPC = 0xe399;
+    NR = 1;
+    CONDITION = DIA_GRON_DRINK_CONDITION;
+    INFORMATION = DIA_GRON_DRINK_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_TREATALCO;
+}
+
+func int DIA_GRON_DRINK_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q402)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x13f0f))) {
+        if ((GRON_WANTSSOMETHINGTODRINK) == (TRUE)) {
+            if ((Q402_HEROISINMINE) == (FALSE)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_DRINK_INFO() {
+    DIA_GRON_DRINK_CHOICES();
+}
+
+instance DIA_GRON_GOAWAY(C_INFO) {
+    NPC = 0xe399;
+    NR = 1;
+    CONDITION = DIA_GRON_GOAWAY_CONDITION;
+    INFORMATION = DIA_GRON_GOAWAY_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GRON_GOAWAY_CONDITION() {
+    if (NPC_ISINSTATE(SELF, 0xf09f)) {
+        if ((((GRON_NOTALK) >= (1)) && ((LOG_GETSTATUS(MIS_Q403)) != (LOG_SUCCESS))) || ((GRON_NOTALKENTIREGAME) == (TRUE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_GOAWAY_INFO() {
+    if ((GRON_NOTALK) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_GoAway_03_01");
+    };
+    if ((SELF.AIVAR[0]) == (FIGHT_WON)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_GoAway_03_02");
+    };
+    GRON_NOTALKENTIREGAME = TRUE;
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_GoAway_03_03");
+    if ((GRON_LOGENTRYQ402FAILED) == (FALSE)) {
+        AI_LOGENTRY(TOPIC_Q402, LOG_Q402_GRONFAILED);
+        GRON_LOGENTRYQ402FAILED = TRUE;
+    };
+}
+
+var int GRONCANTEACHUS = 0;
+var int GRON_AMBIENT = 0;
+instance DIA_GRON_CUTSCENE(C_INFO) {
+    NPC = 0xe399;
+    NR = 1;
+    CONDITION = DIA_GRON_CUTSCENE_CONDITION;
+    INFORMATION = DIA_GRON_CUTSCENE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GRON_CUTSCENE_CONDITION() {
+    if (((Q402_GRONCUTSCENESTATUS) == (1)) && ((NPC_GETDISTTOWP(SELF, "PART16_CUTSCENE_BOLT_GRON")) <= (500))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void GRON_CUTSCENE_01() {
+    AI_STARTFACEANI(HERO, S_DISGUST, 1, -(1));
+    WLD_SENDUNTRIGGER("KM_BOLT_01");
+    WLD_SENDTRIGGER("KM_BOLT_02");
+    TELEPORTNPCTOWP(0xe390, "PART16_GRON_CUTSCENE_DUMMY");
+    B_STARTOTHERROUTINE(DJG_10004_EINAR, "GRONCUTSCENEDUMMY");
+}
+
+func void GRON_CUTSCENE_02() {
+    FF_APPLYONCEEXT(0x13f2a, 950, 10);
+}
+
+func void GRON_CHANGECAMERA() {
+    GRON_CHANGECAMERA_COUNTS = (GRON_CHANGECAMERA_COUNTS) + (1);
+    if ((GRON_CHANGECAMERA_COUNTS) == (4)) {
+        TELEPORTNPCTOWP(0xe390, "WOLFSDEN_CITADEL_ARMORY_02");
+        B_STARTOTHERROUTINE(DJG_10004_EINAR, START);
+        WLD_SENDUNTRIGGER("KM_BOLT_02");
+        WLD_SENDTRIGGER("KM_BOLT_03");
+    };
+    if ((GRON_CHANGECAMERA_COUNTS) == (8)) {
+        WLD_SENDUNTRIGGER("KM_BOLT_03");
+        WLD_SENDTRIGGER("KM_BOLT_04");
+    };
+    if ((GRON_CHANGECAMERA_COUNTS) == (9)) {
+        AI_RESETFACEANI(HERO);
+        SND_PLAY("CS_IHL_ME_EA");
+        SND_PLAY("CS_IHL_ST_SA");
+        WLD_SENDTRIGGER("KM_BOLT_MOVER");
+    };
+    if ((GRON_CHANGECAMERA_COUNTS) == (10)) {
+        WLD_SENDUNTRIGGER("KM_BOLT_04");
+        WLD_SENDTRIGGER("KM_BOLT_05");
+    };
+}
+
+var int GRON_CHANGECAMERA.GRON_CHANGECAMERA_COUNTS = 0;
+func void GRON_CUTSCENE_03() {
+    WLD_SENDUNTRIGGER("KM_BOLT_05");
+    DIACAM_ENABLE();
+    WLD_SENDTRIGGER("KM_BOLT_MOVER");
+    WLD_INSERTITEM(0x91d7, "FP_GRONCUTSCENE_BOLT");
+}
+
+func void DIA_GRON_CUTSCENE_INFO() {
+    Q402_GRONCUTSCENESTATUS = 2;
+    Q402_GRONVOMIT = TRUE;
+    DIACAM_DISABLE();
+    AI_FUNCTION_S(HERO, 777, "KM_BOLT_01");
+    TELEPORTNPCTOWP(0xe399, "PART16_CUTSCENE_BOLT_GRON");
+    TELEPORTNPCTOWP(0x71b, "PART16_CUTSCENE_BOLT_HERO");
+    AI_TURNTONPC(SELF, OTHER);
+    AI_TURNTONPC(OTHER, SELF);
+    AI_LOOKATNPC(OTHER, SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Cutscene_03_01");
+    AI_FUNCTION(SELF, 0x13f28);
+    AI_TURNTONPC(SELF, DJG_10004_EINAR);
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_FUNCTION(HERO, 0x13f29);
+    CREATEINVITEMS(SELF, 0x8ce4, 1);
+    AI_USEITEMTOSTATE(SELF, 0x8ce4, 1);
+    AI_USEITEMTOSTATE(SELF, 0x8ce4, -(1));
+    AI_WAIT(SELF, 0x3f800000);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Cutscene_03_02");
+    AI_FUNCTION(SELF, 0x13f2c);
+    AI_TURNTONPC(SELF, OTHER);
+    B_TURNTONPC(HERO, DJG_10011_GRON);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Cutscene_15_03");
+    AI_STARTFACEANI(DJG_10011_GRON, T_HURT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Cutscene_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Cutscene_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Cutscene_15_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Cutscene_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Cutscene_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Cutscene_03_09");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Cutscene_15_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Cutscene_03_11");
+    GRONCANTEACHUS = TRUE;
+    GRON_AMBIENT = TRUE;
+    AI_LOGENTRY(TOPIC_Q402, LOG_Q402_GRONINFO);
+    AI_STOPLOOKAT(OTHER);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    if ((LOG_GETSTATUS(MIS_Q403)) == (LOG_SUCCESS)) {
+        NPC_EXCHANGEROUTINE(SELF, START);
+        Q402_GRONVOMIT = 3;
+    };
+    Q402_GRONVOMIT = 2;
+    NPC_EXCHANGEROUTINE(SELF, "VOMIT");
+}
+
+instance DIA_GRON_HELPMINE(C_INFO) {
+    NPC = 0xe399;
+    NR = 1;
+    CONDITION = DIA_GRON_HELPMINE_CONDITION;
+    INFORMATION = DIA_GRON_HELPMINE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I need someone to guard the mine.";
+}
+
+func int DIA_GRON_HELPMINE_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q404)) == (LOG_RUNNING)) && ((Q404_GUARDMINE_NEEDHELP) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_HELPMINE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_HelpMine_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_HelpMine_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_HelpMine_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_HelpMine_03_04");
+}
+
+instance DIA_GRON_SHOOTING(C_INFO) {
+    NPC = 0xe399;
+    NR = 1;
+    CONDITION = DIA_GRON_SHOOTING_CONDITION;
+    INFORMATION = DIA_GRON_SHOOTING_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What if Ulryk finds out about you shooting civilians?";
+}
+
+func int DIA_GRON_SHOOTING_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_Q404)) == (LOG_RUNNING)) && ((Q404_GUARDMINE_NEEDHELP) == (TRUE))) && (NPC_KNOWSINFO(OTHER, 0x13f2e))) && ((Q402_GRONCUTSCENESTATUS) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_SHOOTING_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Shooting_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Shooting_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Shooting_03_03");
+    INFO_CLEARCHOICES(0x13f31);
+    INFO_ADDCHOICE(0x13f31, "Come on, it was fun to shoot...", 0x13f35);
+    INFO_ADDCHOICE(0x13f31, "Apparently mine guards get a discount on alcohol.", 0x13f36);
+    INFO_ADDCHOICE(0x13f31, "Jon's team was reportedly heard.", 0x13f37);
+}
+
+func void DIA_GRON_SHOOTING_FAILED() {
+    INFO_CLEARCHOICES(0x13f31);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_Q404, LOG_Q404_GRON_FAILED);
+}
+
+func void DIA_GRON_SHOOTING_COMEON() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Shooting_ComeOn_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Shooting_ComeOn_03_02");
+    DIA_GRON_SHOOTING_FAILED();
+}
+
+func void DIA_GRON_SHOOTING_ALCOHOL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Shooting_Alcohol_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Shooting_Alcohol_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Shooting_Alcohol_03_03");
+    DIA_GRON_SHOOTING_FAILED();
+}
+
+func void DIA_GRON_SHOOTING_JON() {
+    Q404_GRONSTATUS = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Shooting_Jon_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Shooting_Jon_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Shooting_Jon_03_03");
+    INFO_CLEARCHOICES(0x13f31);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_Q404, LOG_Q404_GRON_SUCCESS);
+    NPC_EXCHANGEROUTINE(SELF, "RUNMINE");
+}
+
+instance DIA_GRON_CROSSBOW(C_INFO) {
+    NPC = 0xe399;
+    NR = 1;
+    CONDITION = DIA_GRON_CROSSBOW_CONDITION;
+    INFORMATION = DIA_GRON_CROSSBOW_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Could you show me how to handle a crossbow better?";
+}
+
+func int DIA_GRON_CROSSBOW_CONDITION() {
+    if ((((GRONCANTEACHUS) == (TRUE)) && (NPC_ISINSTATE(SELF, 0xf09f))) && ((GRON_NOTALKENTIREGAME) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_CROSSBOW_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Crossbow_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Crossbow_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Crossbow_03_02");
+    LOG_CREATETOPIC(TOPIC_WOLFSDENTEACHER, LOG_NOTE);
+    AI_LOGENTRY(TOPIC_WOLFSDENTEACHER, LOG_WOLFSDENTEACHER_GRON);
+}
+
+var int GRON_CURRENTCRLEVEL = 0;
+var int GRON_NOMORE = 0;
+var string GRON_PRINTS = "";
+const int GRON_RLEVEL = 60;
+instance DIA_GRON_TRAIN(C_INFO) {
+    NPC = 0xe399;
+    NR = 7;
+    CONDITION = DIA_GRON_TRAIN_CONDITION;
+    INFORMATION = DIA_GRON_TRAIN_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Let's start training.";
+}
+
+func int DIA_GRON_TRAIN_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 0x13f38)) && ((GRON_NOMORE) == (FALSE))) && ((GRON_NOTALKENTIREGAME) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_TRAIN_CHOICES() {
+    GRON_GOLDCOST = 25;
+    GRON_CURRENTCRLEVEL = OTHER.AIVAR[87];
+    INFO_CLEARCHOICES(0x13f3f);
+    INFO_ADDCHOICE(0x13f3f, DIALOG_BACK, 0x13f44);
+    INFO_ADDCHOICE(0x13f3f, B_BUILDLEARNSTRING2(PRINT_LEARNCROSSBOW1, B_GETLEARNCOSTTALENT(OTHER, NPC_TALENT_CROSSBOW, 1), GRON_GOLDCOST), 0x13f45);
+    INFO_ADDCHOICE(0x13f3f, B_BUILDLEARNSTRING2(PRINT_LEARNCROSSBOW5, (B_GETLEARNCOSTTALENT(OTHER, NPC_TALENT_CROSSBOW, 1)) * (5), (GRON_GOLDCOST) * (5)), 0x13f46);
+}
+
+var int DIA_GRON_TRAIN_CHOICES.GRON_GOLDCOST = 0;
+func void DIA_GRON_TRAIN_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Train_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gron_Train_03_01");
+    DIA_GRON_TRAIN_CHOICES();
+}
+
+func void DIA_GRON_TRAIN_BACK() {
+    if (((OTHER.AIVAR[87]) < (100)) && ((OTHER.AIVAR[87]) >= (800))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_Train_Back_03_00");
+    };
+    if ((OTHER.AIVAR[87]) >= (100)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_Train_Back_03_01");
+        GRON_NOMORE = TRUE;
+    };
+    INFO_CLEARCHOICES(0x13f3f);
+}
+
+func void DIA_GRON_TRAIN_CR_1() {
+    if (((NPC_HASITEMS(OTHER, 0x859b)) >= (GRON_PAYMENT1)) && ((OTHER.AIVAR[87]) >= (60))) {
+        if ((GRON_CURRENTCRLEVEL) < (OTHER.AIVAR[87])) {
+            SND_PLAY(GELDBEUTEL);
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, GRON_PAYMENT1);
+            NPC_REMOVEINVITEMS(SELF, 0x859b, GRON_PAYMENT1);
+        };
+        B_TEACHFIGHTTALENTPERCENT(SELF, OTHER, NPC_TALENT_CROSSBOW, 1, 100);
+        DIA_GRON_TRAIN_CHOICES();
+    };
+    if ((NPC_HASITEMS(OTHER, 0x859b)) < (GRON_PAYMENT1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_Train_CR1_13_01");
+        GRON_PRINTS = CONCATSTRINGS(PRINT_RGOLD, INTTOSTRING(GRON_PAYMENT1));
+        PRINTSCREEN(GRON_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_GRON_TRAIN_CHOICES();
+    };
+    if ((OTHER.AIVAR[87]) < (60)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_Train_CR1_13_02");
+        GRON_PRINTS = CONCATSTRINGS(PRINT_MINSKILL, INTTOSTRING(GRON_RLEVEL));
+        PRINTSCREEN(GRON_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_GRON_TRAIN_CHOICES();
+    };
+}
+
+func void DIA_GRON_TRAIN_CR_5() {
+    if (((NPC_HASITEMS(OTHER, 0x859b)) >= (GRON_PAYMENT5)) && ((OTHER.AIVAR[87]) >= (60))) {
+        if ((GRON_CURRENTCRLEVEL) < (OTHER.AIVAR[87])) {
+            SND_PLAY(GELDBEUTEL);
+            B_GIVEINVITEMS(OTHER, SELF, 0x859b, GRON_PAYMENT5);
+            NPC_REMOVEINVITEMS(SELF, 0x859b, GRON_PAYMENT5);
+        };
+        B_TEACHFIGHTTALENTPERCENT(SELF, OTHER, NPC_TALENT_CROSSBOW, 5, 100);
+        DIA_GRON_TRAIN_CHOICES();
+    };
+    if ((NPC_HASITEMS(OTHER, 0x859b)) < (GRON_PAYMENT5)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_Train_CR5_13_01");
+        GRON_PRINTS = CONCATSTRINGS(PRINT_RGOLD, INTTOSTRING(GRON_PAYMENT5));
+        PRINTSCREEN(GRON_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_GRON_TRAIN_CHOICES();
+    };
+    if ((OTHER.AIVAR[87]) < (60)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_Train_CR5_13_02");
+        GRON_PRINTS = CONCATSTRINGS(PRINT_MINSKILL, INTTOSTRING(GRON_RLEVEL));
+        PRINTSCREEN(GRON_PRINTS, -(1), -(1), FONT_SCREEN, 2);
+        DIA_GRON_TRAIN_CHOICES();
+    };
+}
+
+instance DIA_GRON_AMBIENT(C_INFO) {
+    NPC = 0xe399;
+    NR = 850;
+    CONDITION = DIA_GRON_AMBIENT_CONDITION;
+    INFORMATION = DIA_GRON_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_GRON_AMBIENT_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q401)) == (LOG_SUCCESS)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_AMBIENT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gron_Ambient_15_01");
+    if ((GRON_AMBIENT) == (FALSE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_Ambient_03_02");
+    };
+    if ((GRON_AMBIENT) == (TRUE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gron_Ambient_03_03");
+    };
+}
+
+instance DIA_GRON_PICKPOCKET(C_INFO) {
+    NPC = 0xe399;
+    NR = 900;
+    CONDITION = DIA_GRON_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_GRON_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80;
+}
+
+func int DIA_GRON_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GRON_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x13f4a);
+    INFO_ADDCHOICE(0x13f4a, DIALOG_BACK, 0x13f4e);
+    INFO_ADDCHOICE(0x13f4a, DIALOG_PICKPOCKET, 0x13f4d);
+}
+
+func void DIA_GRON_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        CREATEINVITEMS(SELF, 0x8650, 6);
+        B_GIVEINVITEMS(SELF, OTHER, 0x8650, 6);
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x13f4a);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x13f4a);
+}
+
+func void DIA_GRON_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x13f4a);
+}
+

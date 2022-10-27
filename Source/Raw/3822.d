@@ -1,0 +1,115 @@
+var int APPLESSMALLLIMIT = 0;
+var int APPLESBIGLIMIT = 0;
+var int APPLESEXP = 0;
+var int APPLESRESET = 0;
+const int APPLESMAXPERDAY = 4;
+const int APPLESMAXTRADER = 24;
+instance DIA_APPLETRADER_EXIT(C_INFO) {
+    NPC = 0xd878;
+    NR = 999;
+    CONDITION = DIA_APPLETRADER_EXIT_CONDITION;
+    INFORMATION = DIA_APPLETRADER_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_APPLETRADER_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_APPLETRADER_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_APPLETRADER_APPLESALMOSTFREE(C_INFO) {
+    NPC = 0xd878;
+    NR = 1;
+    CONDITION = DIA_APPLETRADER_APPLESALMOSTFREE_CONDITION;
+    INFORMATION = DIA_APPLETRADER_APPLESALMOSTFREE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_APPLETRADER_APPLESALMOSTFREE_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_APPLETRADER_APPLESALMOSTFREE_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_ApplesAlmostFree_03_01");
+}
+
+instance DIA_APPLETRADER_WHYFREE(C_INFO) {
+    NPC = 0xd878;
+    NR = 2;
+    CONDITION = DIA_APPLETRADER_WHYFREE_CONDITION;
+    INFORMATION = DIA_APPLETRADER_WHYFREE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "For half-price?";
+}
+
+func int DIA_APPLETRADER_WHYFREE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x11992)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_APPLETRADER_WHYFREE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_AppleTrader_WhyFree_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_WhyFree_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_WhyFree_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_WhyFree_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_WhyFree_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_WhyFree_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_WhyFree_03_07");
+}
+
+instance DIA_APPLETRADER_BUYAPPLE(C_INFO) {
+    NPC = 0xd878;
+    NR = 3;
+    CONDITION = DIA_APPLETRADER_BUYAPPLE_CONDITION;
+    INFORMATION = DIA_APPLETRADER_BUYAPPLE_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "An apple, please. (4 GP)";
+}
+
+func int DIA_APPLETRADER_BUYAPPLE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x11995)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_APPLETRADER_BUYAPPLE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_AppleTrader_BuyApple_15_01");
+    if ((APPLESSMALLLIMIT) == (APPLESMAXPERDAY)) {
+        APPLESDAYLIMIT = WLD_GETDAY();
+        APPLESSMALLLIMIT = 0;
+    };
+    if ((APPLESBIGLIMIT) < (APPLESMAXTRADER)) {
+        if ((NPC_HASITEMS(OTHER, 0x859b)) < (4)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_BuyApple_03_02");
+            AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_BuyApple_03_03");
+            AI_STOPPROCESSINFOS(SELF);
+        } else if (((APPLESSMALLLIMIT) <= (APPLESMAXPERDAY)) && ((APPLESDAYLIMIT) != (WLD_GETDAY()))) {
+            APPLESSMALLLIMIT = (APPLESSMALLLIMIT) + (1);
+            APPLESBIGLIMIT = (APPLESBIGLIMIT) + (1);
+            AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_BuyApple_03_04");
+            CREATEINVITEMS(SELF, 0x84ac, 1);
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_BuyApple_03_05");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_BuyApple_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_AppleTrader_BuyApple_03_07");
+    if ((APPLESEXP) == (FALSE)) {
+        B_GIVEPLAYERXP(XP_EVENT_APPLES);
+        NPC_EXCHANGEROUTINE(SELF, TOT);
+        APPLESEXP = TRUE;
+        NS04_ENDOFAPPLES = TRUE;
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+

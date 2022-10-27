@@ -1,0 +1,56 @@
+func void ZS_POTION_ALCHEMY() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((HLP_STRCMP(NPC_GETNEARESTWP(SELF), SELF.WP)) == (FALSE)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    if ((NPC_HASITEMS(SELF, 0x8581)) == (0)) {
+        CREATEINVITEM(SELF, 0x8581);
+    };
+}
+
+func int ZS_POTION_ALCHEMY_LOOP() {
+    if (!(C_BODYSTATECONTAINS(SELF, BS_MOBINTERACT_INTERRUPT))) {
+        if (WLD_ISMOBAVAILABLE(SELF, "LAB")) {
+            AI_USEMOB(SELF, "LAB", 1);
+        };
+        if (WLD_ISMOBAVAILABLE(SELF, "LATI")) {
+            AI_USEMOB(SELF, "LATI", 1);
+        };
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_POTION_ALCHEMY_END() {
+    AI_USEMOB(SELF, "LATI", -(1));
+}
+
+func void ZS_POTION_ALCHEMY_ONLYDIALOGUE() {
+    PERCEPTION_SET_ONLYDIALOGUE();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((HLP_STRCMP(NPC_GETNEARESTWP(SELF), SELF.WP)) == (FALSE)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    if ((NPC_HASITEMS(SELF, 0x8581)) == (0)) {
+        CREATEINVITEM(SELF, 0x8581);
+    };
+}
+
+func int ZS_POTION_ALCHEMY_ONLYDIALOGUE_LOOP() {
+    if (!(C_BODYSTATECONTAINS(SELF, BS_MOBINTERACT_INTERRUPT))) {
+        if (WLD_ISMOBAVAILABLE(SELF, "LAB")) {
+            AI_USEMOB(SELF, "LAB", 1);
+        };
+        if (WLD_ISMOBAVAILABLE(SELF, "LATI")) {
+            AI_USEMOB(SELF, "LATI", 1);
+        };
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_POTION_ALCHEMY_ONLYDIALOGUE_END() {
+    AI_USEMOB(SELF, "LATI", -(1));
+}
+

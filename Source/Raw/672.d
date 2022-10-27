@@ -1,0 +1,23 @@
+func void ZS_PREACH_VATRAS() {
+    PERCEPTION_SET_NORMAL();
+    NPC_PERCDISABLE(SELF, PERC_ASSESSQUIETSOUND);
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    AI_GOTOWP(SELF, SELF.WP);
+    AI_ALIGNTOWP(SELF);
+}
+
+func int ZS_PREACH_VATRAS_LOOP() {
+    if ((NPC_GETSTATETIME(SELF)) >= (13)) {
+        if ((SELF.AIVAR[19]) > (20)) {
+            SELF.AIVAR[19] = 0;
+        };
+        SELF.AIVAR[19] = (SELF.AIVAR[19]) + (1);
+        NPC_SETSTATETIME(SELF, 0);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_PREACH_VATRAS_END() {
+}
+

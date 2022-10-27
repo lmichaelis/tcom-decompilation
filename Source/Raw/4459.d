@@ -1,0 +1,229 @@
+func void EVT_VRAZKA_FOUND() {
+    if ((MARVIN_FOUNDVRAZKA) == (0)) {
+        MARVIN_FOUNDVRAZKA = 1;
+        AI_OUTPUT(HERO, HERO, "DIA_Marvin_FoundVrazka_15_01");
+        WLD_INSERTNPC(0xc3b9, "FP_ROAM_PART6_191");
+    };
+}
+
+var int PART3_TRAVELER_01_REMOVE = 0;
+func void EVT_PART3_TRAVELER_01() {
+    if ((PART3_TRAVELER_CHECKED) == (FALSE)) {
+        PART3_TRAVELER_CHECKED = TRUE;
+        PART3_TRAVELER_01_REMOVE = TRUE;
+        NPC = HLP_GETNPC(0x71b);
+        NPCPTR = _@(0x16734);
+        FF_APPLYEXTDATAGT(0x1673a, 75, -(1), NPCPTR);
+    };
+}
+
+var int EVT_PART3_TRAVELER_01.PART3_TRAVELER_CHECKED = 0;
+instance EVT_PART3_TRAVELER_01.NPC(C_NPC)
+var int EVT_PART3_TRAVELER_01.NPCPTR = 0;
+func void EVT_PART3_TRAVELER_01_REMOVECORPSE() {
+    if ((PART3_TRAVELER_01_REMOVECORPSE_COUNT) == (0)) {
+        PRINTD("Rozpoczynam - EVT_PART3_TRAVELER_01_RemoveCorpse");
+        MOVPTR1 = MEM_SEARCHVOBBYNAME("PART3_MOVER_TRAVELER_01");
+        MOVER1 = MEM_PTRTOINST(MOVPTR1);
+        CHANGEVOBCOLLISION("PART3_TRAVELER_01", FALSE, FALSE, FALSE, TRUE);
+        WLD_SENDTRIGGER("PART3_MOVER_TRAVELER_01");
+        PART3_TRAVELER_01_REMOVECORPSE_COUNT = 1;
+    };
+    if (((MOVER1.MOVERSTATE) != (MOVER_STATE_OPENING)) && ((MOVER1.MOVERSTATE) != (MOVER_STATE_CLOSING))) {
+        PRINTD("Skoñczy³em - EVT_PART3_TRAVELER_01_RemoveCorpse");
+        CHANGEVOBCOLLISION("PART3_TRAVELER_01", TRUE, TRUE, TRUE, TRUE);
+        FF_REMOVE(0x16736);
+        PART3_TRAVELER_01_REMOVECORPSE_COUNT = 0;
+    };
+}
+
+var int EVT_PART3_TRAVELER_01_REMOVECORPSE.PART3_TRAVELER_01_REMOVECORPSE_COUNT = 0;
+instance EVT_PART3_TRAVELER_01_REMOVECORPSE.MOVER1(ZCMOVER)
+var int EVT_PART3_TRAVELER_01_REMOVECORPSE.MOVPTR1 = 0;
+func void EVT_PART3_TRAVELER_01_APPLY() {
+    if ((CURRENTLEVEL) == (ARCHOLOS_ZEN)) {
+        if ((NPC_GETDISTTOWP(HERO, "PART3_PATHTRAVELER_01")) >= (0x1388)) {
+            if ((PART3_TRAVELER_01_REMOVE) == (TRUE)) {
+                PART3_TRAVELER_01_REMOVE = 2;
+                PRINTD("Remove podró¿nik");
+                FF_REMOVE(0x1673a);
+                FF_APPLYONCEEXTGT(0x16736, 0, -(1));
+            };
+        } else {
+            PRINTD("Oddal siê to usunê cia³o");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    if (((CURRENTLEVEL) == (ARCHOLOS_ENDGAME_ZEN)) || ((CURRENTLEVEL) == (ARCHOLOS_VOLFZACKE_ZEN))) {
+        PRINTD("I tak nie zobaczysz efektów");
+        FF_REMOVE(0x1673a);
+    };
+    PRINTD("Mogê funkcjê wykonaæ tylko w zenie Archolos! - EVT_PART3_TRAVELER_01_APPLY");
+}
+
+var int PART12_CORPSE_REMOVE = 0;
+func void EVT_PART12_CORPSE_REMOVECORPSE() {
+    if ((PART12_CORPSE_REMOVE_COUNT) == (0)) {
+        PRINTD("Rozpoczynam - EVT_PART12_CORPSE_RemoveCorpse");
+        MOVPTR1 = MEM_SEARCHVOBBYNAME("PART12_MOVER_CORPSE_01");
+        MOVER1 = MEM_PTRTOINST(MOVPTR1);
+        CHANGEVOBCOLLISION("PART12_CORPSE_01", FALSE, FALSE, FALSE, TRUE);
+        WLD_SENDTRIGGER("PART12_MOVER_CORPSE_01");
+        PART12_CORPSE_REMOVE_COUNT = 1;
+    };
+    if (((MOVER1.MOVERSTATE) != (MOVER_STATE_OPENING)) && ((MOVER1.MOVERSTATE) != (MOVER_STATE_CLOSING))) {
+        PRINTD("Skoñczy³em - EVT_PART12_CORPSE_RemoveCorpse");
+        CHANGEVOBCOLLISION("PART12_CORPSE_01", TRUE, TRUE, TRUE, TRUE);
+        FF_REMOVE(0x1673c);
+        PART12_CORPSE_REMOVE_COUNT = 0;
+    };
+}
+
+var int EVT_PART12_CORPSE_REMOVECORPSE.PART12_CORPSE_REMOVE_COUNT = 0;
+instance EVT_PART12_CORPSE_REMOVECORPSE.MOVER1(ZCMOVER)
+var int EVT_PART12_CORPSE_REMOVECORPSE.MOVPTR1 = 0;
+func void EVT_PART12_CORPSE_REMOVE_APPLY() {
+    if ((CURRENTLEVEL) == (ARCHOLOS_ZEN)) {
+        if ((NPC_GETDISTTOWP(HERO, "PART12_MOB_61")) >= (0x1388)) {
+            if ((PART12_CORPSE_REMOVE) == (0)) {
+                PART12_CORPSE_REMOVE = 1;
+                PRINTD("Remove hunter");
+                FF_REMOVE(0x16740);
+                FF_APPLYONCEEXTGT(0x1673c, 0, -(1));
+            };
+        } else {
+            PRINTD("Oddal siê to usunê cia³o");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    if (((CURRENTLEVEL) == (ARCHOLOS_ENDGAME_ZEN)) || ((CURRENTLEVEL) == (ARCHOLOS_VOLFZACKE_ZEN))) {
+        PRINTD("I tak nie zobaczysz efektów");
+        FF_REMOVE(0x16740);
+    };
+    PRINTD("Mogê funkcjê wykonaæ tylko w zenie Archolos! - EVT_PART12_CORPSE_Remove_APPLY");
+}
+
+func void EVT_PART12_CORPSE() {
+    if ((EVT_PART12_CORPSE_CHECKED) == (FALSE)) {
+        EVT_PART12_CORPSE_CHECKED = TRUE;
+        NPC = HLP_GETNPC(0x71b);
+        NPCPTR = _@(0x16743);
+        FF_APPLYEXTDATAGT(0x16740, 75, -(1), NPCPTR);
+    };
+}
+
+var int EVT_PART12_CORPSE.EVT_PART12_CORPSE_CHECKED = 0;
+instance EVT_PART12_CORPSE.NPC(C_NPC)
+var int EVT_PART12_CORPSE.NPCPTR = 0;
+var int ROYALGUARD_REMOVE = 0;
+func void EVT_ROYALGUARD_CORPSE() {
+    if ((EVT_ROYALGUARD_CORPSE_CHECKED) == (FALSE)) {
+        EVT_ROYALGUARD_CORPSE_CHECKED = TRUE;
+        NPC = HLP_GETNPC(0x71b);
+        NPCPTR = _@(0x16748);
+        FF_APPLYEXTDATAGT(0x1674a, 75, -(1), NPCPTR);
+    };
+}
+
+var int EVT_ROYALGUARD_CORPSE.EVT_ROYALGUARD_CORPSE_CHECKED = 0;
+instance EVT_ROYALGUARD_CORPSE.NPC(C_NPC)
+var int EVT_ROYALGUARD_CORPSE.NPCPTR = 0;
+func void EVT_ROYALGUARD_CORPSE_REMOVE_APPLY() {
+    if ((CURRENTLEVEL) == (ARCHOLOS_ZEN)) {
+        if ((NPC_GETDISTTOWP(HERO, "PART5_MOB_89")) >= (0x1388)) {
+            if ((ROYALGUARD_REMOVE) == (0)) {
+                ROYALGUARD_REMOVE = 1;
+                PRINTD("Remove Royal Guard");
+                FF_REMOVE(0x1674a);
+                FF_APPLYONCEEXTGT(0x1674b, 0, -(1));
+            };
+        } else {
+            PRINTD("Oddal siê to usunê cia³o");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    if (((CURRENTLEVEL) == (ARCHOLOS_ENDGAME_ZEN)) || ((CURRENTLEVEL) == (ARCHOLOS_VOLFZACKE_ZEN))) {
+        PRINTD("I tak nie zobaczysz efektów");
+        FF_REMOVE(0x1674a);
+    };
+    PRINTD("Mogê funkcjê wykonaæ tylko w zenie Archolos! - EVT_ROYALGUARD_CORPSE_Remove_APPLY");
+}
+
+func void ROYALGUARD_CORPSE_APPLY() {
+    if ((ROYALGUARD_CORPSE_APPLY_COUNT) == (0)) {
+        PRINTD("Rozpoczynam - ROYALGUARD_CORPSE_APPLY");
+        MOVPTR1 = MEM_SEARCHVOBBYNAME("CORPSE_MOVER_ROYALGUARD");
+        MOVER1 = MEM_PTRTOINST(MOVPTR1);
+        CHANGEVOBCOLLISION("CORPSE_ROYALGUARD", FALSE, FALSE, FALSE, TRUE);
+        WLD_SENDTRIGGER("CORPSE_MOVER_ROYALGUARD");
+        ROYALGUARD_CORPSE_APPLY_COUNT = 1;
+    };
+    if (((MOVER1.MOVERSTATE) != (MOVER_STATE_OPENING)) && ((MOVER1.MOVERSTATE) != (MOVER_STATE_CLOSING))) {
+        PRINTD("Skoñczy³em - ROYALGUARD_CORPSE_APPLY");
+        CHANGEVOBCOLLISION("CORPSE_ROYALGUARD", TRUE, TRUE, TRUE, TRUE);
+        FF_REMOVE(0x1674b);
+        ROYALGUARD_CORPSE_APPLY_COUNT = 0;
+    };
+}
+
+var int ROYALGUARD_CORPSE_APPLY.ROYALGUARD_CORPSE_APPLY_COUNT = 0;
+instance ROYALGUARD_CORPSE_APPLY.MOVER1(ZCMOVER)
+var int ROYALGUARD_CORPSE_APPLY.MOVPTR1 = 0;
+var int NOVIZESILBACH_REMOVE = 0;
+func void EVT_SILBACH_NOVIZE() {
+    if ((EVT_NOVIZESILBACH_CORPSE_CHECKED) == (FALSE)) {
+        EVT_NOVIZESILBACH_CORPSE_CHECKED = TRUE;
+        NPC = HLP_GETNPC(0x71b);
+        NPCPTR = _@(0x16752);
+        FF_APPLYEXTDATAGT(0x16754, 75, -(1), NPCPTR);
+    };
+}
+
+var int EVT_SILBACH_NOVIZE.EVT_NOVIZESILBACH_CORPSE_CHECKED = 0;
+instance EVT_SILBACH_NOVIZE.NPC(C_NPC)
+var int EVT_SILBACH_NOVIZE.NPCPTR = 0;
+func void EVT_NOVIZESILBACH_CORPSE_REMOVE_APPLY() {
+    if ((CURRENTLEVEL) == (ARCHOLOS_ZEN)) {
+        if ((NPC_GETDISTTOWP(HERO, "PART12_MOB_101")) >= (0x1388)) {
+            if ((NOVIZESILBACH_REMOVE) == (0)) {
+                NOVIZESILBACH_REMOVE = 1;
+                PRINTD("Remove Novize Silbach");
+                FF_REMOVE(0x16754);
+                FF_APPLYONCEEXTGT(0x16755, 0, -(1));
+            };
+        } else {
+            PRINTD("Oddal siê to usunê cia³o");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    if (((CURRENTLEVEL) == (ARCHOLOS_ENDGAME_ZEN)) || ((CURRENTLEVEL) == (ARCHOLOS_VOLFZACKE_ZEN))) {
+        PRINTD("I tak nie zobaczysz efektów");
+        FF_REMOVE(0x16754);
+    };
+    PRINTD("Mogê funkcjê wykonaæ tylko w zenie Archolos! - EVT_NovizeSilbach_CORPSE_Remove_APPLY");
+}
+
+func void NOVIZESILBACH_CORPSE_APPLY() {
+    if ((NOVIZESILBACH_CORPSE_APPLY_COUNT) == (0)) {
+        PRINTD("Rozpoczynam - NovizeSilbach_CORPSE_APPLY");
+        MOVPTR1 = MEM_SEARCHVOBBYNAME("SILBACH_MOVER_NOVIZE");
+        MOVER1 = MEM_PTRTOINST(MOVPTR1);
+        CHANGEVOBCOLLISION("SILBACH_NOVIZE", FALSE, FALSE, FALSE, TRUE);
+        WLD_SENDTRIGGER("SILBACH_MOVER_NOVIZE");
+        NOVIZESILBACH_CORPSE_APPLY_COUNT = 1;
+    };
+    if (((MOVER1.MOVERSTATE) != (MOVER_STATE_OPENING)) && ((MOVER1.MOVERSTATE) != (MOVER_STATE_CLOSING))) {
+        PRINTD("Skoñczy³em - NovizeSilbach_CORPSE_APPLY");
+        CHANGEVOBCOLLISION("SILBACH_NOVIZE", TRUE, TRUE, TRUE, TRUE);
+        FF_REMOVE(0x16755);
+        NOVIZESILBACH_CORPSE_APPLY_COUNT = 0;
+    };
+}
+
+var int NOVIZESILBACH_CORPSE_APPLY.NOVIZESILBACH_CORPSE_APPLY_COUNT = 0;
+instance NOVIZESILBACH_CORPSE_APPLY.MOVER1(ZCMOVER)
+var int NOVIZESILBACH_CORPSE_APPLY.MOVPTR1 = 0;

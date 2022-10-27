@@ -1,0 +1,325 @@
+instance DIA_LUDWIG_EXIT(C_INFO) {
+    NPC = 0xd4fe;
+    NR = 999;
+    CONDITION = DIA_LUDWIG_EXIT_CONDITION;
+    INFORMATION = DIA_LUDWIG_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_LUDWIG_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_LUDWIG_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_LUDWIG_HELLO(C_INFO) {
+    NPC = 0xd4fe;
+    NR = 1;
+    CONDITION = DIA_LUDWIG_HELLO_CONDITION;
+    INFORMATION = DIA_LUDWIG_HELLO_INFO;
+    DESCRIPTION = "What do you do?";
+}
+
+func int DIA_LUDWIG_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_LUDWIG_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Hello_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Hello_02_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Hello_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Hello_02_03");
+    TRADER_LOGENTRY_LUDWIG();
+}
+
+instance DIA_LUDWIG_TRADE(C_INFO) {
+    NPC = 0xd4fe;
+    NR = 1;
+    CONDITION = DIA_LUDWIG_TRADE_CONDITION;
+    INFORMATION = DIA_LUDWIG_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Show me your maps.";
+}
+
+func int DIA_LUDWIG_TRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12074)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LUDWIG_TRADE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Trade_15_01");
+    B_GIVETRADEINV_LUDWIG(SELF);
+}
+
+var int LUDWIG_HOWGETMAP = 0;
+var int LUDWIG_WANTGOLDBLOODMAP = 0;
+instance DIA_LUDWIG_Q402MAP(C_INFO) {
+    NPC = 0xd4fe;
+    NR = 1;
+    CONDITION = DIA_LUDWIG_Q402MAP_CONDITION;
+    INFORMATION = DIA_LUDWIG_Q402MAP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Could you clean up a map?";
+}
+
+func int DIA_LUDWIG_Q402MAP_CONDITION() {
+    if ((((((LOG_GETSTATUS(MIS_Q402)) == (LOG_RUNNING)) && ((Q404_MARVINFINISHEDMINE) == (2))) && ((NPC_HASITEMS(OTHER, 0x91e7)) >= (1))) && (NPC_KNOWSINFO(OTHER, 0x12074))) && ((Q402_STRANGENOTELOGENTRY) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LUDWIG_Q402MAP_END() {
+    Q402_LUDWIG_FINISHEDMAP = 1;
+    Q402_LUDWIG_FINISHEDMAP_DAY = WLD_GETDAY();
+    INFO_CLEARCHOICES(0x1207c);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_Q402, LOG_Q402_LUDWIGMAP);
+    if (((HERO.GUILD) == (GIL_MIL)) && (!(NPC_KNOWSINFO(OTHER, 0x102a5)))) {
+        Q402_MILITIA_MESSAGE = TRUE;
+        Q402_MARVINISLATE = TRUE;
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        Q402_ARAXOS_MESSAGE = TRUE;
+        Q402_MARVINISLATE = TRUE;
+    };
+}
+
+func void DIA_LUDWIG_Q402MAP_INFO() {
+    B_STANDUP();
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_03_02");
+    AI_STARTFACEANI(SELF, S_FRIGHTENED, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_15_03");
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_PLAYANI(SELF, T_JUMPB);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_03_04");
+    INFO_CLEARCHOICES(0x1207c);
+    INFO_ADDCHOICE(0x1207c, "I took it from the body of a dead comrade.", 0x12081);
+    INFO_ADDCHOICE(0x1207c, "I was attacked by an animal.", 0x12082);
+    INFO_ADDCHOICE(0x1207c, "It fell on the floor when I was at the butcher's.", 0x12083);
+}
+
+func void DIA_LUDWIG_Q402MAP_NEXT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Next_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 0x91e7, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Next_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Next_03_03");
+    if ((LUDWIG_HOWGETMAP) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Next_03_04");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Next_15_05");
+    };
+    if ((LUDWIG_HOWGETMAP) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Next_03_08");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Next_15_09");
+    };
+    if ((LUDWIG_HOWGETMAP) == (3)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Next_03_10");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Next_03_11");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Next_15_12");
+    };
+    if ((LUDWIG_HOWGETMAP) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Next_03_13");
+        AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Next_15_14");
+        DIA_LUDWIG_Q402MAP_END();
+    };
+    INFO_CLEARCHOICES(0x1207c);
+    if ((LUDWIG_HOWGETMAP) == (2)) {
+        if ((NPC_HASITEMS(OTHER, 0x859b)) >= (Q402_MONEYFORCLEANINGMAP)) {
+            INFO_ADDCHOICE(0x1207c, "Here, your money. (100 GP)", 0x12084);
+        };
+    };
+    if ((LUDWIG_HOWGETMAP) == (3)) {
+        if ((NPC_HASITEMS(OTHER, 0x859b)) >= ((Q402_MONEYFORCLEANINGMAP) * (2))) {
+            INFO_ADDCHOICE(0x1207c, "Here, your money. (100 GP)", 0x12084);
+        };
+    };
+    INFO_ADDCHOICE(0x1207c, "I'll bring you the gold soon.", 0x12085);
+}
+
+func void DIA_LUDWIG_Q402MAP_FRIEND() {
+    LUDWIG_HOWGETMAP = 1;
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Friend_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Friend_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Friend_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Friend_03_04");
+    AI_RESETFACEANI(SELF);
+    DIA_LUDWIG_Q402MAP_NEXT();
+}
+
+func void DIA_LUDWIG_Q402MAP_ANIMAL() {
+    LUDWIG_HOWGETMAP = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Animal_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Animal_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Animal_15_03");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Animal_03_04");
+    DIA_LUDWIG_Q402MAP_NEXT();
+}
+
+func void DIA_LUDWIG_Q402MAP_BUTCHER() {
+    LUDWIG_HOWGETMAP = 3;
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Butcher_15_01");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Butcher_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Butcher_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Butcher_03_04");
+    DIA_LUDWIG_Q402MAP_NEXT();
+}
+
+func void DIA_LUDWIG_Q402MAP_BUTCHER_NEXT_GOLD() {
+    LUDWIG_WANTGOLDBLOODMAP = FALSE;
+    if ((LUDWIG_HOWGETMAP) == (2)) {
+    };
+    if ((LUDWIG_HOWGETMAP) == (3)) {
+        B_GIVEINVITEMS(OTHER, SELF, 0x859b, (Q402_MONEYFORCLEANINGMAP) * (2));
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_Gold_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_Gold_03_02");
+    DIA_LUDWIG_Q402MAP_END();
+}
+
+func void DIA_LUDWIG_Q402MAP_BUTCHER_NEXT_NOGOLD() {
+    LUDWIG_WANTGOLDBLOODMAP = TRUE;
+    B_GIVEINVITEMS(SELF, OTHER, 0x91e7, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402Map_NoGold_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402Map_NoGold_03_02");
+    INFO_CLEARCHOICES(0x1207c);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_LUDWIG_YOURGOLD(C_INFO) {
+    NPC = 0xd4fe;
+    NR = 1;
+    CONDITION = DIA_LUDWIG_YOURGOLD_CONDITION;
+    INFORMATION = DIA_LUDWIG_YOURGOLD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Here, your money.";
+}
+
+func int DIA_LUDWIG_YOURGOLD_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_Q402)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x1207c))) && ((LUDWIG_WANTGOLDBLOODMAP) == (TRUE))) && ((NPC_HASITEMS(OTHER, 0x91e7)) >= (1))) {
+        if ((((LUDWIG_HOWGETMAP) == (2)) && ((NPC_HASITEMS(OTHER, 0x859b)) >= (Q402_MONEYFORCLEANINGMAP))) || (((LUDWIG_HOWGETMAP) == (3)) && ((NPC_HASITEMS(OTHER, 0x859b)) >= ((Q402_MONEYFORCLEANINGMAP) * (2))))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LUDWIG_YOURGOLD_INFO() {
+    DIA_LUDWIG_Q402MAP_BUTCHER_NEXT_GOLD();
+}
+
+instance DIA_LUDWIG_Q402MYMAP(C_INFO) {
+    NPC = 0xd4fe;
+    NR = 1;
+    CONDITION = DIA_LUDWIG_Q402MYMAP_CONDITION;
+    INFORMATION = DIA_LUDWIG_Q402MYMAP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I came for the map.";
+}
+
+func int DIA_LUDWIG_Q402MYMAP_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q402)) == (LOG_RUNNING)) && ((Q402_LUDWIG_FINISHEDMAP) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LUDWIG_Q402MYMAP_INFO() {
+    Q402_LUDWIG_FINISHEDMAP = 3;
+    CREATEINVITEMS(SELF, 0x91e9, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x91e9, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402MyMap_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402MyMap_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402MyMap_03_03");
+    if ((Q402_ARAXOS_LUDWIGMESSAGE) == (TRUE)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402MyMap_15_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402MyMap_03_05");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402MyMap_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402MyMap_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402MyMap_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402MyMap_03_09");
+    if ((LUDWIG_HOWGETMAP) >= (2)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402MyMap_15_10");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Ludwig_Q402MyMap_15_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Q402MyMap_03_12");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_Q402, LOG_Q402_LUDWIG_GOTMAP);
+}
+
+instance DIA_LUDWIG_AMBIENT(C_INFO) {
+    NPC = 0xd4fe;
+    NR = 998;
+    CONDITION = DIA_LUDWIG_AMBIENT_CONDITION;
+    INFORMATION = DIA_LUDWIG_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "What's up?";
+}
+
+func int DIA_LUDWIG_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x12074)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LUDWIG_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_HowAreYou2");
+    if (((Q402_LUDWIG_FINISHEDMAP) == (3)) && ((LUDWIG_HOWGETMAP) == (1))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Ambient_03_01");
+    };
+    if (((Q402_LUDWIG_FINISHEDMAP) == (3)) && ((LUDWIG_HOWGETMAP) > (1))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Ambient_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Ludwig_Ambient_03_03");
+}
+
+instance DIA_VLK_3004_LUDWIG_PICKPOCKET(C_INFO) {
+    NPC = 0xd4fe;
+    NR = 900;
+    CONDITION = DIA_VLK_3004_LUDWIG_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_VLK_3004_LUDWIG_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_VLK_3004_LUDWIG_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VLK_3004_LUDWIG_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x1208f);
+    INFO_ADDCHOICE(0x1208f, DIALOG_BACK, 0x12093);
+    INFO_ADDCHOICE(0x1208f, DIALOG_PICKPOCKET, 0x12092);
+}
+
+func void DIA_VLK_3004_LUDWIG_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        CREATEINVITEMS(SELF, 0x9b8c, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x9b8c, 1);
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x1208f);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x1208f);
+}
+
+func void DIA_VLK_3004_LUDWIG_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x1208f);
+}
+

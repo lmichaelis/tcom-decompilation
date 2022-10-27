@@ -1,0 +1,228 @@
+instance DIA_BAU_VALERIOVINE_SQ116_HOLDWIG(C_INFO) {
+    NR = 30;
+    CONDITION = DIA_BAU_VALERIOVINE_SQ116_HOLDWIG_CONDITION;
+    INFORMATION = DIA_BAU_VALERIOVINE_SQ116_HOLDWIG_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Do you know anything about Holdwig's ailment?";
+}
+
+func int DIA_BAU_VALERIOVINE_SQ116_HOLDWIG_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_SQ116)) == (LOG_RUNNING)) {
+        if (((NPC_KNOWSINFO(OTHER, 0xfd7b)) && ((SQ116_BLOCKTERRYWAY) == (FALSE))) && ((SQ116_GUMBERTWAY_BLOCK) == (FALSE))) {
+            if ((SELF.AIVAR[93]) <= (WLD_GETDAY())) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_BAU_VALERIOVINE_SQ116_HOLDWIG_INFO() {
+    SELF.AIVAR[93] = (WLD_GETDAY()) + (1);
+    B_SAY(OTHER, SELF, "$SQ116_Marvin_AskHoldwig");
+    RNGANWSER = HLP_RANDOM(5);
+    if ((RNGANWSER) == (0)) {
+        AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+        B_SAY(SELF, OTHER, "$SQ116_Farmer_KnowSomething_V1");
+    };
+    if ((RNGANWSER) == (1)) {
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        B_SAY(SELF, OTHER, "$SQ116_Farmer_KnowSomething_V2");
+    };
+    if ((RNGANWSER) == (2)) {
+        AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+        B_SAY(SELF, OTHER, "$SQ116_Farmer_KnowSomething_V3");
+    };
+    if ((RNGANWSER) == (3)) {
+        B_SAY(SELF, OTHER, "$DONTKNOW_TOPIC_CALM");
+    };
+    if ((RNGANWSER) == (4)) {
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        B_SAY(SELF, OTHER, "$DONTKNOW_TOPIC_ANGRY");
+    };
+    AI_RESETFACEANI(SELF);
+}
+
+var int DIA_BAU_VALERIOVINE_SQ116_HOLDWIG_INFO.RNGANWSER = 0;
+instance DIA_BAU_VALERIOVINE_SQ225_QUESTION(C_INFO) {
+    NR = 31;
+    CONDITION = DIA_BAU_VALERIOVINE_SQ225_QUESTION_CONDITION;
+    INFORMATION = DIA_BAU_VALERIOVINE_SQ225_QUESTION_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ASKBROTHERSCONFLICT;
+}
+
+func int DIA_BAU_VALERIOVINE_SQ225_QUESTION_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING)) && ((NPC_KNOWSINFO(OTHER, 0x12097)) == (FALSE))) && ((NPC_KNOWSINFO(OTHER, 0xfe93)) == (FALSE))) && ((SQ225_FIGHTINVINEYARD_BLOCKFASTTRAVEL) == (0))) {
+        if ((NPC_KNOWSINFO(OTHER, 0xfe77)) || (NPC_KNOWSINFO(OTHER, 0x119f1))) {
+            if ((SQ225_MARVINKNOWABOUTLIAM) == (0)) {
+                if ((SELF.AIVAR[93]) <= (WLD_GETDAY())) {
+                    return TRUE;
+                };
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_BAU_VALERIOVINE_SQ225_QUESTION_INFO() {
+    SELF.AIVAR[93] = (WLD_GETDAY()) + (1);
+    if ((SQ225_TALKEDWITHFARMERSCOUNT) >= (5)) {
+        SQ225_MARVINKNOWABOUTLIAM = 1;
+        AI_OUTPUT(OTHER, SELF, "DIA_BAU_ValerioVine_SQ225_Question_15_13");
+        AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_14");
+        B_STANDUP();
+        AI_PLAYANI(SELF, T_SEARCH);
+        AI_RESETFACEANI(SELF);
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_15");
+        AI_OUTPUT(OTHER, SELF, "DIA_BAU_ValerioVine_SQ225_Question_15_16");
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_17");
+        AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_18");
+    };
+    RNGANWSER = HLP_RANDOM(4);
+    if ((RNGANWSER) == (0)) {
+        if ((SELF.VOICE) == (49)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_BAU_ValerioVine_SQ225_Question_15_10");
+            B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_11");
+            AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+            B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_12");
+        } else {
+            AI_OUTPUT(OTHER, SELF, "DIA_BAU_ValerioVine_SQ225_Question_15_01");
+            B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_02");
+            B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_03");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    if ((RNGANWSER) == (1)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_BAU_ValerioVine_SQ225_Question_15_04");
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_05");
+        AI_RESETFACEANI(SELF);
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_06");
+    };
+    if ((RNGANWSER) == (2)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_BAU_ValerioVine_SQ225_Question_15_07");
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_08");
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_09");
+    };
+    if ((RNGANWSER) == (3)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_BAU_ValerioVine_SQ225_Question_15_10");
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_11");
+        AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_Question_03_12");
+    };
+    AI_FUNCTION(SELF, 0xa44b);
+    AI_RESETFACEANI(SELF);
+}
+
+var int DIA_BAU_VALERIOVINE_SQ225_QUESTION_INFO.RNGANWSER = 0;
+instance DIA_BAU_VALERIOVINE_SQ225_FIRECART(C_INFO) {
+    NR = 32;
+    CONDITION = DIA_BAU_VALERIOVINE_SQ225_FIRECART_CONDITION;
+    INFORMATION = DIA_BAU_VALERIOVINE_SQ225_FIRECART_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_BAU_VALERIOVINE_SQ225_FIRECART_CONDITION() {
+    return FALSE;
+}
+
+var int SQ225_BAU_VALERIOVINE_FIRECART_LOGENTRY = 0;
+func void DIA_BAU_VALERIOVINE_SQ225_FIRECART_INFO() {
+    AI_STARTFACEANI(SELF, "S_HOSTILE", 1, -(1));
+    B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_FireCart_03_01");
+    AI_DRAWWEAPON(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+    B_ATTACK(SELF, OTHER, AR_GUARDSTOPSINTRUDER, 1);
+    if ((SQ225_BAU_VALERIOVINE_FIRECART_LOGENTRY) == (FALSE)) {
+        SQ225_BAU_VALERIOVINE_FIRECART_LOGENTRY = TRUE;
+        SQ225_ANDERASWAY_FAILED = TRUE;
+        SQ225_ANDERASWAY_AGREED = FALSE;
+        B_LOGENTRY(TOPIC_SQ225, LOG_SQ225_CARTS_FAILED);
+    };
+}
+
+instance DIA_BAU_VALERIOVINE_SQ225_GOAWAY(C_INFO) {
+    NR = 33;
+    CONDITION = DIA_BAU_VALERIOVINE_SQ225_GOAWAY_CONDITION;
+    INFORMATION = DIA_BAU_VALERIOVINE_SQ225_GOAWAY_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_BAU_VALERIOVINE_SQ225_GOAWAY_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING)) {
+        if ((((SQ225_ANDERASWAY_FAILED) == (TRUE)) && (NPC_KNOWSINFO(OTHER, 0x11a13))) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_BAU_VALERIOVINE_SQ225_GOAWAY_INFO() {
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    RNGANWSER = HLP_RANDOM(2);
+    if ((RNGANWSER) == (0)) {
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_GoAway_03_01");
+    };
+    if ((RNGANWSER) == (1)) {
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_GoAway_03_02");
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+var int DIA_BAU_VALERIOVINE_SQ225_GOAWAY_INFO.RNGANWSER = 0;
+instance DIA_BAU_VALERIOVINE_SQ225_HELPME(C_INFO) {
+    NR = 34;
+    CONDITION = DIA_BAU_VALERIOVINE_SQ225_HELPME_CONDITION;
+    INFORMATION = DIA_BAU_VALERIOVINE_SQ225_HELPME_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_BAU_VALERIOVINE_SQ225_HELPME_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING)) {
+        if (((SQ225_FIGHTINVINEYARD_HOLDWIG) >= (2)) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_BAU_VALERIOVINE_SQ225_HELPME_INFO() {
+    RNGANWSER = HLP_RANDOM(2);
+    AI_OUTPUT(OTHER, SELF, "DIA_BAU_ValerioVine_SQ225_HelpMe_15_01");
+    if ((((((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(BAU_2266_FARMER))) || ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(BAU_11183_FARMER)))) || ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(BAU_11186_FARMER)))) || ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(BAU_11190_FARMER)))) || ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(BAU_11196_FARMER)))) {
+        if ((RNGANWSER) == (0)) {
+            B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_HelpMe_03_04");
+        } else if ((RNGANWSER) == (1)) {
+            B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_HelpMe_03_05");
+        };
+        NPC_EXCHANGEROUTINE(SELF, "SQ225_HELPHOLDWIG");
+    };
+    if ((RNGANWSER) == (0)) {
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_HelpMe_03_02");
+    };
+    if ((RNGANWSER) == (1)) {
+        B_SAY(SELF, OTHER, "$DIA_BAU_ValerioVine_SQ225_HelpMe_03_03");
+    };
+    NPC_EXCHANGEROUTINE(SELF, "SQ225_FLEE");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+var int DIA_BAU_VALERIOVINE_SQ225_HELPME_INFO.RNGANWSER = 0;
+func void B_ASSIGNAMBIENTINFOS_BAU_VALERIOVINE(var C_NPC SLF) {
+    DIA_BAU_VALERIOVINE_SQ225_QUESTION.NPC = HLP_GETINSTANCEID(SLF);
+    DIA_BAU_VALERIOVINE_SQ225_GOAWAY.NPC = HLP_GETINSTANCEID(SLF);
+    DIA_BAU_VALERIOVINE_SQ225_FIRECART.NPC = HLP_GETINSTANCEID(SLF);
+    DIA_BAU_VALERIOVINE_SQ225_HELPME.NPC = HLP_GETINSTANCEID(SLF);
+    DIA_BAU_VALERIOVINE_SQ116_HOLDWIG.NPC = HLP_GETINSTANCEID(SLF);
+}
+

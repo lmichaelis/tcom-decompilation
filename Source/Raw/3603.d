@@ -1,0 +1,165 @@
+instance DIA_DARRYL_EXIT(C_INFO) {
+    NPC = 0xc8b8;
+    NR = 999;
+    CONDITION = DIA_DARRYL_EXIT_CONDITION;
+    INFORMATION = DIA_DARRYL_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_DARRYL_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_DARRYL_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_DARRYL_Q101_WHATSUP(C_INFO) {
+    NPC = 0xc8b8;
+    NR = 1;
+    CONDITION = DIA_DARRYL_Q101_WHATSUP_CONDITION;
+    INFORMATION = DIA_DARRYL_Q101_WHATSUP_INFO;
+    DESCRIPTION = "How is the mood?";
+}
+
+func int DIA_DARRYL_Q101_WHATSUP_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_DARRYL_Q101_WHATSUP_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Darryl_Q101_WhatsUp_15_00");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_WhatsUp_10_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_WhatsUp_10_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Darryl_Q101_WhatsUp_15_03");
+}
+
+instance DIA_DARRYL_Q101_CALM(C_INFO) {
+    NPC = 0xc8b8;
+    NR = 1;
+    CONDITION = DIA_DARRYL_Q101_CALM_CONDITION;
+    INFORMATION = DIA_DARRYL_Q101_CALM_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How do you do it that you're so calm?";
+}
+
+func int DIA_DARRYL_Q101_CALM_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0xfc99)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DARRYL_Q101_CALM_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Darryl_Q101_Calm_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Calm_10_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Calm_10_03");
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_DARRYL_Q101_BROTHER(C_INFO) {
+    NPC = 0xc8b8;
+    NR = 1;
+    CONDITION = DIA_DARRYL_Q101_BROTHER_CONDITION;
+    INFORMATION = DIA_DARRYL_Q101_BROTHER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "My brother says the same thing.";
+}
+
+func int DIA_DARRYL_Q101_BROTHER_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0xfc9c)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DARRYL_Q101_BROTHER_INFO() {
+    SHIPTALK += 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Darryl_Q101_Brother_15_00");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_10_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_10_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_10_03");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_10_04");
+    AI_STARTFACEANI(OTHER, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Darryl_Q101_Brother_15_05");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_10_06");
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(0xfc9f);
+    INFO_ADDCHOICE(0xfc9f, "As far away from the war as possible.", 0xfca2);
+    INFO_ADDCHOICE(0xfc9f, "Actually, I'm going to visit my uncle.", 0xfca3);
+}
+
+func void DIA_DARRYL_Q101_BROTHER_WAR() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Darryl_Q101_Brother_War_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_War_10_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_War_10_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_War_10_03");
+    INFO_CLEARCHOICES(0xfc9f);
+}
+
+func void DIA_DARRYL_Q101_BROTHER_UNCLE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Darryl_Q101_Brother_Uncle_15_00");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_Uncle_10_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Darryl_Q101_Brother_Uncle_15_02");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_Uncle_10_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Brother_Uncle_10_04");
+    INFO_CLEARCHOICES(0xfc9f);
+}
+
+instance DIA_DARRYL_Q101_LONDRAM(C_INFO) {
+    NPC = 0xc8b8;
+    NR = 1;
+    CONDITION = DIA_DARRYL_Q101_LONDRAM_CONDITION;
+    INFORMATION = DIA_DARRYL_Q101_LONDRAM_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What do you think is the fate of Londram?";
+}
+
+func int DIA_DARRYL_Q101_LONDRAM_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0xfc9f)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DARRYL_Q101_LONDRAM_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Darryl_Q101_Londram_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Londram_10_02");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Londram_10_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Londram_10_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Londram_10_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Darryl_Q101_Londram_10_06");
+}
+
+instance DIA_DARRYL_Q101_AFTERLONDRAM(C_INFO) {
+    NPC = 0xc8b8;
+    NR = 1;
+    CONDITION = DIA_DARRYL_Q101_AFTERLONDRAM_CONDITION;
+    INFORMATION = DIA_DARRYL_Q101_AFTERLONDRAM_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_DARRYL_Q101_AFTERLONDRAM_CONDITION() {
+    if ((NPC_ISINSTATE(SELF, 0xf09f)) && (NPC_KNOWSINFO(OTHER, 0xfca4))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DARRYL_Q101_AFTERLONDRAM_INFO() {
+    B_SAY(SELF, OTHER, "$KIND_GOODBYE");
+    AI_STOPPROCESSINFOS(SELF);
+}
+

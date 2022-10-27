@@ -1,0 +1,880 @@
+const int CRAFTINGVIEW_DLG = 0;
+const int CRAFTINGVIEW_RENDERDLG = 0;
+const int CRAFTINGVIEW_RENDERITEM = 0;
+const int CRAFTINGVIEW_ISOPEN = 0;
+const int CRAFTINGVIEW_SELECTEDTAB = 0;
+const int CV_INGREDIENTSTAB = 0;
+const int CV_PROPERTIESTAB = 1;
+const int CV_CURRENTITEM = 0;
+const int CV_CURRENTMODE = 0;
+const int CV_CURRENTAMOUNT = 0;
+const int CRAFTINGVIEWREFX = 800;
+const int CRAFTINGVIEWREFY = 600;
+var int CRAFTINGVIEWTEXT[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+const int MAX_WEAPONRECIPEINSTANCES = 100;
+var int WEAPONRECIPEINSTANCE[100] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+const int MAX_POTIONRECIPEINSTANCES = 62;
+var int POTIONRECIPEINSTANCE[62] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+const int MAX_MEALRECIPEINSTANCES = 63;
+var int MEALRECIPEINSTANCE[63] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+const int MAX_SCROLLRECIPEINSTANCES = 24;
+var int SCROLLRECIPEINSTANCE[24] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+func void CRAFTINGVIEW_SETUPRECIPESARRAY() {
+    WEAPONRECIPEINSTANCE[0] = 0x937a;
+    WEAPONRECIPEINSTANCE[1] = 0x937c;
+    WEAPONRECIPEINSTANCE[2] = 0x937e;
+    WEAPONRECIPEINSTANCE[3] = 0x9380;
+    WEAPONRECIPEINSTANCE[4] = 0x9382;
+    WEAPONRECIPEINSTANCE[5] = 0x9384;
+    WEAPONRECIPEINSTANCE[6] = 0x9386;
+    WEAPONRECIPEINSTANCE[7] = 0x9388;
+    WEAPONRECIPEINSTANCE[8] = 0x938a;
+    WEAPONRECIPEINSTANCE[9] = 0x938c;
+    WEAPONRECIPEINSTANCE[10] = 0x938e;
+    WEAPONRECIPEINSTANCE[11] = 0x9390;
+    WEAPONRECIPEINSTANCE[12] = 0x9392;
+    WEAPONRECIPEINSTANCE[13] = 0x9394;
+    WEAPONRECIPEINSTANCE[14] = 0x9396;
+    WEAPONRECIPEINSTANCE[15] = 0x9398;
+    WEAPONRECIPEINSTANCE[16] = 0x939a;
+    WEAPONRECIPEINSTANCE[17] = 0x939c;
+    WEAPONRECIPEINSTANCE[18] = 0x939e;
+    WEAPONRECIPEINSTANCE[19] = 0x93a0;
+    WEAPONRECIPEINSTANCE[20] = 0x93a2;
+    WEAPONRECIPEINSTANCE[21] = 0x93a4;
+    WEAPONRECIPEINSTANCE[22] = 0x93a6;
+    WEAPONRECIPEINSTANCE[23] = 0x93a8;
+    WEAPONRECIPEINSTANCE[24] = 0x93aa;
+    WEAPONRECIPEINSTANCE[25] = 0x93ac;
+    WEAPONRECIPEINSTANCE[26] = 0x93ae;
+    WEAPONRECIPEINSTANCE[27] = 0x93b0;
+    WEAPONRECIPEINSTANCE[28] = 0x93b2;
+    WEAPONRECIPEINSTANCE[29] = 0x93b4;
+    WEAPONRECIPEINSTANCE[30] = 0x93b6;
+    WEAPONRECIPEINSTANCE[31] = 0x93b8;
+    WEAPONRECIPEINSTANCE[32] = 0x93ba;
+    WEAPONRECIPEINSTANCE[33] = 0x93bc;
+    WEAPONRECIPEINSTANCE[34] = 0x93be;
+    WEAPONRECIPEINSTANCE[35] = 0x93c0;
+    WEAPONRECIPEINSTANCE[36] = 0x93c2;
+    WEAPONRECIPEINSTANCE[37] = 0x93c4;
+    WEAPONRECIPEINSTANCE[38] = 0x93c6;
+    WEAPONRECIPEINSTANCE[39] = 0x93c8;
+    WEAPONRECIPEINSTANCE[40] = 0x93ca;
+    WEAPONRECIPEINSTANCE[41] = 0x93cc;
+    WEAPONRECIPEINSTANCE[42] = 0x93ce;
+    WEAPONRECIPEINSTANCE[43] = 0x93d0;
+    WEAPONRECIPEINSTANCE[44] = 0x93d2;
+    WEAPONRECIPEINSTANCE[45] = 0x93d4;
+    WEAPONRECIPEINSTANCE[46] = 0x93d6;
+    WEAPONRECIPEINSTANCE[47] = 0x93d8;
+    WEAPONRECIPEINSTANCE[48] = 0x93da;
+    WEAPONRECIPEINSTANCE[49] = 0x93dc;
+    WEAPONRECIPEINSTANCE[50] = 0x93de;
+    WEAPONRECIPEINSTANCE[51] = 0x93e0;
+    WEAPONRECIPEINSTANCE[52] = 0x93e2;
+    WEAPONRECIPEINSTANCE[53] = 0x93e4;
+    WEAPONRECIPEINSTANCE[54] = 0x93e6;
+    WEAPONRECIPEINSTANCE[55] = 0x93e8;
+    WEAPONRECIPEINSTANCE[56] = 0x93ea;
+    WEAPONRECIPEINSTANCE[57] = 0x93ec;
+    WEAPONRECIPEINSTANCE[58] = 0x93ee;
+    WEAPONRECIPEINSTANCE[59] = 0x93f0;
+    WEAPONRECIPEINSTANCE[60] = 0x93f2;
+    WEAPONRECIPEINSTANCE[61] = 0x93f4;
+    WEAPONRECIPEINSTANCE[62] = 0x93f6;
+    WEAPONRECIPEINSTANCE[63] = 0x93f8;
+    WEAPONRECIPEINSTANCE[64] = 0x93fa;
+    WEAPONRECIPEINSTANCE[65] = 0x93fc;
+    WEAPONRECIPEINSTANCE[66] = 0x93fe;
+    WEAPONRECIPEINSTANCE[67] = 0x9400;
+    WEAPONRECIPEINSTANCE[68] = 0x9402;
+    WEAPONRECIPEINSTANCE[69] = 0x9404;
+    WEAPONRECIPEINSTANCE[70] = 0x9406;
+    WEAPONRECIPEINSTANCE[71] = 0x940a;
+    WEAPONRECIPEINSTANCE[72] = 0x940c;
+    WEAPONRECIPEINSTANCE[73] = 0x940e;
+    WEAPONRECIPEINSTANCE[74] = 0x9410;
+    WEAPONRECIPEINSTANCE[75] = 0x9412;
+    WEAPONRECIPEINSTANCE[76] = 0x9414;
+    WEAPONRECIPEINSTANCE[77] = 0x9416;
+    WEAPONRECIPEINSTANCE[78] = 0x9418;
+    WEAPONRECIPEINSTANCE[79] = 0x941a;
+    WEAPONRECIPEINSTANCE[80] = 0x941c;
+    WEAPONRECIPEINSTANCE[81] = 0x941e;
+    WEAPONRECIPEINSTANCE[82] = 0x9420;
+    WEAPONRECIPEINSTANCE[83] = 0x9422;
+    WEAPONRECIPEINSTANCE[84] = 0x9424;
+    WEAPONRECIPEINSTANCE[85] = 0x9426;
+    WEAPONRECIPEINSTANCE[86] = 0x9428;
+    WEAPONRECIPEINSTANCE[87] = 0x942a;
+    WEAPONRECIPEINSTANCE[88] = 0x942c;
+    WEAPONRECIPEINSTANCE[89] = 0x942e;
+    WEAPONRECIPEINSTANCE[90] = 0x9430;
+    WEAPONRECIPEINSTANCE[91] = 0x9432;
+    WEAPONRECIPEINSTANCE[92] = 0x9434;
+    WEAPONRECIPEINSTANCE[93] = 0x9436;
+    WEAPONRECIPEINSTANCE[94] = 0x9438;
+    WEAPONRECIPEINSTANCE[95] = 0x943a;
+    WEAPONRECIPEINSTANCE[96] = 0x943c;
+    WEAPONRECIPEINSTANCE[97] = 0x943e;
+    POTIONRECIPEINSTANCE[0] = 0x889b;
+    POTIONRECIPEINSTANCE[1] = 0x889a;
+    POTIONRECIPEINSTANCE[2] = 0x889c;
+    POTIONRECIPEINSTANCE[3] = 0x889d;
+    POTIONRECIPEINSTANCE[4] = 0x889f;
+    POTIONRECIPEINSTANCE[5] = 0x88a1;
+    POTIONRECIPEINSTANCE[6] = 0x88a3;
+    POTIONRECIPEINSTANCE[7] = 0x88a5;
+    POTIONRECIPEINSTANCE[8] = 0x88a7;
+    POTIONRECIPEINSTANCE[9] = 0x88a9;
+    POTIONRECIPEINSTANCE[10] = 0x88c7;
+    POTIONRECIPEINSTANCE[11] = 0x88ab;
+    POTIONRECIPEINSTANCE[12] = 0x88ac;
+    POTIONRECIPEINSTANCE[13] = 0x88c9;
+    POTIONRECIPEINSTANCE[14] = 0x88af;
+    POTIONRECIPEINSTANCE[15] = 0x88b1;
+    POTIONRECIPEINSTANCE[16] = 0x88b3;
+    POTIONRECIPEINSTANCE[17] = 0x88b5;
+    POTIONRECIPEINSTANCE[18] = 0x88b7;
+    POTIONRECIPEINSTANCE[19] = 0x88b9;
+    POTIONRECIPEINSTANCE[20] = 0x88bb;
+    POTIONRECIPEINSTANCE[21] = 0x88bd;
+    POTIONRECIPEINSTANCE[22] = 0x88bf;
+    POTIONRECIPEINSTANCE[23] = 0x88c1;
+    POTIONRECIPEINSTANCE[24] = 0x88c3;
+    POTIONRECIPEINSTANCE[25] = 0x88c5;
+    POTIONRECIPEINSTANCE[26] = 0x88cb;
+    POTIONRECIPEINSTANCE[27] = 0x88cd;
+    POTIONRECIPEINSTANCE[28] = 0x88cf;
+    POTIONRECIPEINSTANCE[29] = 0x88d1;
+    POTIONRECIPEINSTANCE[30] = 0x88d3;
+    POTIONRECIPEINSTANCE[31] = 0x88df;
+    POTIONRECIPEINSTANCE[32] = 0x88e1;
+    POTIONRECIPEINSTANCE[33] = 0x88e3;
+    POTIONRECIPEINSTANCE[34] = 0x88e5;
+    POTIONRECIPEINSTANCE[35] = 0x88e7;
+    POTIONRECIPEINSTANCE[36] = 0x8898;
+    POTIONRECIPEINSTANCE[37] = 0x88a0;
+    POTIONRECIPEINSTANCE[38] = 0x88a4;
+    POTIONRECIPEINSTANCE[39] = 0x88a8;
+    POTIONRECIPEINSTANCE[40] = 0x88ae;
+    POTIONRECIPEINSTANCE[41] = 0x88b0;
+    POTIONRECIPEINSTANCE[42] = 0x88b4;
+    POTIONRECIPEINSTANCE[43] = 0x88b8;
+    POTIONRECIPEINSTANCE[44] = 0x88bc;
+    POTIONRECIPEINSTANCE[45] = 0x8899;
+    POTIONRECIPEINSTANCE[46] = 0x88a2;
+    POTIONRECIPEINSTANCE[47] = 0x88a6;
+    POTIONRECIPEINSTANCE[48] = 0x88aa;
+    POTIONRECIPEINSTANCE[49] = 0x88ad;
+    POTIONRECIPEINSTANCE[50] = 0x88b2;
+    POTIONRECIPEINSTANCE[51] = 0x88b6;
+    POTIONRECIPEINSTANCE[52] = 0x88ba;
+    POTIONRECIPEINSTANCE[53] = 0x88be;
+    POTIONRECIPEINSTANCE[54] = 0x88ed;
+    POTIONRECIPEINSTANCE[55] = 0x88d5;
+    POTIONRECIPEINSTANCE[56] = 0x88d7;
+    POTIONRECIPEINSTANCE[57] = 0x88d9;
+    POTIONRECIPEINSTANCE[58] = 0x88db;
+    POTIONRECIPEINSTANCE[59] = 0x88dd;
+    POTIONRECIPEINSTANCE[60] = 0x88e9;
+    POTIONRECIPEINSTANCE[61] = 0x88eb;
+    MEALRECIPEINSTANCE[0] = 0x8c06;
+    MEALRECIPEINSTANCE[1] = 0x8c08;
+    MEALRECIPEINSTANCE[2] = 0x8c0a;
+    MEALRECIPEINSTANCE[3] = 0x8c0c;
+    MEALRECIPEINSTANCE[4] = 0x8c0e;
+    MEALRECIPEINSTANCE[5] = 0x8c10;
+    MEALRECIPEINSTANCE[6] = 0x8c12;
+    MEALRECIPEINSTANCE[7] = 0x8c14;
+    MEALRECIPEINSTANCE[8] = 0x8c16;
+    MEALRECIPEINSTANCE[9] = 0x8c18;
+    MEALRECIPEINSTANCE[10] = 0x8c1a;
+    MEALRECIPEINSTANCE[11] = 0x8c1c;
+    MEALRECIPEINSTANCE[12] = 0x8c1e;
+    MEALRECIPEINSTANCE[13] = 0x8c20;
+    MEALRECIPEINSTANCE[14] = 0x8c22;
+    MEALRECIPEINSTANCE[15] = 0x8c24;
+    MEALRECIPEINSTANCE[16] = 0x8c26;
+    MEALRECIPEINSTANCE[17] = 0x8c28;
+    MEALRECIPEINSTANCE[18] = 0x8c2a;
+    MEALRECIPEINSTANCE[19] = 0x8c2c;
+    MEALRECIPEINSTANCE[20] = 0x8c2e;
+    MEALRECIPEINSTANCE[21] = 0x8c30;
+    MEALRECIPEINSTANCE[22] = 0x8c32;
+    MEALRECIPEINSTANCE[23] = 0x8c34;
+    MEALRECIPEINSTANCE[25] = 0x8c36;
+    MEALRECIPEINSTANCE[26] = 0x8c38;
+    MEALRECIPEINSTANCE[27] = 0x8c3a;
+    MEALRECIPEINSTANCE[28] = 0x8c3c;
+    MEALRECIPEINSTANCE[29] = 0x8c3e;
+    MEALRECIPEINSTANCE[30] = 0x8c40;
+    MEALRECIPEINSTANCE[31] = 0x8c42;
+    MEALRECIPEINSTANCE[32] = 0x8c44;
+    MEALRECIPEINSTANCE[33] = 0x8c46;
+    MEALRECIPEINSTANCE[34] = 0x8c48;
+    MEALRECIPEINSTANCE[35] = 0x8c4a;
+    MEALRECIPEINSTANCE[36] = 0x8c4c;
+    MEALRECIPEINSTANCE[37] = 0x8c4e;
+    MEALRECIPEINSTANCE[39] = 0x8c50;
+    MEALRECIPEINSTANCE[40] = 0x8c53;
+    MEALRECIPEINSTANCE[41] = 0x8c56;
+    MEALRECIPEINSTANCE[42] = 0x8c58;
+    MEALRECIPEINSTANCE[43] = 0x8c5a;
+    MEALRECIPEINSTANCE[45] = 0x8c5c;
+    MEALRECIPEINSTANCE[46] = 0x8c5e;
+    MEALRECIPEINSTANCE[47] = 0x8c60;
+    MEALRECIPEINSTANCE[48] = 0x8c62;
+    MEALRECIPEINSTANCE[49] = 0x8c64;
+    MEALRECIPEINSTANCE[50] = 0x8c66;
+    MEALRECIPEINSTANCE[51] = 0x8c68;
+    MEALRECIPEINSTANCE[52] = 0x8c6a;
+    MEALRECIPEINSTANCE[53] = 0x8c6c;
+    MEALRECIPEINSTANCE[54] = 0x8c6e;
+    MEALRECIPEINSTANCE[55] = 0x8c70;
+    MEALRECIPEINSTANCE[56] = 0x8c72;
+    MEALRECIPEINSTANCE[57] = 0x8c74;
+    MEALRECIPEINSTANCE[58] = 0x8c76;
+    MEALRECIPEINSTANCE[59] = 0x8c78;
+    MEALRECIPEINSTANCE[60] = 0x8c7a;
+    MEALRECIPEINSTANCE[61] = 0x8c7e;
+    MEALRECIPEINSTANCE[62] = 0x8c7c;
+    SCROLLRECIPEINSTANCE[0] = 0x9505;
+    SCROLLRECIPEINSTANCE[1] = 0x9506;
+    SCROLLRECIPEINSTANCE[2] = 0x9508;
+    SCROLLRECIPEINSTANCE[3] = 0x9509;
+    SCROLLRECIPEINSTANCE[4] = 0x950a;
+    SCROLLRECIPEINSTANCE[5] = 0x950b;
+    SCROLLRECIPEINSTANCE[6] = 0x950c;
+    SCROLLRECIPEINSTANCE[7] = 0x950d;
+    SCROLLRECIPEINSTANCE[8] = 0x950e;
+    SCROLLRECIPEINSTANCE[9] = 0x950f;
+    SCROLLRECIPEINSTANCE[10] = 0x9510;
+    SCROLLRECIPEINSTANCE[11] = 0x9511;
+    SCROLLRECIPEINSTANCE[12] = 0x9512;
+    SCROLLRECIPEINSTANCE[13] = 0x9513;
+    SCROLLRECIPEINSTANCE[14] = 0x9514;
+    SCROLLRECIPEINSTANCE[15] = 0x9515;
+    SCROLLRECIPEINSTANCE[16] = 0x9516;
+    SCROLLRECIPEINSTANCE[17] = 0x9517;
+    SCROLLRECIPEINSTANCE[18] = 0x9518;
+    SCROLLRECIPEINSTANCE[19] = 0x9519;
+    SCROLLRECIPEINSTANCE[20] = 0x951a;
+    SCROLLRECIPEINSTANCE[21] = 0x951b;
+    SCROLLRECIPEINSTANCE[22] = 0x951c;
+    SCROLLRECIPEINSTANCE[23] = 0x9507;
+}
+
+func int RENDER_ADDITEMCENTER(var int ITEMINST, var int X, var int Y, var int W, var int H) {
+    return RENDER_ADDITEM(ITEMINST, (X) - ((W) >> (1)), (Y) - ((H) >> (1)), (X) + (((W) + (1)) >> (1)), (Y) + (((H) + (1)) >> (1)));
+}
+
+func int RENDER_ADDITEMCENTERPXL(var int ITEMINST, var int X1, var int Y1, var int W, var int H) {
+    return RENDER_ADDITEMCENTER(ITEMINST, PRINT_TOVIRTUAL(X1, PS_X), PRINT_TOVIRTUAL(Y1, PS_Y), PRINT_TOVIRTUAL(W, PS_X), PRINT_TOVIRTUAL(H, PS_Y));
+}
+
+func void RENDER_TOP(var int PTR) {
+    ITM = _^(PTR);
+    if (ITM.ITMPTR) {
+        VIEWPTR_TOP(ITM.VIEW);
+    };
+}
+
+instance RENDER_TOP.ITM(RENDERITEM)
+func void CRAFTINGVIEW_HIDE() {
+    if ((CRAFTINGVIEW_RENDERDLG) != (0)) {
+        RENDER_REMOVE(CRAFTINGVIEW_RENDERDLG);
+        CRAFTINGVIEW_RENDERDLG = 0;
+    };
+    if ((CRAFTINGVIEW_RENDERITEM) != (0)) {
+        RENDER_REMOVE(CRAFTINGVIEW_RENDERITEM);
+        CRAFTINGVIEW_RENDERITEM = 0;
+    };
+    REPEAT(I, 8);
+    HND = MEM_READINTARRAY(_@(CRAFTINGVIEWTEXT[0]), I);
+    if (HLP_ISVALIDHANDLE(HND)) {
+        PRINT_DELETETEXT(HND);
+    };
+    END;
+    CRAFTINGVIEW_ISOPEN = FALSE;
+}
+
+var int CRAFTINGVIEW_HIDE.I = 0;
+var int CRAFTINGVIEW_HIDE.HND = 0;
+func int CRAFTINGVIEW_CHECKARMORS(var string STR) {
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_01)) {
+        return 0x8a56;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_02)) {
+        return 0x8a5e;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_03)) {
+        return 0x8a59;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_04)) {
+        return 0x8a56;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_05)) {
+        return 0x8a4b;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_06)) {
+        return 0x8a46;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_07)) {
+        return 0x8acb;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_08)) {
+        return 0x8ad7;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_09)) {
+        return 0x8ad6;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_10)) {
+        return 0x8acd;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_11)) {
+        return 0x8acb;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_12)) {
+        return 0x8acc;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_13)) {
+        if ((TAILOR_VLK_RICH) == (1)) {
+            return 0x8aca;
+        };
+        if ((TAILOR_VLK_RICH) == (2)) {
+            return 0x8ac8;
+        };
+        if ((TAILOR_VLK_RICH) == (3)) {
+            return 0x8ac9;
+        };
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_14)) {
+        if ((TAILOR_VLK_RICH) == (1)) {
+            return 0x8acd;
+        };
+        if ((TAILOR_VLK_RICH) == (2)) {
+            return 0x8acb;
+        };
+        if ((TAILOR_VLK_RICH) == (3)) {
+            return 0x8acc;
+        };
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_15)) {
+        return 0x8ad7;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_16)) {
+        return 0x8ad8;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_17)) {
+        return 0x8ad9;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_18)) {
+        return 0x8adc;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_19)) {
+        return 0x8ade;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_20)) {
+        return 0x8ad6;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_21)) {
+        return 0x8ada;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_22)) {
+        return 0x8add;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_23)) {
+        return 0x8adb;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_24)) {
+        return 0x8adf;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_25)) {
+        return 0x8a59;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_26)) {
+        return 0x8a4b;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_27)) {
+        return 0x8a89;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_28)) {
+        return 0x8a46;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_29)) {
+        return 0x8a66;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_30)) {
+        return 0x8a6b;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_31)) {
+        return 0x8a4f;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_32)) {
+        return 0x8a52;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_33)) {
+        return 0x8a53;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_34)) {
+        return 0x8a54;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_35)) {
+        return 0x8a55;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_36)) {
+        return 0x8af3;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_37)) {
+        return 0x8a42;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_38)) {
+        return 0x8a43;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_39)) {
+        return 0x8a44;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_40)) {
+        return 0x8a45;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_41)) {
+        return 0x8ae0;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_42)) {
+        return 0x8ac5;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CHAIN_L_TIER2)) {
+        return 0x8a47;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CHAIN_M_TIER2)) {
+        return 0x8a4c;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CRAB_TIER2)) {
+        return 0x8a50;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_LEATHER_L_TIER2)) {
+        return 0x8a57;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_LEATHER_M_TIER2)) {
+        return 0x8a5a;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_HUNTER_L_TIER2)) {
+        return 0x8a5f;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_STH_L_TIER2)) {
+        return 0x8a67;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_STH_H_TIER2)) {
+        return 0x8a6c;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_NORDMAR_TIER2)) {
+        return 0x8a75;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_R_TIER2)) {
+        return 0x8a7c;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_B_TIER2)) {
+        return 0x8a8a;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_W1_TIER2)) {
+        return 0x8a7f;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_W2_TIER2)) {
+        return 0x8a84;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_H1_TIER2)) {
+        return 0x8a8f;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_H2_TIER2)) {
+        return 0x8a94;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_R_TIER2)) {
+        return 0x8a9b;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_B_TIER2)) {
+        return 0x8aa1;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_W1_TIER2)) {
+        return 0x8aae;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_W2_TIER2)) {
+        return 0x8ab3;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_C1_TIER2)) {
+        return 0x8aa6;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_C2_TIER2)) {
+        return 0x8aab;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_USM_L_TIER2)) {
+        return 0x8a98;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_WS_M_TIER2)) {
+        return 0x8abc;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_GRD_M_TIER2)) {
+        return 0x8b22;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_KNIGHT_TIER2)) {
+        return 0x8ac6;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CHAIN_L_TIER3)) {
+        return 0x8a48;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CHAIN_M_TIER3)) {
+        return 0x8a4d;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CRAB_TIER3)) {
+        return 0x8a51;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_LEATHER_L_TIER3)) {
+        return 0x8a58;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_LEATHER_M_TIER3)) {
+        return 0x8a5b;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_HUNTER_L_TIER3)) {
+        return 0x8a60;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_STH_L_TIER3)) {
+        return 0x8a68;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_STH_H_TIER3)) {
+        return 0x8a6d;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_NORDMAR_TIER3)) {
+        return 0x8a76;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_R_TIER3)) {
+        return 0x8a7d;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_B_TIER3)) {
+        return 0x8a8b;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_W1_TIER3)) {
+        return 0x8a7f;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_W2_TIER3)) {
+        return 0x8a84;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_H1_TIER3)) {
+        return 0x8a90;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_H2_TIER3)) {
+        return 0x8a95;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_R_TIER3)) {
+        return 0x8a9c;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_B_TIER3)) {
+        return 0x8aa2;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_W1_TIER3)) {
+        return 0x8aaf;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_W2_TIER3)) {
+        return 0x8ab4;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_C1_TIER3)) {
+        return 0x8aa7;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_C2_TIER3)) {
+        return 0x8aac;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_USM_L_TIER3)) {
+        return 0x8a99;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_WS_M_TIER3)) {
+        return 0x8abd;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_GRD_M_TIER3)) {
+        return 0x8b23;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_KNIGHT_TIER3)) {
+        return 0x8ac7;
+    };
+    return -(1);
+}
+
+func void CRAFTINGVIEW_SHOW(var int RECINST, var int MODE, var int AMOUNT) {
+    CV_CURRENTITEM = RECINST;
+    CV_CURRENTMODE = MODE;
+    CV_CURRENTAMOUNT = AMOUNT;
+    PRINT_GETSCREENSIZE();
+    YQUARTSIZE = (PRINT_SCREEN[1]) / (4);
+    CRAFTINGVIEW_HIDE();
+    FH = PRINT_GETFONTHEIGHT(TEXT_FONT_DEFAULT);
+    SCALEF = BAR_GETINTERFACESCALING();
+    TEXTYPOSH = (((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2))) - (ROUNDF(MULF(MKF(90), SCALEF)));
+    TEXTYPOS = (((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2))) - (90);
+    TEXTXPOS = ((PRINT_SCREEN[0]) / (2)) - (ROUNDF(MULF(MKF(200), SCALEF)));
+    TEXTCENTER = (PRINT_SCREEN[0]) / (2);
+    WINDOWWIDTH = ROUNDF(MULF(MKF(800), SCALEF));
+    WINDOWHEIGHT = ROUNDF(MULF(MKF(200), SCALEF));
+    CRAFTINGVIEW_DLG = VIEWPTR_CREATECENTERPXL((PRINT_SCREEN[0]) / (2), ((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2)), WINDOWWIDTH, WINDOWHEIGHT);
+    VIEWPTR_SETTEXTURE(CRAFTINGVIEW_DLG, "DLG_CHOICE.TGA");
+    CRAFTINGVIEW_RENDERDLG = RENDER_ADDVIEW(CRAFTINGVIEW_DLG);
+    RENDER_TOP(CRAFTINGVIEW_RENDERDLG);
+    if ((MODE) != (2)) {
+        PTR = CREATE(RECINST);
+        REC = MEM_PTRTOINST(PTR);
+        CRAFTINGVIEW_RENDERITEM = RENDER_ADDITEMCENTERPXL(REC.RECIPEITEM, ((PRINT_SCREEN[0]) / (2)) - (ROUNDF(MULF(MKF(300), SCALEF))), ((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2)), WINDOWHEIGHT, WINDOWHEIGHT);
+        RENDER_TOP(CRAFTINGVIEW_RENDERITEM);
+        RENDER_OPENVIEW(CRAFTINGVIEW_RENDERITEM);
+        RECITEM = MEM_PTRTOINST(ITM_GETPTR(REC.RECIPEITEM));
+        CV_TABPTR = _@S(TXT_CRAFTINGVIEWTAB[0]);
+        if ((CRAFTINGVIEW_SELECTEDTAB) == (CV_INGREDIENTSTAB)) {
+            CRAFTINGVIEWTEXT[0] = PRINT_EXTPXL(((TEXTCENTER) - (PRINT_GETSTRINGWIDTH(MEM_READSTRINGARRAY(CV_TABPTR, 0), TEXT_FONT_DEFAULT))) - (10), TEXTYPOSH, MEM_READSTRINGARRAY(CV_TABPTR, 0), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+            CRAFTINGVIEWTEXT[1] = PRINT_EXTPXL((TEXTCENTER) + (10), TEXTYPOSH, MEM_READSTRINGARRAY(CV_TABPTR, 1), TEXT_FONT_DEFAULT, COL_GRAY, -(1));
+            OFFSET = ((6) - (REC.TOTALREQUIRED)) / (2);
+            REPEAT(I, REC.TOTALREQUIRED);
+            S = SB_NEW();
+            CURRENTITEM = MEM_PTRTOINST(ITM_GETPTR(RECIPE_GETREQUIREDITEMINSTANCE(REC, I)));
+            if ((HLP_ISITEMGROUP(RECIPE_GETREQUIREDITEMINSTANCE(REC, I))) == (TRUE)) {
+                INVITEMS = NPC_HASITEMGROUP(HERO, RECIPE_GETREQUIREDITEMINSTANCE(REC, I));
+            } else {
+                INVITEMS = NPC_HASITEMS(HERO, RECIPE_GETREQUIREDITEMINSTANCE(REC, I));
+            } else {
+                SB(CURRENTITEM.DESCRIPTION);
+            } else {
+                SB(": ");
+            } else {
+                SBI(INVITEMS);
+            } else {
+                SB("/");
+            } else if (RECIPE_ISREQUIREDITEMMULTIUSE(REC, I)) {
+                SBI(RECIPE_GETREQUIREDITEMAMOUNT(REC, I));
+                if ((INVITEMS) >= (RECIPE_GETREQUIREDITEMAMOUNT(REC, I))) {
+                    COLOR = RGBA(100, 200, 255, 255);
+                } else {
+                    COLOR = RGBA(255, 50, 50, 255);
+                } else {
+                    /* set_instance(0) */;
+                };
+            };
+            SBI((RECIPE_GETREQUIREDITEMAMOUNT(REC, I)) * (AMOUNT));
+            if ((INVITEMS) >= ((RECIPE_GETREQUIREDITEMAMOUNT(REC, I)) * (AMOUNT))) {
+                COLOR = RGBA(50, 255, 50, 255);
+            } else {
+                COLOR = RGBA(255, 50, 50, 255);
+            } else {
+                MEM_WRITEINTARRAY(_@(CRAFTINGVIEWTEXT[0]), ((I) + (2)) + (OFFSET), PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (((I) + (1)) + (OFFSET))), SB_TOSTRING(), TEXT_FONT_DEFAULT, COLOR, -(1)));
+            } else {
+                SB_DESTROY();
+            } else {
+                /* set_instance(0) */;
+            };
+        };
+        CRAFTINGVIEW_SELECTEDTAB = CV_PROPERTIESTAB;
+        if (0) {
+            CRAFTINGVIEWTEXT[0] = PRINT_EXTPXL(((TEXTCENTER) - (PRINT_GETSTRINGWIDTH(MEM_READSTRINGARRAY(CV_TABPTR, 0), TEXT_FONT_DEFAULT))) - (10), TEXTYPOSH, MEM_READSTRINGARRAY(CV_TABPTR, 0), TEXT_FONT_DEFAULT, COL_GRAY, -(1));
+            CRAFTINGVIEWTEXT[1] = PRINT_EXTPXL((TEXTCENTER) + (10), TEXTYPOSH, MEM_READSTRINGARRAY(CV_TABPTR, 1), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+            TEXTARRAYPTR = _@S(RECITEM.TEXT[0]);
+            COUNTARRAYPTR = _@(RECITEM.COUNT[0]);
+            REPEAT(J, ITM_TEXT_MAX);
+            COUNT = MEM_READINTARRAY(COUNTARRAYPTR, J);
+            S = SB_NEW();
+            SB(MEM_READSTRINGARRAY(TEXTARRAYPTR, J));
+            if ((COUNT) > (0)) {
+                SB(" ");
+                SBI(COUNT);
+            };
+            MEM_WRITEINTARRAY(_@(CRAFTINGVIEWTEXT[0]), (J) + (2), PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * ((J) + (1))), SB_TOSTRING(), TEXT_FONT_DEFAULT, COL_WHITE, -(1)));
+            SB_DESTROY();
+            END;
+        };
+    };
+    RECITEM = MEM_PTRTOINST(ITM_GETPTR(RECINST));
+    CRAFTINGVIEW_RENDERITEM = RENDER_ADDITEMCENTERPXL(RECINST, ((PRINT_SCREEN[0]) / (2)) - (ROUNDF(MULF(MKF(300), SCALEF))), ((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2)), WINDOWHEIGHT, WINDOWHEIGHT);
+    RENDER_TOP(CRAFTINGVIEW_RENDERITEM);
+    RENDER_OPENVIEW(CRAFTINGVIEW_RENDERITEM);
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_BLUNT));
+    CRAFTINGVIEWTEXT[1] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (1)), CS3(NAME_PROT_BLUNT, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_EDGE));
+    CRAFTINGVIEWTEXT[2] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (2)), CS3(NAME_PROT_EDGE, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_POINT));
+    CRAFTINGVIEWTEXT[3] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (3)), CS3(NAME_PROT_POINT, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_FIRE));
+    CRAFTINGVIEWTEXT[4] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (4)), CS3(NAME_PROT_FIRE, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_MAGIC));
+    CRAFTINGVIEWTEXT[5] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (5)), CS3(NAME_PROT_MAGIC, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    CRAFTINGVIEW_ISOPEN = TRUE;
+}
+
+var int CRAFTINGVIEW_SHOW.YQUARTSIZE = 0;
+var int CRAFTINGVIEW_SHOW.FH = 0;
+var int CRAFTINGVIEW_SHOW.SCALEF = 0;
+var int CRAFTINGVIEW_SHOW.TEXTYPOSH = 0;
+var int CRAFTINGVIEW_SHOW.TEXTYPOS = 0;
+var int CRAFTINGVIEW_SHOW.TEXTXPOS = 0;
+var int CRAFTINGVIEW_SHOW.TEXTCENTER = 0;
+var int CRAFTINGVIEW_SHOW.WINDOWWIDTH = 0;
+var int CRAFTINGVIEW_SHOW.WINDOWHEIGHT = 0;
+instance CRAFTINGVIEW_SHOW.RECITEM(C_ITEM)
+var int CRAFTINGVIEW_SHOW.PTR = 0;
+instance CRAFTINGVIEW_SHOW.REC(C_RECIPE)
+var int CRAFTINGVIEW_SHOW.CV_TABPTR = 0;
+var int CRAFTINGVIEW_SHOW.S = 0;
+instance CRAFTINGVIEW_SHOW.CURRENTITEM(C_ITEM)
+var int CRAFTINGVIEW_SHOW.OFFSET = 0;
+var int CRAFTINGVIEW_SHOW.I = 0;
+var int CRAFTINGVIEW_SHOW.INVITEMS = 0;
+var int CRAFTINGVIEW_SHOW.COLOR = 0;
+var int CRAFTINGVIEW_SHOW.TEXTARRAYPTR = 0;
+var int CRAFTINGVIEW_SHOW.COUNTARRAYPTR = 0;
+var int CRAFTINGVIEW_SHOW.J = 0;
+var int CRAFTINGVIEW_SHOW.COUNT = 0;
+var string CRAFTINGVIEW_SHOW.ARMOR_TEXT = "";
+func void CRAFTINGVIEW_TABSWITCHER(var int KEY) {
+    if ((CRAFTINGVIEW_ISOPEN) == (TRUE)) {
+        if ((CV_CURRENTMODE) != (2)) {
+            if (((((((((KEY) == (MEM_GETKEY("keyLeft"))) || ((KEY) == (MEM_GETKEY("keyRight")))) || ((KEY) == (MEM_GETSECONDARYKEY("keyLeft")))) || ((KEY) == (MEM_GETSECONDARYKEY("keyRight")))) || ((KEY) == (MEM_GETKEY("keyStrafeLeft")))) || ((KEY) == (MEM_GETKEY("keyStrafeRight")))) || ((KEY) == (MEM_GETSECONDARYKEY("keyStrafeLeft")))) || ((KEY) == (MEM_GETSECONDARYKEY("keyStrafeRight")))) {
+                if ((CRAFTINGVIEW_SELECTEDTAB) == (0)) {
+                    CRAFTINGVIEW_SELECTEDTAB = 1;
+                } else {
+                    CRAFTINGVIEW_SELECTEDTAB = 0;
+                } else {
+                    CRAFTINGVIEW_SHOW(CV_CURRENTITEM, CV_CURRENTMODE, CV_CURRENTAMOUNT);
+                };
+            };
+        };
+    };
+}
+
+func void INIT_CRAFTINGVIEW_GAMESTART() {
+    HOOKENGINEF(OCINFORMATIONMANAGER__UPDATE, 5, 0x17242);
+}
+
+func void INIT_CRAFTINGVIEW_ALWAYS() {
+    CRAFTINGVIEW_SETUPRECIPESARRAY();
+}
+
+const int CRAFTINGVIEWLASTCHOICE = -1;
+func void CRAFTINGVIEW_UPDATE() {
+    DLG = _^(MEM_INFORMATIONMAN.DLGCHOICE);
+    CHOICEVIEW = MEM_INFORMATIONMAN.DLGCHOICE;
+    if ((DLG.ISACTIVATED) == (1)) {
+        if ((CRAFTINGVIEWLASTCHOICE) != (DLG.CHOICESELECTED)) {
+            ARR = _^((CHOICEVIEW) + (172));
+            if (ARR.ARRAY) {
+                NEXTPOSY = 0;
+                I = 0;
+                P = MEM_STACKPOS.POSITION;
+                if ((I) < (DLG.CHOICES)) {
+                    SLF = _^(MEM_INFORMATIONMAN.NPC);
+                    HER = _^(MEM_INFORMATIONMAN.PLAYER);
+                    INFOPTR = 0;
+                    if ((MEM_INFORMATIONMAN.MODE) == (CINFO_MGR_MODE_INFO)) {
+                        INFOPTR = OCINFOMANAGER_GETINFOUNIMPORTANT(0x1724a, 0x1724b, I);
+                    } else if ((MEM_INFORMATIONMAN.MODE) == (CINFO_MGR_MODE_CHOICE)) {
+                        INFOPTR = MEM_INFORMATIONMAN.INFO;
+                    };
+                    if (INFOPTR) {
+                        DLGINSTANCE = _^(INFOPTR);
+                        DLGDESCRIPTION = DLGINSTANCE.DESCRIPTION;
+                        if ((MEM_INFORMATIONMAN.MODE) == (CINFO_MGR_MODE_CHOICE)) {
+                            if (DLGINSTANCE.LISTCHOICES_NEXT) {
+                                J = 0;
+                                LIST = DLGINSTANCE.LISTCHOICES_NEXT;
+                                WHILE(LIST);
+                                L = _^(LIST);
+                                DLGCHOICE = MEM_PTRTOINST(L.DATA);
+                                if ((I) == (J)) {
+                                    DLGDESCRIPTION = DLGCHOICE.TEXT;
+                                };
+                                LIST = L.NEXT;
+                                J += 1;
+                                END;
+                            };
+                        };
+                        DLGNR = DLGINSTANCE.NR;
+                        if ((I) == (DLG.CHOICESELECTED)) {
+                            ARMOR_CHECK = CRAFTINGVIEW_CHECKARMORS(DLGDESCRIPTION);
+                            if ((MEM_INFORMATIONMAN.MODE) == (CINFO_MGR_MODE_CHOICE)) {
+                                CHOICEITEMINSTANCE = -(1);
+                                if ((POTIONALCHEMY_INSTANCE) != (-(1))) {
+                                    CHOICEITEMINSTANCE = POTIONALCHEMY_INSTANCE;
+                                } else if ((SCROLL_WRITING_INSTANCE) != (-(1))) {
+                                    CHOICEITEMINSTANCE = SCROLL_WRITING_INSTANCE;
+                                } else if ((COOKINGMEALS_INSTANCE) != (-(1))) {
+                                    CHOICEITEMINSTANCE = COOKINGMEALS_INSTANCE;
+                                };
+                                if ((CHOICEITEMINSTANCE) != (-(1))) {
+                                    MAX = PC_CRAFTRECIPEITEM_MAX(CHOICEITEMINSTANCE);
+                                    DLG_ALL = CS4(DIALOG_ALL, " (", I2S(MAX), ")");
+                                    if ((STR_TOINT(DLGDESCRIPTION)) > (0)) {
+                                        CRAFTINGVIEW_SHOW(CHOICEITEMINSTANCE, 1, STR_TOINT(DLGDESCRIPTION));
+                                    } else if ((STR_TOINT(STR_SPLIT(DLGDESCRIPTION, ".", 0))) > (0)) {
+                                        CRAFTINGVIEW_SHOW(CHOICEITEMINSTANCE, 1, STR_TOINT(STR_SPLIT(DLGDESCRIPTION, ".", 0)));
+                                    } else if (HLP_STRCMP(DLGDESCRIPTION, DLG_ALL)) {
+                                        CRAFTINGVIEW_SHOW(CHOICEITEMINSTANCE, 1, MAX);
+                                    } else {
+                                        CRAFTINGVIEW_HIDE();
+                                    } else {
+                                        /* set_instance(0) */;
+                                    };
+                                };
+                                if ((ARMOR_CHECK) != (-(1))) {
+                                    CRAFTINGVIEW_SHOW(ARMOR_CHECK, 2, 1);
+                                } else {
+                                    CRAFTINGVIEW_HIDE();
+                                } else {
+                                    /* set_instance(0) */;
+                                };
+                            };
+                            if (((DLGNR) >= (0x2710)) && ((DLGNR) < (0x2774))) {
+                                CRAFTINGVIEW_SHOW(MEM_READINTARRAY(_@(WEAPONRECIPEINSTANCE[0]), (DLGNR) - (0x2710)), 0, 1);
+                            } else if (((DLGNR) >= (0x2774)) && ((DLGNR) < (0x27d8))) {
+                                CRAFTINGVIEW_SHOW(MEM_READINTARRAY(_@(POTIONRECIPEINSTANCE[0]), (DLGNR) - (0x2774)), 1, 1);
+                            } else if (((DLGNR) >= (0x27d8)) && ((DLGNR) < (0x283c))) {
+                                CRAFTINGVIEW_SHOW(MEM_READINTARRAY(_@(MEALRECIPEINSTANCE[0]), (DLGNR) - (0x27d8)), 1, 1);
+                            } else if (((DLGNR) >= (0x283c)) && ((DLGNR) < (0x28a0))) {
+                                CRAFTINGVIEW_SHOW(MEM_READINTARRAY(_@(SCROLLRECIPEINSTANCE[0]), (DLGNR) - (0x283c)), 1, 1);
+                            } else if ((ARMOR_CHECK) != (-(1))) {
+                                CRAFTINGVIEW_SHOW(ARMOR_CHECK, 2, 1);
+                            } else if ((CRAFTINGVIEW_ISOPEN) == (TRUE)) {
+                                CRAFTINGVIEW_HIDE();
+                            };
+                        };
+                    };
+                    I += 1;
+                    MEM_STACKPOS.POSITION = P;
+                };
+            };
+        };
+        CRAFTINGVIEWLASTCHOICE = DLG.CHOICESELECTED;
+    };
+    if ((CRAFTINGVIEW_ISOPEN) == (TRUE)) {
+        CRAFTINGVIEW_HIDE();
+    };
+}
+
+instance CRAFTINGVIEW_UPDATE.DLG(ZCVIEWDIALOGCHOICE)
+var int CRAFTINGVIEW_UPDATE.CHOICEVIEW = 0;
+instance CRAFTINGVIEW_UPDATE.ARR(ZCARRAY)
+var int CRAFTINGVIEW_UPDATE.NEXTPOSY = 0;
+var int CRAFTINGVIEW_UPDATE.I = 0;
+var int CRAFTINGVIEW_UPDATE.P = 0;
+var string CRAFTINGVIEW_UPDATE.DLGFONT = "";
+instance CRAFTINGVIEW_UPDATE.SLF(C_NPC)
+instance CRAFTINGVIEW_UPDATE.HER(C_NPC)
+var int CRAFTINGVIEW_UPDATE.INFOPTR = 0;
+instance CRAFTINGVIEW_UPDATE.DLGINSTANCE(OCINFO)
+const int CRAFTINGVIEW_UPDATE.CINFO_MGR_MODE_IMPORTANT = 0;
+const int CRAFTINGVIEW_UPDATE.CINFO_MGR_MODE_INFO = 1;
+const int CRAFTINGVIEW_UPDATE.CINFO_MGR_MODE_CHOICE = 2;
+const int CRAFTINGVIEW_UPDATE.CINFO_MGR_MODE_TRADE = 3;
+var int CRAFTINGVIEW_UPDATE.LEN = 0;
+var int CRAFTINGVIEW_UPDATE.INDEX = 0;
+var string CRAFTINGVIEW_UPDATE.DLGDESCRIPTION = "";
+var int CRAFTINGVIEW_UPDATE.DLGNR = 0;
+var int CRAFTINGVIEW_UPDATE.J = 0;
+instance CRAFTINGVIEW_UPDATE.L(ZCLIST)
+var int CRAFTINGVIEW_UPDATE.LIST = 0;
+instance CRAFTINGVIEW_UPDATE.DLGCHOICE(OCINFOCHOICE)
+var int CRAFTINGVIEW_UPDATE.ARMOR_CHECK = 0;
+var int CRAFTINGVIEW_UPDATE.CHOICEITEMINSTANCE = 0;
+var int CRAFTINGVIEW_UPDATE.MAX = 0;
+var string CRAFTINGVIEW_UPDATE.DLG_ALL = "";

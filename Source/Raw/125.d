@@ -1,0 +1,89 @@
+const string BOSSUI_FONT = "font_old_20_white.tga";
+instance BOSSBAR(BAR) {
+    X = (PRINT_SCREEN[0]) / (2);
+    Y = 20;
+    BARTOP = 42;
+    BARLEFT = 34;
+    WIDTH = 800;
+    HEIGHT = 100;
+    BACKTEX = "bossbar_bg.tga";
+    BARTEX = "bossbar.tga";
+    VALUE = 100;
+    VALUEMAX = 100;
+}
+
+var int BOSSUI = 0;
+var int BOSS_BAR = 0;
+var int BOSSNAMEPRINT = 0;
+var int BOSSUI_MODE = 0;
+instance CURRENTBOSS(C_NPC)
+var int CURRENTBOSSID = 0;
+func void INIT_BOSSUI_GAMESTART() {
+    HOOKENGINEF(OCGAME__UPDATESCREENRESOLUTION_END, 6, 0x5530);
+}
+
+func void INIT_BOSSUI_ALWAYS() {
+    if (BOSSUI) {
+        CURRENTBOSS = HLP_GETNPC(CURRENTBOSSID);
+        FF_APPLYONCE(0x5535);
+    };
+}
+
+func void _BOSSUI_UPDATERESOLUTION() {
+    if ((HLP_ISVALIDNPC(CURRENTBOSS)) && (BOSSUI)) {
+        DELETE(BOSSNAMEPRINT);
+        BOSSNAMEPRINT = PRINT_EXTPXL(((PRINT_SCREEN[0]) / (2)) - ((PRINT_GETSTRINGWIDTH(CURRENTBOSS.NAME[0], BOSSUI_FONT)) / (2)), ROUNDF(MULF(MKF(64), BAR_GETINTERFACESCALING())), CURRENTBOSS.NAME[0], BOSSUI_FONT, COL_WHITE, -(1));
+    };
+}
+
+func void START_BOSSUI(var C_NPC BOSS, var int MODE) {
+    if (!(BOSSUI)) {
+        FOCUSBAR = _^(MEM_GAME.FOCUSBAR);
+        BOSSUI = TRUE;
+        BOSS_BAR = BAR_CREATE(0x5527);
+        BOSSNAMEPRINT = PRINT_EXTPXL(((PRINT_SCREEN[0]) / (2)) - ((PRINT_GETSTRINGWIDTH(BOSS.NAME[0], BOSSUI_FONT)) / (2)), ROUNDF(MULF(MKF(64), BAR_GETINTERFACESCALING())), BOSS.NAME[0], BOSSUI_FONT, COL_WHITE, -(1));
+        BAR_SETMAX(BOSS_BAR, BOSS.ATTRIBUTE[1]);
+        CURRENTBOSS = _^(_@(0x5532));
+        CURRENTBOSSID = HLP_GETINSTANCEID(CURRENTBOSS);
+        BOSSUI_MODE = MODE;
+        FF_APPLYONCE(0x5535);
+    };
+}
+
+func void FINISH_BOSSUI() {
+    BOSSUI = FALSE;
+    BAR_DELETE(BOSS_BAR);
+    DELETE(BOSSNAMEPRINT);
+    FF_REMOVE(0x5535);
+    FOCUSBAR.ZCVIEW_VPOSY = 171;
+}
+
+func void BOSSUI_FF() {
+    if (HLP_ISVALIDHANDLE(BOSS_BAR)) {
+        BAR_SETVALUE(BOSS_BAR, CURRENTBOSS.ATTRIBUTE[0]);
+    };
+    HER = HLP_GETNPC(0x71b);
+    if (HLP_IS_OCNPC(HER.FOCUS_VOB)) {
+        FOCUSNPC = MEM_PTRTOINST(HER.FOCUS_VOB);
+        if ((HLP_GETINSTANCEID(FOCUSNPC)) == (HLP_GETINSTANCEID(CURRENTBOSS))) {
+            if ((FOCUSBAR.ZCVIEW_VPOSY) != (0x2008)) {
+                FOCUSBAR.ZCVIEW_VPOSY = 0x2008;
+            };
+        } else if ((FOCUSBAR.ZCVIEW_VPOSY) != (420)) {
+            FOCUSBAR.ZCVIEW_VPOSY = 420;
+        };
+    };
+    if ((BOSSUI_MODE) == (1)) {
+        if (NPC_ISDEAD(CURRENTBOSS)) {
+            FINISH_BOSSUI();
+        };
+    };
+    if ((BOSSUI_MODE) == (2)) {
+        if (NPC_ISINSTATE(CURRENTBOSS, 0xf0a3)) {
+            FINISH_BOSSUI();
+        };
+    };
+}
+
+instance BOSSUI_FF.HER(OCNPC)
+instance BOSSUI_FF.FOCUSNPC(C_NPC)

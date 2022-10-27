@@ -1,0 +1,125 @@
+instance DIA_EVA_EXIT(C_INFO) {
+    NPC = 0xd0d2;
+    NR = 999;
+    CONDITION = DIA_EVA_EXIT_CONDITION;
+    INFORMATION = DIA_EVA_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_EVA_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_EVA_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_EVA_HELLO(C_INFO) {
+    NPC = 0xd0d2;
+    NR = 1;
+    CONDITION = DIA_EVA_HELLO_CONDITION;
+    INFORMATION = DIA_EVA_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What are you doing here?";
+}
+
+func int DIA_EVA_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_EVA_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Eva_HELLO_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Eva_HELLO_03_02");
+    if ((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) {
+        INFO_CLEARCHOICES(0x129f7);
+        INFO_ADDCHOICE(0x129f7, "Were you at home when your master was attacked?", 0x129fa);
+        INFO_ADDCHOICE(0x129f7, "How is it working for Volker?", 0x129fb);
+    };
+}
+
+func void DIA_EVA_HELLO_ATTEMPT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Eva_HELLO_Attempt_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Eva_HELLO_Attempt_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Eva_HELLO_Attempt_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Eva_HELLO_Attempt_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Eva_HELLO_Attempt_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Eva_HELLO_Attempt_03_06");
+}
+
+func void DIA_EVA_HELLO_VOLKER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Eva_HELLO_Volker_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Eva_HELLO_Volker_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Eva_HELLO_Volker_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Eva_HELLO_Volker_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Eva_HELLO_Volker_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Eva_HELLO_Volker_03_06");
+}
+
+instance DIA_EVA_Q308AMBIENT(C_INFO) {
+    NPC = 0xd0d2;
+    NR = 1;
+    CONDITION = DIA_EVA_Q308AMBIENT_CONDITION;
+    INFORMATION = DIA_EVA_Q308AMBIENT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_EVA_Q308AMBIENT_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 0x129f7)) && ((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING))) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EVA_Q308AMBIENT_INFO() {
+    NPC_INITAMBIENTS(SELF, 3);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Eva_Q308Ambient_03_01");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Eva_Q308Ambient_03_02");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (3)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Eva_Q308Ambient_03_03");
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_EVA_PICKPOCKET(C_INFO) {
+    NPC = 0xd0d2;
+    NR = 900;
+    CONDITION = DIA_EVA_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_EVA_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40_FEMALE;
+}
+
+func int DIA_EVA_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_EVA_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x129ff);
+    INFO_ADDCHOICE(0x129ff, DIALOG_BACK, 0x12a03);
+    INFO_ADDCHOICE(0x129ff, DIALOG_PICKPOCKET, 0x12a02);
+}
+
+func void DIA_EVA_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x129ff);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x129ff);
+}
+
+func void DIA_EVA_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x129ff);
+}
+

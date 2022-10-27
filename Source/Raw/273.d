@@ -1,0 +1,7 @@
+func int C_BODYSTATECONTAINS(var C_NPC SLF, var int BODYSTATE) {
+    if (((NPC_GETBODYSTATE(SLF)) & (((BS_MAX) | (BS_FLAG_INTERRUPTABLE)) | (BS_FLAG_FREEHANDS))) == ((BODYSTATE) & (((BS_MAX) | (BS_FLAG_INTERRUPTABLE)) | (BS_FLAG_FREEHANDS)))) {
+        return TRUE;
+    };
+    return FALSE;
+}
+

@@ -1,0 +1,133 @@
+instance DIA_FABIO_EXIT(C_INFO) {
+    NPC = 0xc938;
+    NR = 999;
+    CONDITION = DIA_FABIO_EXIT_CONDITION;
+    INFORMATION = DIA_FABIO_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_FABIO_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_FABIO_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_FABIO_Q101_AFTERFIGHT(C_INFO) {
+    NPC = 0xc938;
+    NR = 1;
+    CONDITION = DIA_FABIO_Q101_AFTERFIGHT_CONDITION;
+    INFORMATION = DIA_FABIO_Q101_AFTERFIGHT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_FABIO_Q101_AFTERFIGHT_CONDITION() {
+    if ((Q101_AFTERJUMP) == (TRUE)) {
+        return FALSE;
+    };
+    if (((((SELF.AIVAR[47]) == (AR_NONE)) && ((SELF.AIVAR[45]) != (AF_NONE))) && ((SELF.AIVAR[45]) != (AF_AFTER_PLUS_DAMAGE))) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    if (((Q101_FABIOAFTERFIGHT) == (TRUE)) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_FABIO_Q101_AFTERFIGHT_INFO() {
+    B_HEALNPC_SELF();
+    if (((SELF.AIVAR[0]) == (FIGHT_LOST)) || ((Q101_FABIOFIGHT) == (1))) {
+        if ((Q101_FABIOFIGHT) != (1)) {
+            ACH_3_COUNTER += 1;
+            B_GIVEPLAYERXP(XP_Q101_FABIOSHIPFIGHT);
+            Q101_FABIOFIGHT = 1;
+        };
+        AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_AfterFight_05_01");
+    };
+    if (((SELF.AIVAR[0]) == (FIGHT_WON)) || ((Q101_FABIOFIGHT) == (-(1)))) {
+        Q101_FABIOFIGHT = -(1);
+        AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_AfterFight_05_02");
+    };
+    AI_STOPPROCESSINFOS(SELF);
+    Q101_FABIOAFTERFIGHT = TRUE;
+    SELF.AIVAR[45] = AF_NONE;
+    (SELF.AIVAR[64]) == (TRUE);
+}
+
+instance DIA_FABIO_Q101_HELLO(C_INFO) {
+    NPC = 0xc938;
+    NR = 1;
+    CONDITION = DIA_FABIO_Q101_HELLO_CONDITION;
+    INFORMATION = DIA_FABIO_Q101_HELLO_INFO;
+    DESCRIPTION = "You don't look tired from the trip.";
+}
+
+func int DIA_FABIO_Q101_HELLO_CONDITION() {
+    return (Q101_AFTERJUMP) == (FALSE);
+}
+
+var int Q101_FABIOWANTBEER = 0;
+func void DIA_FABIO_Q101_HELLO_INFO() {
+    SHIPTALK += 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Fabio_Q101_Hello_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_Hello_05_02");
+    INFO_CLEARCHOICES(0xfd2a);
+    INFO_ADDCHOICE(0xfd2a, "Relax, I was just asking. Then I'll be on my way.", 0xfd2e);
+    INFO_ADDCHOICE(0xfd2a, "I feel like someone should give you a lesson in good manners.", 0xfd2f);
+}
+
+func void DIA_FABIO_Q101_HELLO_1() {
+    Q101_FABIOWANTBEER = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Fabio_Q101_Hello1_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_Hello1_05_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_Hello1_05_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Fabio_Q101_Hello1_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_Hello1_05_05");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_Q101, LOG_Q101_FABIO);
+}
+
+func void DIA_FABIO_Q101_HELLO_2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Fabio_Q101_Hello2_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_Hello2_05_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Fabio_Q101_Hello2_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_Hello2_05_04");
+    SELF.AIVAR[15] = FALSE;
+    SELF.AIVAR[45] = AF_RUNNING;
+    AI_STOPPROCESSINFOS(SELF);
+    SELF.AIVAR[96] = 5;
+    B_ATTACK(SELF, OTHER, 0, 0);
+}
+
+instance DIA_FABIO_Q101_BEER(C_INFO) {
+    NPC = 0xc938;
+    NR = 2;
+    CONDITION = DIA_FABIO_Q101_BEER_CONDITION;
+    INFORMATION = DIA_FABIO_Q101_BEER_INFO;
+    DESCRIPTION = "I brought you a beer.";
+}
+
+func int DIA_FABIO_Q101_BEER_CONDITION() {
+    if ((((C_GOTANYKINDOFBEER(HERO)) && (NPC_KNOWSINFO(OTHER, 0xfd2a))) && ((Q101_FABIOWANTBEER) == (TRUE))) && ((Q101_AFTERJUMP) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_FABIO_Q101_BEER_INFO() {
+    ACH_3_COUNTER += 1;
+    B_GIVEPLAYERXP(XP_Q101_FABIOSHIPBEER);
+    Q101_FABIOWANTBEER = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Fabio_Q101_Beer_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_Beer_05_02");
+    B_STANDUP();
+    B_GIVEANYBEER_USEIT();
+    AI_OUTPUT(OTHER, SELF, "DIA_Fabio_Q101_Beer_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Fabio_Q101_Beer_05_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Fabio_Q101_Beer_15_05");
+    AI_STOPPROCESSINFOS(SELF);
+}
+

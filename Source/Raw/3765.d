@@ -1,0 +1,633 @@
+instance DIA_GERSTAND_EXIT(C_INFO) {
+    NPC = 0xd083;
+    NR = 999;
+    CONDITION = DIA_GERSTAND_EXIT_CONDITION;
+    INFORMATION = DIA_GERSTAND_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_GERSTAND_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_GERSTAND_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_GERSTAND_HELLO(C_INFO) {
+    NPC = 0xd083;
+    NR = 1;
+    CONDITION = DIA_GERSTAND_HELLO_CONDITION;
+    INFORMATION = DIA_GERSTAND_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What is this place?";
+}
+
+func int DIA_GERSTAND_HELLO_CONDITION() {
+    if ((NPC_GETDISTTOWP(SELF, "PARTM4_TAVERN_GERSTAND")) <= (0xbb8)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_Hello_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Hello_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Hello_03_03");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Hello_03_04");
+}
+
+instance DIA_GERSTAND_NAME(C_INFO) {
+    NPC = 0xd083;
+    NR = 2;
+    CONDITION = DIA_GERSTAND_NAME_CONDITION;
+    INFORMATION = DIA_GERSTAND_NAME_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Where did the name Broken String come from?";
+}
+
+func int DIA_GERSTAND_NAME_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x10ea7)) {
+        if ((NPC_GETDISTTOWP(SELF, "PARTM4_TAVERN_GERSTAND")) <= (0xbb8)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_NAME_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_Name_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Name_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Name_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Name_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Name_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Name_03_06");
+}
+
+instance DIA_GERSTAND_TRADE(C_INFO) {
+    NPC = 0xd083;
+    NR = 50;
+    CONDITION = DIA_GERSTAND_TRADE_CONDITION;
+    INFORMATION = DIA_GERSTAND_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Show me your wares.";
+}
+
+func int DIA_GERSTAND_TRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x10ea7)) {
+        if ((NPC_GETDISTTOWP(SELF, "PARTM4_TAVERN_GERSTAND")) <= (0xbb8)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_TRADE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_Trade_15_01");
+    B_GIVETRADEINV(SELF);
+}
+
+instance DIA_GERSTAND_CQ003(C_INFO) {
+    NPC = 0xd083;
+    NR = 45;
+    CONDITION = DIA_GERSTAND_CQ003_CONDITION;
+    INFORMATION = DIA_GERSTAND_CQ003_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Tomas sent me.";
+}
+
+func int DIA_GERSTAND_CQ003_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_CQ003)) == (LOG_RUNNING)) && ((NPC_HASITEMS(OTHER, 0x8e0c)) >= (1))) && (NPC_KNOWSINFO(OTHER, 0x10ea7))) {
+        if ((NPC_GETDISTTOWP(SELF, "PARTM4_TAVERN_GERSTAND")) <= (0xbb8)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_CQ003_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_CQ003_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_CQ003_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_CQ003_03_05");
+    INFO_CLEARCHOICES(0x10eb0);
+    INFO_ADDCHOICE(0x10eb0, "Dark Paladine has a very rich, surprising flavor and aroma.", 0x10eb4);
+    INFO_ADDCHOICE(0x10eb0, "Dark Paladine is a strong, warming beer.", 0x10eb3);
+}
+
+func void DIA_GERSTAND_CQ003_STRONG() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_Strong_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_Strong_15_02");
+    AI_STARTFACEANI(SELF, S_DOUBT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_CQ003_Strong_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_Strong_15_04");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_CQ003_Strong_03_05");
+    INFO_CLEARCHOICES(0x10eb0);
+    AI_LOGENTRY(TOPIC_CQ003, LOG_CQ003_GERSTANDNOTHAPPY);
+    CQ003_HAPPYGERSTAND = 2;
+    CQ003_TALKED = (CQ003_TALKED) + (1);
+}
+
+func void DIA_GERSTAND_CQ003_RICH() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_Rich_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_Rich_15_02");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_CQ003_Rich_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_Rich_15_04");
+    B_STANDUP();
+    B_GIVEINVITEMS(OTHER, SELF, 0x8e0c, 1);
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_STOPLOOKAT(SELF);
+    CREATEINVITEM(SELF, 0x8cc9);
+    AI_USEITEMTOSTATE(SELF, 0x8cc9, 1);
+    AI_WAIT(SELF, 0x40400000);
+    AI_USEITEMTOSTATE(SELF, 0x8cc9, -(1));
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_LOOKATNPC(SELF, OTHER);
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_CQ003_Rich_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_CQ003_Rich_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_Rich_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_CQ003_Rich_03_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_CQ003_Rich_15_09");
+    INFO_CLEARCHOICES(0x10eb0);
+    AI_LOGENTRY(TOPIC_CQ003, LOG_CQ003_GERSTANDHAPPY);
+    CQ003_HAPPYGERSTAND = 1;
+    CQ003_HAPPYCUSTOMER = (CQ003_HAPPYCUSTOMER) + (4);
+    CQ003_TALKED = (CQ003_TALKED) + (1);
+    AI_STOPLOOKAT(SELF);
+}
+
+instance DIA_GERSTAND_WELCOMEMIL(C_INFO) {
+    NPC = 0xd083;
+    NR = 1;
+    CONDITION = DIA_GERSTAND_WELCOMEMIL_CONDITION;
+    INFORMATION = DIA_GERSTAND_WELCOMEMIL_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GERSTAND_WELCOMEMIL_CONDITION() {
+    if (((OTHER.GUILD) == (GIL_MIL)) && (BECOMEAGUARD_TAVERNPART)) {
+        if ((NPC_GETDISTTOWP(SELF, "PARTM4_TAVERN_GERSTAND")) <= (0xbb8)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_WELCOMEMIL_INFO() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_WELCOMEMIL_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_WELCOMEMIL_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_WELCOMEMIL_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_WELCOMEMIL_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_WELCOMEMIL_03_05");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    CREATEINVITEMS(SELF, 0x84b6, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x84b6, 1);
+}
+
+instance DIA_GERSTAND_SQ225_GERHARD(C_INFO) {
+    NPC = 0xd083;
+    NR = 1;
+    CONDITION = DIA_GERSTAND_SQ225_GERHARD_CONDITION;
+    INFORMATION = DIA_GERSTAND_SQ225_GERHARD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you trade with Gerhard?";
+}
+
+func int DIA_GERSTAND_SQ225_GERHARD_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING)) && ((SQ225_FOUNDGERHARD) == (FALSE))) && ((SQ225_HOLDWIGWAY_AGREED) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_SQ225_GERHARD_INFO() {
+    SQ225_FOUNDGERHARD = TRUE;
+    MOB_CREATEITEMS("SQ225_GERSTANDCHEST", 0x90dc, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_Gerhard_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_Gerhard_03_02");
+    INFO_CLEARCHOICES(0x10eb8);
+    INFO_ADDCHOICE(0x10eb8, "Is that important? I want to offer you to take over his position.", 0x10ebd);
+    INFO_ADDCHOICE(0x10eb8, "None of your business. You better tell me what you know about him.", 0x10ebc);
+    if ((KAPITEL) == (2)) {
+        if (((HERO.GUILD) != (GIL_MIL)) && ((HERO.GUILD) != (GIL_SLD))) {
+            INFO_ADDCHOICE(0x10eb8, "My name is Marvin.", 0x10ebe);
+        };
+    };
+    NPC_EXCHANGEROUTINE(SELF, "SQ225_LIVEININN");
+}
+
+func void DIA_GERSTAND_SQ225_GERHARD_LOGENTRY() {
+    AI_LOGENTRY(TOPIC_SQ225, LOG_SQ225_GERSTAND_NOTALK);
+    INFO_CLEARCHOICES(0x10eb8);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_RESETFACEANI(SELF);
+}
+
+func void DIA_GERSTAND_SQ225_GERHARD_TELLME() {
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_Gerhard_TellMe_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_Gerhard_TellMe_03_02");
+    if ((HERO.GUILD) != (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_Gerhard_TellMe_03_03");
+    };
+    DIA_GERSTAND_SQ225_GERHARD_LOGENTRY();
+}
+
+func void DIA_GERSTAND_SQ225_GERHARD_IMPORTANT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_Gerhard_Important_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_Gerhard_Important_03_02");
+    DIA_GERSTAND_SQ225_GERHARD_LOGENTRY();
+}
+
+func void DIA_GERSTAND_SQ225_GERHARD_MARVIN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_Gerhard_Marvin_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_Gerhard_Marvin_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_Gerhard_Marvin_03_03");
+    DIA_GERSTAND_SQ225_GERHARD_LOGENTRY();
+}
+
+instance DIA_GERSTAND_SQ225_GETOUT(C_INFO) {
+    NPC = 0xd083;
+    NR = 1;
+    CONDITION = DIA_GERSTAND_SQ225_GETOUT_CONDITION;
+    INFORMATION = DIA_GERSTAND_SQ225_GETOUT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GERSTAND_SQ225_GETOUT_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING)) && ((SQ225_GERSTANDBOOK_READ) == (1))) && ((SQ225_HOLDWIGWAY_AGREED) == (1))) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_SQ225_GETOUT_INFO() {
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_03_01");
+    INFO_CLEARCHOICES(0x10ebf);
+    INFO_ADDCHOICE(0x10ebf, "I'm going to get rid of Gerhard, and you're going to help me do it.", 0x10ec4);
+    INFO_ADDCHOICE(0x10ebf, "Relax, I just wanted to ask if you lost anything.", 0x10ec3);
+}
+
+func void DIA_GERSTAND_SQ225_GETOUT_CHOICES() {
+    INFO_CLEARCHOICES(0x10ebf);
+    INFO_ADDCHOICE(0x10ebf, "Tell Gerhard about the situation and urge him to leave Archolos.", 0x10ec9);
+    INFO_ADDCHOICE(0x10ebf, "Plead guilty.", 0x10ec8);
+}
+
+func void DIA_GERSTAND_SQ225_GETOUT_LOST() {
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Lost_15_01");
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Lost_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Lost_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Lost_15_04");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Lost_03_05");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Lost_15_06");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Lost_03_07");
+    DIA_GERSTAND_SQ225_GETOUT_CHOICES();
+}
+
+func void DIA_GERSTAND_SQ225_GETOUT_HELP() {
+    if (TORCH_HEROHOLDINGTORCH()) {
+        TORCH_UNEQUIP();
+    };
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Help_15_01");
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_DRAWWEAPON(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Help_03_02");
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_REMOVEWEAPON(OTHER);
+    AI_UNREADYSPELL(OTHER);
+    AI_PLAYANI(OTHER, "T_STAND_2_LGUARD_HERO");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Help_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Help_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Help_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Help_15_06");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_REMOVEWEAPON(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Help_03_07");
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_PLAYANI(OTHER, "T_REMOVE_LGUARD");
+    DIA_GERSTAND_SQ225_GETOUT_CHOICES();
+}
+
+var int GERSTAND_SQ225_GERHARDBYEBYE = 0;
+var int GERSTAND_SQ225_GERHARDBYEBYE_DAY = 0;
+var int GERSTAND_SQ225_WENTTOBARRACK = 0;
+func void DIA_GERSTAND_SQ225_GETOUT_HELP_GUILTY() {
+    GERSTAND_SQ225_WENTTOBARRACK = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Guilty_15_01");
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Guilty_03_02");
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Guilty_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Guilty_03_04");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Guilty_15_05");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_Guilty_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_Guilty_15_07");
+    INFO_CLEARCHOICES(0x10ebf);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_SQ225, LOG_SQ225_GERSTAND_BARRACK);
+    NPC_EXCHANGEROUTINE(SELF, "SQ225_BARRACK");
+    MDL_APPLYOVERLAYMDS(SELF, HUMANSTIREDMDS);
+}
+
+func void DIA_GERSTAND_SQ225_GETOUT_HELP_GERHARDLEAVE() {
+    GERSTAND_SQ225_GERHARDBYEBYE = TRUE;
+    GERSTAND_SQ225_GERHARDBYEBYE_DAY = WLD_GETDAY();
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_GerhardLeave_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_GerhardLeave_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_GerhardLeave_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_GerhardLeave_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_GerhardLeave_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GetOut_GerhardLeave_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GetOut_GerhardLeave_15_07");
+    INFO_CLEARCHOICES(0x10ebf);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_SQ225, LOG_SQ225_GERSTAND_GERHARDBYEBYE);
+}
+
+instance DIA_GERSTAND_SQ225_GERHARDGONE(C_INFO) {
+    NPC = 0xd083;
+    NR = 1;
+    CONDITION = DIA_GERSTAND_SQ225_GERHARDGONE_CONDITION;
+    INFORMATION = DIA_GERSTAND_SQ225_GERHARDGONE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How was it? Did you make it?";
+}
+
+func int DIA_GERSTAND_SQ225_GERHARDGONE_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING)) && ((GERSTAND_SQ225_GERHARDBYEBYE) == (1))) && ((GERSTAND_SQ225_GERHARDBYEBYE_DAY) <= ((WLD_GETDAY()) - (1)))) && ((SQ225_HOLDWIGWAY_AGREED) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_SQ225_GERHARDGONE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GerhardGone_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GerhardGone_03_02");
+    AI_STARTFACEANI(SELF, S_WHAT, 0, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GerhardGone_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_GerhardGone_15_04");
+    B_GIVEINVITEMS(OTHER, SELF, 0x90dc, 1);
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_GerhardGone_03_05");
+    SQ225_FINISHGERSTANDEVENT();
+}
+
+instance DIA_GERSTAND_SQ225_READY(C_INFO) {
+    NPC = 0xd083;
+    NR = 1;
+    CONDITION = DIA_GERSTAND_SQ225_READY_CONDITION;
+    INFORMATION = DIA_GERSTAND_SQ225_READY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You ready?";
+}
+
+func int DIA_GERSTAND_SQ225_READY_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING)) && ((GERSTAND_SQ225_WENTTOBARRACK) == (1))) && ((NPC_GETDISTTOWP(SELF, "PARTM3_ALDER_WAIT")) <= (750))) && ((SQ225_HOLDWIGWAY_AGREED) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_SQ225_READY_NEXT() {
+    SQ225_GERSTAND_TALKWITHRODERICH = 1;
+    SQ225_GERSTAND_TALKWITHRODERICH_DAY = WLD_GETDAY();
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_Ready_Next_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 0x90dc, 1);
+    INFO_CLEARCHOICES(0x10ecd);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_SQ225, LOG_SQ225_GERSTAND_RODERICHTALK);
+    NPC_EXCHANGEROUTINE(SELF, "SQ225_RODERICH");
+    B_STARTOTHERROUTINE(MIL_4000_RODERICH, "SMALLTALK");
+    NPC_REFRESH(MIL_4000_RODERICH);
+}
+
+func void DIA_GERSTAND_SQ225_READY_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_Ready_15_01");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_Ready_03_02");
+    INFO_CLEARCHOICES(0x10ecd);
+    INFO_ADDCHOICE(0x10ecd, "It's your only chance to get out of the case alive.", 0x10ed2);
+    INFO_ADDCHOICE(0x10ecd, "You come in, explain everything in detail, and you're done.", 0x10ed1);
+}
+
+func void DIA_GERSTAND_SQ225_READY_ALRIGHT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_Ready_Alright_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_Ready_Alright_03_02");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_Ready_Alright_03_03");
+    DIA_GERSTAND_SQ225_READY_NEXT();
+}
+
+func void DIA_GERSTAND_SQ225_READY_NOCHOICE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_Ready_NoChoice_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_Ready_NoChoice_03_02");
+    DIA_GERSTAND_SQ225_READY_NEXT();
+}
+
+instance DIA_GERSTAND_SQ225_AFTERRODERICH(C_INFO) {
+    NPC = 0xd083;
+    NR = 1;
+    CONDITION = DIA_GERSTAND_SQ225_AFTERRODERICH_CONDITION;
+    INFORMATION = DIA_GERSTAND_SQ225_AFTERRODERICH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Did everything go according to plan?";
+}
+
+func int DIA_GERSTAND_SQ225_AFTERRODERICH_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING)) && ((SQ225_GERSTAND_TALKWITHRODERICH) == (2))) && ((SQ225_HOLDWIGWAY_AGREED) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_SQ225_AFTERRODERICH_INFO() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_AfterRoderich_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_AfterRoderich_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_AfterRoderich_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_AfterRoderich_03_04");
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    INFO_CLEARCHOICES(0x10ed3);
+    INFO_ADDCHOICE(0x10ed3, "That's all I wanted to hear. Goodbye.", 0x10ed7);
+    INFO_ADDCHOICE(0x10ed3, "So you were lucky to run into me.", 0x10ed6);
+}
+
+func void DIA_GERSTAND_SQ225_AFTERRODERICH_LUCK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_AfterRoderich_Luck_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_AfterRoderich_Luck_03_02");
+}
+
+func void DIA_GERSTAND_SQ225_AFTERRODERICH_BYE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_SQ225_AfterRoderich_Bye_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_AfterRoderich_Bye_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_SQ225_AfterRoderich_Bye_03_03");
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(0x10ed3);
+    SQ225_FINISHGERSTANDEVENT();
+}
+
+instance DIA_GERSTAND_BRUNO(C_INFO) {
+    NPC = 0xd083;
+    NR = 1;
+    CONDITION = DIA_GERSTAND_BRUNO_CONDITION;
+    INFORMATION = DIA_GERSTAND_BRUNO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GERSTAND_BRUNO_CONDITION() {
+    if (((KAPITEL) == (3)) && (!(NPC_KNOWSINFO(OTHER, 0x128c3)))) {
+        if ((NPC_GETDISTTOWP(SELF, "PARTM4_TAVERN_GERSTAND")) <= (0xbb8)) {
+            if (((LOG_GETSTATUS(MIS_Q311)) == (LOG_RUNNING)) && ((Q311_TAVERNCUTSCENE) == (2))) {
+                return TRUE;
+            };
+            if (((LOG_GETSTATUS(MIS_Q311)) == (0)) || ((LOG_GETSTATUS(MIS_Q311)) == (LOG_SUCCESS))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_BRUNO_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Bruno_03_01");
+    NPC_EXCHANGEROUTINE(SELF, START);
+}
+
+instance DIA_GERSTAND_Q505_HELP(C_INFO) {
+    NPC = 0xd083;
+    NR = 1;
+    CONDITION = DIA_GERSTAND_Q505_HELP_CONDITION;
+    INFORMATION = DIA_GERSTAND_Q505_HELP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Can I buy some provisions from you?";
+}
+
+func int DIA_GERSTAND_Q505_HELP_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q505)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x13974))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_Q505_HELP_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$Q505_MARVIN_BUYFOOD");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Q505_Help_03_01");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_GERSTAND_AMBIENT(C_INFO) {
+    NPC = 0xd083;
+    NR = 850;
+    CONDITION = DIA_GERSTAND_AMBIENT_CONDITION;
+    INFORMATION = DIA_GERSTAND_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_GERSTAND_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x10ea7)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_AMBIENT_COMMENT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Ambient_03_04");
+}
+
+func void DIA_GERSTAND_AMBIENT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gerstand_Ambient_15_01");
+    if ((KAPITEL) < (4)) {
+        if ((CQ003_HAPPYGERSTAND) == (0)) {
+            DIA_GERSTAND_AMBIENT_COMMENT();
+        } else if ((CQ003_HAPPYGERSTAND) == (1)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Ambient_03_02");
+        } else if ((CQ003_HAPPYGERSTAND) == (2)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Ambient_03_03");
+        };
+    };
+    if ((OTHER.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Ambient_03_05");
+    };
+    if ((OTHER.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gerstand_Ambient_03_06");
+    };
+    DIA_GERSTAND_AMBIENT_COMMENT();
+}
+
+instance DIA_GERSTAND_PICKPOCKET(C_INFO) {
+    NPC = 0xd083;
+    NR = 900;
+    CONDITION = DIA_GERSTAND_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_GERSTAND_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80;
+}
+
+func int DIA_GERSTAND_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GERSTAND_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x10ee2);
+    INFO_ADDCHOICE(0x10ee2, DIALOG_BACK, 0x10ee6);
+    INFO_ADDCHOICE(0x10ee2, DIALOG_PICKPOCKET, 0x10ee5);
+}
+
+func void DIA_GERSTAND_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        CREATEINVITEMS(SELF, 0x8e15, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x8e15, 1);
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x10ee2);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x10ee2);
+}
+
+func void DIA_GERSTAND_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x10ee2);
+}
+

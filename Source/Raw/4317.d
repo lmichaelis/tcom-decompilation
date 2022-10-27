@@ -1,0 +1,117 @@
+var int DIA_PETE_AFTERCHEESE = 0;
+instance DIA_PETE_EXIT(C_INFO) {
+    NPC = 0xe1af;
+    NR = 999;
+    CONDITION = DIA_PETE_EXIT_CONDITION;
+    INFORMATION = DIA_PETE_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_PETE_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_PETE_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_PETE_SAYCHEESE(C_INFO) {
+    NPC = 0xe1af;
+    NR = 1;
+    CONDITION = DIA_PETE_SAYCHEESE_CONDITION;
+    INFORMATION = DIA_PETE_SAYCHEESE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_PETE_SAYCHEESE_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_PETE_SAYCHEESE_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Pete_SayCheese_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Pete_SayCheese_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Pete_SayCheese_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Pete_SayCheese_03_04");
+}
+
+instance DIA_PETE_CHEESEFORYOU(C_INFO) {
+    NPC = 0xe1af;
+    NR = 2;
+    CONDITION = DIA_PETE_CHEESEFORYOU_CONDITION;
+    INFORMATION = DIA_PETE_CHEESEFORYOU_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Here's the cheese.";
+}
+
+func int DIA_PETE_CHEESEFORYOU_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x15cee)) {
+        if ((DIA_PETE_AFTERCHEESE) == (FALSE)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PETE_CHEESEFORYOU_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Pete_CheeseForYou_15_01");
+    if ((NPC_HASITEMS(OTHER, 0x84ae)) >= (2)) {
+        B_GIVEINVITEMS(OTHER, SELF, 0x84ae, 2);
+        AI_OUTPUT(SELF, OTHER, "DIA_Pete_CheeseForYou_03_02");
+        CREATEINVITEMS(SELF, 0x859b, EVENT_CHEESE_SILBACH);
+        B_GIVEINVITEMS(SELF, OTHER, 0x859b, EVENT_CHEESE_SILBACH);
+        B_GIVEPLAYERXP(XP_EVENT_SILBACHCHEESE);
+        DIA_PETE_AFTERCHEESE = TRUE;
+        NPC_EXCHANGEROUTINE(SELF, TOT);
+        NPC_EXCHANGEROUTINE(NONE_13503_ALF, TOT);
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Pete_CheeseForYou_03_03");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_PETE_AFTEREVENT(C_INFO) {
+    NPC = 0xe1af;
+    NR = 4;
+    CONDITION = DIA_PETE_AFTEREVENT_CONDITION;
+    INFORMATION = DIA_PETE_AFTEREVENT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_PETE_AFTEREVENT_CONDITION() {
+    if ((DIA_PETE_AFTERCHEESE) == (TRUE)) {
+        if (NPC_ISINSTATE(SELF, 0xf09f)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PETE_AFTEREVENT_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Pete_AfterEvent_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_PETE_YOUBASTARD(C_INFO) {
+    NPC = 0xe1af;
+    NR = 1;
+    CONDITION = DIA_PETE_YOUBASTARD_CONDITION;
+    INFORMATION = DIA_PETE_YOUBASTARD_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_PETE_YOUBASTARD_CONDITION() {
+    if (NPC_ISDEAD(NONE_13503_ALF)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PETE_YOUBASTARD_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Pete_YouBastard_03_01");
+    NPC_EXCHANGEROUTINE(SELF, "RUN");
+    AI_STOPPROCESSINFOS(SELF);
+}
+

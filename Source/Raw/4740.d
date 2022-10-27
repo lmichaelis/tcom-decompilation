@@ -1,0 +1,33 @@
+func void EVENTSMANAGER_QM304() {
+    if ((LOG_GETSTATUS(MIS_QM304)) != (LOG_RUNNING)) {
+        return;
+    };
+    if ((QM304_REFUGEEFLEE_STATUS) == (1)) {
+        if ((NPC_GETDISTTOWP(NONE_13592_REFUGEE, "SLUMS_QM304_FLEE")) <= (700)) {
+            PRINTD("Dobieg³");
+            QM304_REFUGEEFLEE_STATUS = 2;
+            B_STARTOTHERROUTINE(NONE_13592_REFUGEE, "QM304_TIRED");
+            NPC_REFRESH(NONE_13592_REFUGEE);
+        };
+    };
+    if ((QM304_FIGHTWITHREFUGEE) == (1)) {
+        if (((NPC_ISDEAD(NONE_13593_REFUGEE)) && (NPC_ISDEAD(NONE_13594_REFUGEE))) && (NPC_ISDEAD(NONE_13595_REFUGEE))) {
+            QM304_FIGHTWITHREFUGEE = 2;
+            QM304_COUNTHOWMANYEVENTS();
+            B_LOGENTRY(TOPIC_QM304, LOG_QM304_REFUGEE_AFTERFIGHT);
+        };
+    };
+    if ((QM304_FIGHTWITHREFUGEE) == (2)) {
+        if ((NPC_HASITEMS(NONE_13595_REFUGEE, 0x859a)) == (0)) {
+            QM304_FIGHTWITHREFUGEE = 3;
+            QM304_COUNTHOWMANYNUGGETS();
+        };
+    };
+    if ((QM304_ALLTASKDONE) == (FALSE)) {
+        if (((QM304_COUNTEVENTS) >= (4)) && ((HERO.AIVAR[4]) == (FALSE))) {
+            QM304_ALLTASKDONE = TRUE;
+            B_LOGENTRY(TOPIC_QM304, LOG_QM304_ALLTASKDONE);
+        };
+    };
+}
+

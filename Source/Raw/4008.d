@@ -1,0 +1,455 @@
+instance DIA_ZACHARY_EXIT(C_INFO) {
+    NPC = 0xda65;
+    NR = 999;
+    CONDITION = DIA_ZACHARY_EXIT_CONDITION;
+    INFORMATION = DIA_ZACHARY_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ZACHARY_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ZACHARY_EXIT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_EXIT_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_EXIT_03_02");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ZACHARY_HELLO(C_INFO) {
+    NPC = 0xda65;
+    NR = 1;
+    CONDITION = DIA_ZACHARY_HELLO_CONDITION;
+    INFORMATION = DIA_ZACHARY_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ZACHARY_HELLO_CONDITION() {
+    if ((SQ123_FISHINGCONTEST) != (2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_HELLO_INFO() {
+    if ((NPC_HASEQUIPPEDARMOR(OTHER)) == (TRUE)) {
+        if (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_SLD)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_07");
+            AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_08");
+        } else if (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_MIL)) {
+            AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_01");
+            AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_02");
+            AI_OUTPUT(OTHER, SELF, "DIA_Zachary_HELLO_15_03");
+            AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_04");
+            AI_OUTPUT(OTHER, SELF, "DIA_Zachary_HELLO_15_05");
+            AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_06");
+            AI_RESETFACEANI(SELF);
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_09");
+            AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_10");
+        } else {
+            /* set_instance(0) */;
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_HELLO_03_10");
+}
+
+instance DIA_ZACHARY_WHO(C_INFO) {
+    NPC = 0xda65;
+    NR = 5;
+    CONDITION = DIA_ZACHARY_WHO_CONDITION;
+    INFORMATION = DIA_ZACHARY_WHO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_ZACHARY_WHO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ZACHARY_WHO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Who_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Who_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Who_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Who_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Who_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Who_03_06");
+}
+
+instance DIA_ZACHARY_LAW(C_INFO) {
+    NPC = 0xda65;
+    NR = 6;
+    CONDITION = DIA_ZACHARY_LAW_CONDITION;
+    INFORMATION = DIA_ZACHARY_LAW_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Are there any laws here?";
+}
+
+func int DIA_ZACHARY_LAW_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x13011)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_LAW_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Law_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Law_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Law_03_03");
+}
+
+instance DIA_ZACHARY_PLACE(C_INFO) {
+    NPC = 0xda65;
+    NR = 7;
+    CONDITION = DIA_ZACHARY_PLACE_CONDITION;
+    INFORMATION = DIA_ZACHARY_PLACE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What can you tell me about this place?";
+}
+
+func int DIA_ZACHARY_PLACE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x13011)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_PLACE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Place_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Place_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Place_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Place_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Place_03_05");
+}
+
+instance DIA_ZACHARY_PROBLEM(C_INFO) {
+    NPC = 0xda65;
+    NR = 8;
+    CONDITION = DIA_ZACHARY_PROBLEM_CONDITION;
+    INFORMATION = DIA_ZACHARY_PROBLEM_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you have any problems here?";
+}
+
+func int DIA_ZACHARY_PROBLEM_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x13011)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_PROBLEM_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Problem_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Problem_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Problem_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Problem_15_04");
+    if (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Problem_03_05");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Problem_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Problem_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Problem_03_08");
+}
+
+instance DIA_ZACHARY_SQ124_START(C_INFO) {
+    NPC = 0xda65;
+    NR = 1;
+    CONDITION = DIA_ZACHARY_SQ124_START_CONDITION;
+    INFORMATION = DIA_ZACHARY_SQ124_START_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What's the matter?";
+}
+
+func int DIA_ZACHARY_SQ124_START_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x1301a)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_SQ124_START_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_SQ124_Start_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Start_03_02");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Start_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Start_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Start_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Start_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Start_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Start_03_08");
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(0x1301d);
+    INFO_ADDCHOICE(0x1301d, "I don't have time for this...", 0x13022);
+    INFO_ADDCHOICE(0x1301d, "I'll check out that cave.", 0x13020);
+}
+
+func void DIA_ZACHARY_SQ124_START_CHECK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_SQ124_Start_Check_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Start_Check_03_02");
+    AI_RESETFACEANI(OTHER);
+    AI_RESETFACEANI(SELF);
+    INFO_CLEARCHOICES(0x1301d);
+    CREATEINVITEMS(SELF, 0x902b, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x902b, 1);
+    LOG_CREATETOPIC(TOPIC_SQ124, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_SQ124), TOPIC_SQ124, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_SQ124, LOG_SQ124_START);
+    SQ124_PREPARENPC();
+}
+
+var int ZACHARY_SQ124_TAKEQUEST = 0;
+func void DIA_ZACHARY_SQ124_START_NO() {
+    ZACHARY_SQ124_TAKEQUEST = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_SQ124_Start_No_15_01");
+    AI_RESETFACEANI(SELF);
+    INFO_CLEARCHOICES(0x1301d);
+}
+
+instance DIA_ZACHARY_SQ124_TAKEQUEST(C_INFO) {
+    NPC = 0xda65;
+    NR = 1;
+    CONDITION = DIA_ZACHARY_SQ124_TAKEQUEST_CONDITION;
+    INFORMATION = DIA_ZACHARY_SQ124_TAKEQUEST_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I'll check out that cave.";
+}
+
+func int DIA_ZACHARY_SQ124_TAKEQUEST_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 0x1301d)) && ((ZACHARY_SQ124_TAKEQUEST) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_SQ124_TAKEQUEST_INFO() {
+    DIA_ZACHARY_SQ124_START_CHECK();
+}
+
+instance DIA_ZACHARY_SQ124_FINISH(C_INFO) {
+    NPC = 0xda65;
+    NR = 1;
+    CONDITION = DIA_ZACHARY_SQ124_FINISH_CONDITION;
+    INFORMATION = DIA_ZACHARY_SQ124_FINISH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Cave checked.";
+}
+
+func int DIA_ZACHARY_SQ124_FINISH_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ124)) == (LOG_RUNNING)) && ((SQ124_SKELETONSTATUS) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_SQ124_FINISH_INFO() {
+    SQ124_REMOVEDOORS = TRUE;
+    SQ124_REMOVEDOORS_DAY = WLD_GETDAY();
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_SQ124_Finish_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Finish_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_SQ124_Finish_15_03");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Finish_03_04");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Finish_03_05");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Finish_03_06");
+    AI_RESETFACEANI(SELF);
+    if ((NPC_HASITEMS(OTHER, 0x902b)) >= (1)) {
+    };
+    WLD_REMOVEITEM(ITKE_SQ124_ZACHARYKEY);
+    AI_LOGENTRY(TOPIC_SQ124, LOG_SQ124_FINISH);
+    LOG_SETSTATUS(_@(MIS_SQ124), TOPIC_SQ124, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_SQ124_FINISH);
+    CREATEINVITEMS(SELF, 0x84b4, 8);
+    B_GIVEINVITEMS(SELF, OTHER, 0x84b4, 8);
+    CREATEINVITEMS(SELF, 0x930f, 2);
+    B_GIVEINVITEMS(SELF, OTHER, 0x930f, 2);
+    CREATEINVITEMS(SELF, 0x8c35, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x8c35, 1);
+}
+
+instance DIA_ZACHARY_SQ124_NOTE(C_INFO) {
+    NPC = 0xda65;
+    NR = 1;
+    CONDITION = DIA_ZACHARY_SQ124_NOTE_CONDITION;
+    INFORMATION = DIA_ZACHARY_SQ124_NOTE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I also found this strange note in the cave.";
+}
+
+func int DIA_ZACHARY_SQ124_NOTE_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ124)) == (LOG_SUCCESS)) && ((NPC_HASITEMS(OTHER, 0x9bba)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_SQ124_NOTE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_SQ124_Note_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 0x9bba, 1);
+    AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+    B_USEFAKESCROLL();
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Note_03_02");
+    B_GIVEINVITEMS(SELF, OTHER, 0x9bba, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_SQ124_Note_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Note_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Note_03_05");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_SQ124_Note_03_06");
+    AI_RESETFACEANI(SELF);
+    B_GIVEPLAYERXP(XP_SQ124_BONUSMAP);
+}
+
+instance DIA_ZACHARY_YANNICK(C_INFO) {
+    NPC = 0xda65;
+    NR = 1;
+    CONDITION = DIA_ZACHARY_YANNICK_CONDITION;
+    INFORMATION = DIA_ZACHARY_YANNICK_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Does anyone named Yannick live here?";
+}
+
+func int DIA_ZACHARY_YANNICK_CONDITION() {
+    if ((((NPC_KNOWSINFO(OTHER, 0x13011)) && (NPC_KNOWSINFO(OTHER, 0x1325a))) && ((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING))) && ((Q208_TALKEDWITHYANNIC) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_YANNICK_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Yannick_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Yannick_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Yannick_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Yannick_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Yannick_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Yannick_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Yannick_03_07");
+}
+
+instance DIA_ZACHARY_Q208_WHERE(C_INFO) {
+    NPC = 0xda65;
+    NR = 1;
+    CONDITION = DIA_ZACHARY_Q208_WHERE_CONDITION;
+    INFORMATION = DIA_ZACHARY_Q208_WHERE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Where's Roy's hut?";
+}
+
+func int DIA_ZACHARY_Q208_WHERE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q208)) == (LOG_RUNNING)) && ((Q208_ROYJOINTPACK) == (TRUE))) && ((Q208_MILITIAFINISHWAY) == (0))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_Q208_WHERE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Q208_Where_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Q208_Where_03_02");
+}
+
+instance DIA_ZACHARY_AMBIENT(C_INFO) {
+    NPC = 0xda65;
+    NR = 950;
+    CONDITION = DIA_ZACHARY_AMBIENT_CONDITION;
+    INFORMATION = DIA_ZACHARY_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_ZACHARY_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 0x13011)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_AMBIENT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Ambient_15_01");
+    NPC_INITAMBIENTS(SELF, 2);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Ambient_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Ambient_03_03");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Ambient_03_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Ambient_03_05");
+    };
+}
+
+instance DIA_ZACHARY_Q505_HELP(C_INFO) {
+    NPC = 0xda65;
+    NR = 1;
+    CONDITION = DIA_ZACHARY_Q505_HELP_CONDITION;
+    INFORMATION = DIA_ZACHARY_Q505_HELP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Don't you have some fish to spare?";
+}
+
+func int DIA_ZACHARY_Q505_HELP_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q505)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 0x13974))) {
+        if ((LOG_GETSTATUS(MIS_SQ124)) == (LOG_SUCCESS)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_Q505_HELP_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Zachary_Q505_Help_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Zachary_Q505_Help_03_02");
+    CREATEINVITEMS(SELF, 0x92c4, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 0x92c4, 1);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_ZACHARY_PICKPOCKET(C_INFO) {
+    NPC = 0xda65;
+    NR = 900;
+    CONDITION = DIA_ZACHARY_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_ZACHARY_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80;
+}
+
+func int DIA_ZACHARY_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACHARY_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x13038);
+    INFO_ADDCHOICE(0x13038, DIALOG_BACK, 0x1303c);
+    INFO_ADDCHOICE(0x13038, DIALOG_PICKPOCKET, 0x1303b);
+}
+
+func void DIA_ZACHARY_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        CREATEINVITEMS(SELF, 0x84b4, 3);
+        B_GIVEINVITEMS(SELF, OTHER, 0x84b4, 3);
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x13038);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x13038);
+}
+
+func void DIA_ZACHARY_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x13038);
+}
+

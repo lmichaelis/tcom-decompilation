@@ -1,0 +1,13 @@
+func void EVENTSMANAGER_FAQ002() {
+    if ((LOG_GETSTATUS(MIS_FAQ002)) != (LOG_RUNNING)) {
+        return;
+    };
+    if ((FAQ002_FIGHTWITHBROTHERS) == (1)) {
+        if (((NPC_ISDEAD(VLK_6249_KAF)) && (NPC_ISDEAD(VLK_6250_JEF))) && (NPC_ISDEAD(VLK_6251_ROF))) {
+            FAQ002_FIGHTWITHBROTHERS = 2;
+            FAQ002_BROTHERSAREDEAD = TRUE;
+            B_LOGENTRY(TOPIC_FAQ002, LOG_FAQ002_KAF_DEAD);
+        };
+    };
+}
+

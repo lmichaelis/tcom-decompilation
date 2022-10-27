@@ -1,0 +1,116 @@
+instance FOCUS_NORMAL(C_FOCUS) {
+    NPC_LONGRANGE = 500;
+    NPC_RANGE1 = 0;
+    NPC_RANGE2 = 300;
+    NPC_AZI = 30;
+    NPC_ELEVUP = 30;
+    NPC_ELEVDO = -45;
+    NPC_PRIO = 1;
+    ITEM_RANGE1 = 0;
+    ITEM_RANGE2 = 300;
+    ITEM_AZI = 30;
+    ITEM_ELEVUP = 60;
+    ITEM_ELEVDO = -89;
+    ITEM_PRIO = 1;
+    MOB_RANGE1 = 0;
+    MOB_RANGE2 = 350;
+    MOB_AZI = 30;
+    MOB_ELEVUP = 89;
+    MOB_ELEVDO = -89;
+    MOB_PRIO = 0;
+}
+
+instance FOCUS_MELEE(C_FOCUS) {
+    NPC_RANGE1 = 0;
+    NPC_RANGE2 = 500;
+    NPC_AZI = 50;
+    NPC_ELEVUP = 90;
+    NPC_ELEVDO = -60;
+    NPC_PRIO = 1;
+    ITEM_PRIO = -(1);
+    MOB_RANGE1 = 0;
+    MOB_RANGE2 = 150;
+    MOB_AZI = 30;
+    MOB_ELEVUP = 45;
+    MOB_ELEVDO = -45;
+    MOB_PRIO = -(1);
+}
+
+instance FOCUS_RANGED(C_FOCUS) {
+    NPC_RANGE1 = 0;
+    NPC_RANGE2 = 3500;
+    NPC_AZI = 45;
+    NPC_ELEVUP = 90;
+    NPC_ELEVDO = -85;
+    NPC_PRIO = 1;
+    ITEM_RANGE1 = 0;
+    ITEM_RANGE2 = 3000;
+    ITEM_AZI = 45;
+    ITEM_ELEVUP = 45;
+    ITEM_ELEVDO = -45;
+    ITEM_PRIO = -(1);
+    MOB_RANGE1 = 0;
+    MOB_RANGE2 = 3000;
+    MOB_AZI = 45;
+    MOB_ELEVUP = 45;
+    MOB_ELEVDO = -45;
+    MOB_PRIO = -(1);
+}
+
+instance FOCUS_THROW_ITEM(C_FOCUS) {
+    NPC_RANGE1 = 300;
+    NPC_RANGE2 = 1500;
+    NPC_AZI = 20;
+    NPC_ELEVUP = 45;
+    NPC_ELEVDO = -45;
+    ITEM_RANGE1 = 300;
+    ITEM_RANGE2 = 1500;
+    ITEM_AZI = 20;
+    ITEM_ELEVUP = 45;
+    ITEM_ELEVDO = -45;
+    MOB_RANGE1 = 300;
+    MOB_RANGE2 = 1500;
+    MOB_AZI = 20;
+    MOB_ELEVUP = 45;
+    MOB_ELEVDO = -45;
+}
+
+instance FOCUS_THROW_MOB(C_FOCUS) {
+    NPC_RANGE1 = 50;
+    NPC_RANGE2 = 200;
+    NPC_AZI = 20;
+    NPC_ELEVUP = 45;
+    NPC_ELEVDO = -45;
+    ITEM_RANGE1 = 50;
+    ITEM_RANGE2 = 200;
+    ITEM_AZI = 20;
+    ITEM_ELEVUP = 45;
+    ITEM_ELEVDO = -45;
+    MOB_RANGE1 = 50;
+    MOB_RANGE2 = 200;
+    MOB_AZI = 20;
+    MOB_ELEVUP = 45;
+    MOB_ELEVDO = -45;
+}
+
+instance FOCUS_MAGIC(C_FOCUS) {
+    NPC_RANGE1 = 0;
+    NPC_RANGE2 = 3500;
+    NPC_AZI = 45;
+    NPC_ELEVUP = 90;
+    NPC_ELEVDO = -85;
+    NPC_PRIO = 1;
+    ITEM_RANGE1 = 0;
+    ITEM_RANGE2 = 3000;
+    ITEM_AZI = 45;
+    ITEM_ELEVUP = 45;
+    ITEM_ELEVDO = -45;
+    ITEM_PRIO = 0;
+    MOB_RANGE1 = 0;
+    MOB_RANGE2 = 3000;
+    MOB_AZI = 45;
+    MOB_ELEVUP = 45;
+    MOB_ELEVDO = -45;
+    MOB_PRIO = -(1);
+}
+

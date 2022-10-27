@@ -1,0 +1,47 @@
+func void ZS_CONCERT_TASSACK() {
+    PERCEPTION_SET_NONE();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_CONCERT_TASSACK_LOOP() {
+    if (NPC_ISONFP(SELF, "INEXTREMO")) {
+        AI_ALIGNTOFP(SELF);
+        if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+            SELF.AIVAR[19] = NOTINPOS;
+        };
+    };
+    if (WLD_ISFPAVAILABLE(SELF, "INEXTREMO")) {
+        AI_GOTOFP(SELF, "INEXTREMO");
+        AI_STANDUP(SELF);
+        AI_ALIGNTOFP(SELF);
+        SELF.AIVAR[19] = NOTINPOS_WALK;
+    };
+    AI_ALIGNTOWP(SELF);
+    if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+        SELF.AIVAR[19] = NOTINPOS;
+    };
+    if ((SELF.AIVAR[19]) == (NOTINPOS)) {
+        if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(NONE_80001_DAWID))) {
+            AI_PLAYANI(SELF, "S_SILLY_1");
+        } else if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(NONE_80002_MIKI))) {
+            AI_PLAYANI(SELF, "S_CANCAN");
+        } else if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(NONE_80003_SHAREC))) {
+            AI_PLAYANI(SELF, "S_GANGAM");
+        } else if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(NONE_80004_KIEP))) {
+            AI_PLAYANI(SELF, "S_DANCE_3");
+        } else if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(NONE_80000_LUCY))) {
+            AI_PLAYANI(SELF, "S_YMCA");
+        };
+        SELF.AIVAR[19] = ISINPOS;
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_CONCERT_TASSACK_END() {
+}
+

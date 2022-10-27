@@ -1,0 +1,31 @@
+func void ZS_MM_RTN_ORCSIT() {
+    PERCEPTION_SET_MONSTER_RTN();
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((HLP_STRCMP(NPC_GETNEARESTWP(SELF), SELF.WP)) == (FALSE)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    B_MM_DESYNCHRONIZE();
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_MM_RTN_ORCSIT_LOOP() {
+    if ((!(WLD_ISTIME(SELF.AIVAR[40], 0, SELF.AIVAR[41], 0))) && ((SELF.AIVAR[40]) != (ONLYROUTINE))) {
+        AI_STARTSTATE(SELF, 0x16618, 1, "");
+        return LOOP_END;
+    };
+    if ((SELF.AIVAR[19]) == (NOTINPOS)) {
+        if (WLD_ISFPAVAILABLE(SELF, "FP_CAMPFIRE")) {
+            AI_GOTOFP(SELF, "FP_CAMPFIRE");
+        };
+        if (NPC_ISONFP(SELF, "FP_CAMPFIRE")) {
+            AI_PLAYANIBS(SELF, "T_STAND_2_GUARDSLEEP", BS_SIT);
+            SELF.AIVAR[19] = ISINPOS;
+        };
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_MM_RTN_ORCSIT_END() {
+    AI_PLAYANIBS(SELF, "T_GUARDSLEEP_2_STAND", BS_STAND);
+}
+

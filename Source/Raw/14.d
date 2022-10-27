@@ -1,0 +1,9 @@
+const int ZCOLOR_CHANNEL = 255;
+const int ZCOLOR_SHIFT_RED = 16;
+const int ZCOLOR_SHIFT_GREEN = 8;
+const int ZCOLOR_SHIFT_BLUE = 0;
+const int ZCOLOR_SHIFT_ALPHA = 24;
+const int ZCOLOR_RED = 16711680;
+const int ZCOLOR_GREEN = 65280;
+const int ZCOLOR_BLUE = 255;
+const int ZCOLOR_ALPHA = -16777216;

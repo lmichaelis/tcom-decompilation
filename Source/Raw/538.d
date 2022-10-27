@@ -1,0 +1,51 @@
+func void B_RESTARTFREEZE() {
+    if (((NPC_GETLASTHITSPELLID(SELF)) == (SPL_ICECUBE)) || ((NPC_GETLASTHITSPELLID(SELF)) == (SPL_ICEWAVE))) {
+        NPC_SETSTATETIME(SELF, 0);
+    };
+}
+
+func void B_STOPMAGICFREEZE() {
+    NPC_PERCENABLE(SELF, PERC_ASSESSMAGIC, 0xa92d);
+    NPC_CLEARAIQUEUE(SELF);
+    AI_STANDUP(SELF);
+    if ((SELF.GUILD) < (GIL_SEPERATOR_HUM)) {
+        B_ASSESSDAMAGE();
+    };
+    NPC_SETTEMPATTITUDE(SELF, ATT_HOSTILE);
+}
+
+func int ZS_MAGICFREEZE() {
+    NPC_PERCENABLE(SELF, PERC_ASSESSMAGIC, 0xab4e);
+    NPC_STOPANI(SELF, "S_FIRE_VICTIM");
+    if (!(C_BODYSTATECONTAINS(SELF, BS_UNCONSCIOUS))) {
+        AI_PLAYANIBS(SELF, "T_STAND_2_FREEZE_VICTIM", BS_UNCONSCIOUS);
+    };
+    SELF.AIVAR[53] = 0;
+    return 0 /* !broken stack! */;
+}
+
+func int ZS_MAGICFREEZE_LOOP() {
+    if ((NPC_GETSTATETIME(SELF)) > (SPL_TIME_FREEZE)) {
+        B_STOPMAGICFREEZE();
+        return LOOP_END;
+    };
+    if ((NPC_GETSTATETIME(SELF)) != (SELF.AIVAR[53])) {
+        SELF.AIVAR[53] = NPC_GETSTATETIME(SELF);
+        if ((SELF.ATTRIBUTE[0]) > ((SELF.ATTRIBUTE[0]) - (SPL_FREEZE_DAMAGE))) {
+            if ((((SELF.GUILD) == (GIL_FIREGOLEM)) || ((SELF.AIVAR[43]) == (ID_FIREWARAN))) || ((SELF.AIVAR[43]) == (ID_DRAGON_FIRE))) {
+                B_MAGICHURTNPC(OTHER, SELF, (SPL_FREEZE_DAMAGE) * (2));
+                return LOOP_CONTINUE;
+            };
+            if (((SELF.GUILD) == (GIL_ICEGOLEM)) || ((SELF.AIVAR[43]) == (ID_DRAGON_ICE))) {
+                B_MAGICHURTNPC(OTHER, SELF, (SPL_FREEZE_DAMAGE) / (2));
+                return LOOP_CONTINUE;
+            };
+            B_MAGICHURTNPC(OTHER, SELF, SPL_FREEZE_DAMAGE);
+        };
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_MAGICFREEZE_END() {
+}
+

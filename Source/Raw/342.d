@@ -1,0 +1,4 @@
+func void B_REMOVEWEAPON(var C_NPC SLF) {
+    AI_REMOVEWEAPON(SLF);
+}
+

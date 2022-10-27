@@ -1,0 +1,238 @@
+instance DIA_SEVERIN_EXIT(C_INFO) {
+    NPC = 0xe10c;
+    NR = 999;
+    CONDITION = DIA_SEVERIN_EXIT_CONDITION;
+    INFORMATION = DIA_SEVERIN_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_SEVERIN_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_SEVERIN_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_SEVERIN_HELLO(C_INFO) {
+    NPC = 0xe10c;
+    NR = 1;
+    CONDITION = DIA_SEVERIN_HELLO_CONDITION;
+    INFORMATION = DIA_SEVERIN_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You have something that doesn't belong to you!";
+}
+
+func int DIA_SEVERIN_HELLO_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 0x15e13)) && ((LOG_GETSTATUS(MIS_SQ107)) == (LOG_RUNNING))) && ((NPC_HASITEMS(SELF, 0x90a6)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int SEVERINCANSELLPAPER = 0;
+var int SEVERINCANFIGHT = 0;
+func void DIA_SEVERIN_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Severin_Hello_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_13_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Severin_Hello_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_13_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_13_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_13_07");
+    AI_LOGENTRY(TOPIC_SQ107, LOG_SQ107_SEVERIN_GOTDOC);
+    SEVERINCANFIGHT = TRUE;
+    INFO_CLEARCHOICES(0x15af3);
+    INFO_ADDCHOICE(0x15af3, "I think I need to punch you in the face...", 0x15af8);
+    INFO_ADDCHOICE(0x15af3, "How much do you think such a permit is worth?", 0x15af9);
+}
+
+func void DIA_SEVERIN_HELLO_FIGHT() {
+    B_HEALNPC_SELF();
+    AI_OUTPUT(OTHER, SELF, "DIA_Severin_Hello_fight_15_00");
+    if ((SELF.AIVAR[0]) == (FIGHT_LOST)) {
+        if ((SELF.AIVAR[45]) == (AF_RUNNING)) {
+            SELF.AIVAR[45] = AF_AFTER;
+        };
+        AI_STARTFACEANI(SELF, S_FRIGHTENED, 1, -(1));
+        NPC_EXCHANGEROUTINE(SELF, FLEE);
+        B_GIVEINVITEMS(SELF, OTHER, 0x90a6, 1);
+        AI_WAITTILLEND(SELF, OTHER);
+        AI_STOPPROCESSINFOS(SELF);
+        AI_LOGENTRY(TOPIC_SQ107, LOG_SQ107_SEVERIN_SCARED);
+    };
+    SEVERINCANFIGHT = 2;
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_fight_13_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Severin_Hello_fight_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_fight_13_03");
+    AI_LOGENTRY(TOPIC_SQ107, LOG_SQ107_SEVERIN_FIGHT);
+    AI_STOPPROCESSINFOS(SELF);
+    SELF.AIVAR[45] = AF_RUNNING;
+    B_ATTACK(SELF, OTHER, AR_NONE, 1);
+}
+
+func void DIA_SEVERIN_HELLO_PAPER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Severin_Hello_paper_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_paper_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_paper_13_02");
+    AI_LOGENTRY(TOPIC_SQ107, LOG_SQ107_SEVERIN_GOLD);
+    INFO_CLEARCHOICES(0x15af3);
+    INFO_ADDCHOICE(0x15af3, "You must be out of your mind...", 0x15afa);
+    if ((NPC_HASITEMS(OTHER, 0x859b)) >= (SQ107_SEVERINPAPER)) {
+        INFO_ADDCHOICE(0x15af3, "Deal. (100 GP)", 0x15afc);
+    };
+}
+
+func void DIA_SEVERIN_HELLO_PAPER_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Severin_Hello_paper_NO_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_paper_NO_13_01");
+    SEVERINCANSELLPAPER = TRUE;
+    INFO_CLEARCHOICES(0x15af3);
+}
+
+func void DIA_SEVERIN_HELLO_BUYPAPER() {
+    INFO_CLEARCHOICES(0x15af3);
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_paper_YES_13_01");
+    B_GIVEINVITEMS(OTHER, SELF, 0x859b, SQ107_SEVERINPAPER);
+    B_GIVEPLAYERXP(XP_SQ107_PAYFORDOC);
+    B_GIVEINVITEMS(SELF, OTHER, 0x90a6, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Severin_Hello_paper_YES_13_02");
+    SEVERINCANSELLPAPER = FALSE;
+    SEVERINCANFIGHT = FALSE;
+}
+
+func void DIA_SEVERIN_HELLO_PAPER_YES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Severin_Hello_paper_YES_15_00");
+    DIA_SEVERIN_HELLO_BUYPAPER();
+}
+
+instance DIA_SEVERIN_BUYPAPER(C_INFO) {
+    NPC = 0xe10c;
+    NR = 1;
+    CONDITION = DIA_SEVERIN_BUYPAPER_CONDITION;
+    INFORMATION = DIA_SEVERIN_BUYPAPER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "All right, give me that permit. (100 GP)";
+}
+
+func int DIA_SEVERIN_BUYPAPER_CONDITION() {
+    if (((((SEVERINCANSELLPAPER) && ((SEVERINCANFIGHT) < (2))) && ((NPC_HASITEMS(OTHER, 0x859b)) >= (SQ107_SEVERINPAPER))) && ((LOG_GETSTATUS(MIS_SQ107)) == (LOG_RUNNING))) && ((NPC_HASITEMS(SELF, 0x90a6)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_SEVERIN_BUYPAPER_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Severin_BuyPaper_15_00");
+    DIA_SEVERIN_HELLO_BUYPAPER();
+}
+
+instance DIA_SEVERIN_FIGHTFORPAPER(C_INFO) {
+    NPC = 0xe10c;
+    NR = 1;
+    CONDITION = DIA_SEVERIN_FIGHTFORPAPER_CONDITION;
+    INFORMATION = DIA_SEVERIN_HELLO_FIGHT;
+    PERMANENT = TRUE;
+    DESCRIPTION = "I think I need to punch you in the face...";
+}
+
+func int DIA_SEVERIN_FIGHTFORPAPER_CONDITION() {
+    if ((((SEVERINCANFIGHT) >= (1)) && ((LOG_GETSTATUS(MIS_SQ107)) == (LOG_RUNNING))) && ((NPC_HASITEMS(SELF, 0x90a6)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+instance DIA_SEVERIN_LEAVEME(C_INFO) {
+    NPC = 0xe10c;
+    NR = 1;
+    CONDITION = DIA_SEVERIN_LEAVEME_CONDITION;
+    INFORMATION = DIA_SEVERIN_LEAVEME_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_SEVERIN_LEAVEME_CONDITION() {
+    if ((((SQ107_GOTPAPERS) == (TRUE)) && ((SEVERINCANFIGHT) >= (1))) && (NPC_ISINSTATE(SELF, 0xf09f))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_SEVERIN_LEAVEME_INFO() {
+    B_HEALNPC_SELF();
+    DIA_IMBUSY_ANGRY();
+    if ((SELF.AIVAR[45]) == (AF_RUNNING)) {
+        SELF.AIVAR[45] = AF_AFTER;
+    };
+}
+
+instance DIA_SEVERIN_AMBIENT(C_INFO) {
+    NPC = 0xe10c;
+    NR = 200;
+    CONDITION = DIA_SEVERIN_AMBIENT_CONDITION;
+    INFORMATION = DIA_SEVERIN_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_SEVERIN_AMBIENT_CONDITION() {
+    if (((SEVERINCANFIGHT) == (0)) && ((LOG_GETSTATUS(MIS_SQ107)) != (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_SEVERIN_AMBIENT_INFO() {
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Severin_Ambient_15_01");
+    NPC_INITAMBIENTS(SELF, 2);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Severin_Ambient_03_02");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Severin_Ambient_03_03");
+    };
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_SEVERIN_PICKPOCKET(C_INFO) {
+    NPC = 0xe10c;
+    NR = 900;
+    CONDITION = DIA_SEVERIN_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_SEVERIN_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_SEVERIN_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_SEVERIN_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(0x15b08);
+    INFO_ADDCHOICE(0x15b08, DIALOG_BACK, 0x15b0c);
+    INFO_ADDCHOICE(0x15b08, DIALOG_PICKPOCKET, 0x15b0b);
+}
+
+func void DIA_SEVERIN_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        CREATEINVITEMS(SELF, 0x8592, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 0x8592, 1);
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(0x15b08);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(0x15b08);
+}
+
+func void DIA_SEVERIN_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(0x15b08);
+}
+

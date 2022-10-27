@@ -1,0 +1,8 @@
+func void STOCKS_S1() {
+    HER = HLP_GETNPC(0xc3ab);
+    if (((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(HER))) && ((SQ202_CANUSESTOCKS) == (FALSE))) {
+        AI_USEMOB(HERO, NPC_GETDETECTEDMOB(HERO), -(1));
+    };
+}
+
+instance STOCKS_S1.HER(C_NPC)

@@ -1,0 +1,70 @@
+func void B_ASSESSFOLLOWPLAYER() {
+    if (((NPC_GETDISTTONPC(SELF, HERO)) < (SELF.AIVAR[80])) && ((SELF.AIVAR[19]) == (FALSE))) {
+        NPC_CLEARAIQUEUE(SELF);
+        AI_STANDUP(SELF);
+        SELF.AIVAR[19] = TRUE;
+    };
+    B_ASSESSPLAYER();
+}
+
+func void B_ASSESSFOLLOWFIGHTSOUND() {
+    if ((((NPC_ISPLAYER(OTHER)) || (NPC_ISPLAYER(VICTIM))) || ((OTHER.AIVAR[15]) == (TRUE))) || ((VICTIM.AIVAR[15]) == (TRUE))) {
+        B_ASSESSFIGHTSOUND();
+    };
+}
+
+func void B_MOVEFOLLOWNPC() {
+}
+
+func void ZS_FOLLOW_PLAYER() {
+    SELF.SENSES = ((SENSE_SEE) | (SENSE_HEAR)) | (SENSE_SMELL);
+    SELF.SENSES_RANGE = 0xbb8;
+    NPC_SETPERCTIME(SELF, 0x3e99999a);
+    PERCEPTION_SET_MINIMAL();
+    NPC_PERCENABLE(SELF, PERC_ASSESSPLAYER, 0xb3cd);
+    NPC_PERCENABLE(SELF, PERC_ASSESSENEMY, 0xa2a1);
+    NPC_PERCENABLE(SELF, PERC_ASSESSTALK, 0xa2ad);
+    NPC_PERCENABLE(SELF, PERC_MOVEMOB, 0xa2b6);
+    NPC_PERCENABLE(SELF, PERC_ASSESSFIGHTSOUND, 0xb3ce);
+    B_RESETALL(SELF);
+    AI_STANDUP(SELF);
+    if ((SELF.AIVAR[75]) == (WALKMODE_WALK)) {
+        AI_SETWALKMODE(SELF, NPC_WALK);
+    };
+    if ((SELF.AIVAR[75]) == (WALKMODE_SNEAK)) {
+        AI_SETWALKMODE(SELF, NPC_SNEAK);
+    };
+    AI_SETWALKMODE(SELF, NPC_RUN);
+    if ((SELF.AIVAR[80]) == (0)) {
+        if ((C_FOLLOWRTN_LONGDISTANCE(SELF)) == (TRUE)) {
+            SELF.AIVAR[80] = 0x578;
+        } else {
+            SELF.AIVAR[80] = 200;
+        };
+    };
+}
+
+func int ZS_FOLLOW_PLAYER_LOOP() {
+    if ((NPC_GETDISTTONPC(SELF, HERO)) > (SELF.AIVAR[80])) {
+        if (!(C_BODYSTATECONTAINS(SELF, BS_SWIM))) {
+            if ((SELF.AIVAR[75]) == (WALKMODE_WALK)) {
+                AI_SETWALKMODE(SELF, NPC_WALK);
+            } else if ((SELF.AIVAR[75]) == (WALKMODE_SNEAK)) {
+                AI_SETWALKMODE(SELF, NPC_SNEAK);
+            } else {
+                AI_SETWALKMODE(SELF, NPC_RUN);
+            };
+        };
+        AI_GOTONPC(SELF, HERO);
+        SELF.AIVAR[19] = FALSE;
+    };
+    if ((NPC_GETSTATETIME(SELF)) > (1)) {
+        B_TURNTONPC(SELF, HERO);
+        NPC_SETSTATETIME(SELF, 0);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_FOLLOW_PLAYER_END() {
+}
+
