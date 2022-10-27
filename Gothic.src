@@ -5073,6 +5073,6 @@ Source/Raw/5075.d
 Source/init.d
 Source/externals.d
 
-Source/Ikarus/LeGo_Const_G2.d
+Source/Ikarus/Ikarus_Const_G2.d
 Source/Ikarus/Ikarus.d
 Source/Ikarus/EngineClasses_G2/oCGame.d
