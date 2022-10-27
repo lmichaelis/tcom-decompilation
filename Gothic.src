@@ -25,7 +25,6 @@ Source/Raw/29.d
 Source/Raw/30.d
 Source/Raw/31.d
 Source/Raw/32.d
-Source/Raw/33.d
 Source/Raw/34.d
 Source/Raw/35.d
 Source/Raw/36.d
@@ -5076,3 +5075,4 @@ Source/Ikarus/EngineClasses_G2/Misc.d
 Source/Ikarus/EngineClasses_G2/oCGame.d
 Source/Ikarus/EngineClasses_G2/oCInfoManager.d
 Source/Ikarus/EngineClasses_G2/oCItem.d
+Source/Ikarus/EngineClasses_G2/oCNpc.d
