@@ -39,7 +39,6 @@ Source/Raw/40.d
 Source/Raw/41.d
 Source/Raw/42.d
 Source/Raw/43.d
-Source/Raw/44.d
 Source/Raw/45.d
 Source/Raw/46.d
 Source/Raw/47.d
@@ -5075,4 +5074,5 @@ Source/init.d
 Source/externals.d
 
 Source/Ikarus/LeGo_Const_G2.d
+Source/Ikarus/Ikarus.d
 Source/Ikarus/EngineClasses_G2/oCGame.d
