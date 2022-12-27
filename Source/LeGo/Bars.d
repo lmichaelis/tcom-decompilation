@@ -12,15 +12,6 @@ class BAR {
 	var int VALUEMAX;
 };
 
-
-
-
-
-
-
-
-
-
 prototype GOTHICBAR(BAR) {
     X = (PRINT_SCREEN[0]) / (2);
     Y = (PRINT_SCREEN[1]) - (20);
@@ -42,10 +33,6 @@ class _BAR {
 	var int V1;
 	var int HIDDEN;
 };
-
-
-
-
 
 instance _BAR@(_BAR)
 func void _BAR_ARCHIVER(var _BAR THIS) {
