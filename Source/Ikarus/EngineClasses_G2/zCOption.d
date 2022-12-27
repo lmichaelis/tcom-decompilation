@@ -10,22 +10,12 @@ class ZCOPTION {
 	var string COMMANDLINE;
 };
 
-
-
-
-
-
-
-
 class ZCOPTIONSECTION {
 	var string SECNAME;
 	var int ENTRYLIST_ARRAY;
 	var int ENTRYLIST_NUMALLOC;
 	var int ENTRYLIST_NUMINARRAY;
 };
-
-
-
 
 const int SIZEOF_ZCOPTIONSECTION = 32;
 class ZCOPTIONENTRY {
@@ -38,12 +28,5 @@ class ZCOPTIONENTRY {
 	var string VARVALUETEMP;
 	var int VARFLAG;
 };
-
-
-
-
-
-
-
 
 const int SIZEOF_ZCOPTIONENTRY = 80;

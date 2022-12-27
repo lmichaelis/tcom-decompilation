@@ -62,4 +62,3 @@ func int COS(var int ANGLE) {
 func int TAN(var int X) {
     return +(DIVF(SIN(X), COS(X)));
 }
-

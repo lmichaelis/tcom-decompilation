@@ -1,5 +1,6 @@
 const int MAX_MISSIONS = 5;
 const int MAX_HITCHANCE = 5;
+
 class C_NPC {
 	var int ID;
 	var string NAME[5];
@@ -35,31 +36,6 @@ class C_NPC {
 	var int NOFOCUS;
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class C_MISSION {
 	var string NAME;
 	var string DESCRIPTION;
@@ -75,55 +51,6 @@ class C_MISSION {
 	var func OBSOLETE;
 	var func RUNNING;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class C_FOCUS {
 	var float NPC_LONGRANGE;
@@ -147,24 +74,6 @@ class C_FOCUS {
 	var int MOB_PRIO;
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class C_INFO {
 	var int NPC;
 	var int NR;
@@ -176,12 +85,6 @@ class C_INFO {
 	var int PERMANENT;
 };
 
-
-
-
-
-
-
 class C_ITEMREACT {
 	var int NPC;
 	var int TRADE_ITEM;
@@ -191,24 +94,6 @@ class C_ITEMREACT {
 	var int REQUESTED_AMOUNT;
 	var func REACTION;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 instance SELF(C_NPC)
 instance OTHER(C_NPC)

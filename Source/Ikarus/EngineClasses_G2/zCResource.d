@@ -17,14 +17,3 @@ class ZCRESOURCE {
 	var int STATECHANGEGUARD_CRITICALSECTION[6];
 	var int BITFIELD[2];
 };
-
-
-
-
-
-
-
-
-
-
-
