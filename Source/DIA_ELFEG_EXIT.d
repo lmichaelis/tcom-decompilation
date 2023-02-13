@@ -1,0 +1,216 @@
+instance DIA_ELFEG_EXIT(C_INFO) {
+    NPC = 56662;
+    NR = 999;
+    CONDITION = DIA_ELFEG_EXIT_CONDITION;
+    INFORMATION = DIA_ELFEG_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ELFEG_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ELFEG_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ELFEG_HELLO(C_INFO) {
+    NPC = 56662;
+    NR = 1;
+    CONDITION = DIA_ELFEG_HELLO_CONDITION;
+    INFORMATION = DIA_ELFEG_HELLO_INFO;
+    IMPORTANT = TRUE;
+    PERMANENT = FALSE;
+}
+
+var int DIA_ELFEG_HELLO_TOLDONCE;
+func int DIA_ELFEG_HELLO_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q501)) != (LOG_SUCCESS)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ELFEG_HELLO_INFO() {
+    if ((DIA_ELFEG_HELLO_TOLDONCE) == (FALSE)) {
+        DIA_ELFEG_HELLO_TOLDONCE = TRUE;
+        AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_Hello_03_01");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_Hello_03_02");
+    INFO_CLEARCHOICES(79828);
+    INFO_ADDCHOICE(79828, "Nothing...", 79832);
+    if (((LOG_GETSTATUS(MIS_GQ001)) == (LOG_RUNNING)) || ((LOG_GETSTATUS(MIS_GQ001)) == (LOG_SUCCESS))) {
+        if ((LOG_GETSTATUS(MIS_Q405)) != (LOG_SUCCESS)) {
+            INFO_ADDCHOICE(79828, "I'm looking for my brother.", 79833);
+        };
+    };
+}
+
+func void DIA_ELFEG_HELLO_EXIT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Elfeg_Hello_Exit_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_Hello_Exit_03_02");
+    INFO_CLEARCHOICES(79828);
+}
+
+func void DIA_ELFEG_HELLO_JORN() {
+    B_SAY(OTHER, SELF, "$MARVIN_AboutJorn3");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_Hello_Jorn_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_Hello_Jorn_03_03");
+    INFO_CLEARCHOICES(79828);
+}
+
+instance DIA_ELFEG_MAYIENTER(C_INFO) {
+    NPC = 56662;
+    NR = 1;
+    CONDITION = DIA_ELFEG_MAYIENTER_CONDITION;
+    INFORMATION = DIA_ELFEG_MAYIENTER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Can I enter the monastery?";
+}
+
+func int DIA_ELFEG_MAYIENTER_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 79828)) && ((LOG_GETSTATUS(MIS_Q501)) != (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ELFEG_MAYIENTER_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Elfeg_MayIEnter_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_MayIEnter_03_01");
+}
+
+instance DIA_ELFEG_ABOUTKLOSTER(C_INFO) {
+    NPC = 56662;
+    NR = 1;
+    CONDITION = DIA_ELFEG_ABOUTKLOSTER_CONDITION;
+    INFORMATION = DIA_ELFEG_ABOUTKLOSTER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What can you tell me about the monastery?";
+}
+
+func int DIA_ELFEG_ABOUTKLOSTER_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 79834)) && ((LOG_GETSTATUS(MIS_Q501)) != (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ELFEG_ABOUTKLOSTER_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_TellMeAboutKloster");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_AboutKloster_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_AboutKloster_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_AboutKloster_03_03");
+}
+
+instance DIA_ELFEG_ABOUTWATERMAGES(C_INFO) {
+    NPC = 56662;
+    NR = 2;
+    CONDITION = DIA_ELFEG_ABOUTWATERMAGES_CONDITION;
+    INFORMATION = DIA_ELFEG_ABOUTWATERMAGES_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What can you tell me about the Water Mages?";
+}
+
+func int DIA_ELFEG_ABOUTWATERMAGES_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 79834)) && ((LOG_GETSTATUS(MIS_Q501)) != (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ELFEG_ABOUTWATERMAGES_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_TellMeAboutWaterMages");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_AboutWaterMages_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_AboutWaterMages_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_AboutWaterMages_03_03");
+}
+
+instance DIA_ELFEG_AMBIENT(C_INFO) {
+    NPC = 56662;
+    NR = 990;
+    CONDITION = DIA_ELFEG_AMBIENT_CONDITION;
+    INFORMATION = DIA_ELFEG_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_ELFEG_AMBIENT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ELFEG_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew2");
+    if ((KAPITEL) < (4)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_Ambient_03_01");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Elfeg_Ambient_03_03");
+}
+
+instance DIA_ELFEG_LETMEOUT(C_INFO) {
+    NPC = 56662;
+    NR = 1;
+    CONDITION = DIA_ELFEG_LETMEOUT_CONDITION;
+    INFORMATION = DIA_ELFEG_LETMEOUT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Could you let me out?";
+}
+
+func int DIA_ELFEG_LETMEOUT_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q501)) == (LOG_SUCCESS)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void ELFEG_OPENGATE() {
+    WLD_SENDTRIGGER("P8_ENTRY");
+}
+
+func void DIA_ELFEG_LETMEOUT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Elfeg_LetMeOut_15_01");
+    B_SAY(SELF, OTHER, "$SURE_V3");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 79848);
+}
+
+instance DIA_ELFEG_PICKPOCKET(C_INFO) {
+    NPC = 56662;
+    NR = 900;
+    CONDITION = DIA_ELFEG_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_ELFEG_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80;
+}
+
+func int DIA_ELFEG_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ELFEG_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(79850);
+    INFO_ADDCHOICE(79850, DIALOG_BACK, 79854);
+    INFO_ADDCHOICE(79850, DIALOG_PICKPOCKET, 79853);
+}
+
+func void DIA_ELFEG_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        CREATEINVITEMS(SELF, 38248, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 38248, 1);
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(79850);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(79850);
+}
+
+func void DIA_ELFEG_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(79850);
+}
+

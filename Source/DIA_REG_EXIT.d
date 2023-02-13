@@ -1,0 +1,38 @@
+instance DIA_REG_EXIT(C_INFO) {
+    NPC = 55703;
+    NR = 999;
+    CONDITION = DIA_REG_EXIT_CONDITION;
+    INFORMATION = DIA_REG_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_REG_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_REG_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_REG_EASTEREGG(C_INFO) {
+    NPC = 55703;
+    NR = 1;
+    CONDITION = DIA_REG_EASTEREGG_CONDITION;
+    INFORMATION = DIA_REG_EASTEREGG_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_REG_EASTEREGG_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 77257)) && (NPC_ISINSTATE(SELF, 61599))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_REG_EASTEREGG_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Reg_EasterEgg_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+

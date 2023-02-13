@@ -1,0 +1,185 @@
+instance DIA_LEONARDO_EXIT(C_INFO) {
+    NPC = 58626;
+    NR = 999;
+    CONDITION = DIA_LEONARDO_EXIT_CONDITION;
+    INFORMATION = DIA_LEONARDO_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_LEONARDO_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_LEONARDO_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_LEONARDO_HELLO(C_INFO) {
+    NPC = 58626;
+    NR = 1;
+    CONDITION = DIA_LEONARDO_HELLO_CONDITION;
+    INFORMATION = DIA_LEONARDO_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Are you a fisherman?";
+}
+
+func int DIA_LEONARDO_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_LEONARDO_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Leonardo_Hello_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Hello_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Hello_13_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Hello_13_03");
+}
+
+instance DIA_LEONARDO_GETHERE(C_INFO) {
+    NPC = 58626;
+    NR = 1;
+    CONDITION = DIA_LEONARDO_GETHERE_CONDITION;
+    INFORMATION = DIA_LEONARDO_GETHERE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How did you get here?";
+}
+
+func int DIA_LEONARDO_GETHERE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 83598)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEONARDO_GETHERE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Leonardo_Gethere_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Gethere_13_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Gethere_13_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Gethere_13_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Gethere_13_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Gethere_13_09");
+}
+
+instance DIA_LEONARDO_SELLINGFISH(C_INFO) {
+    NPC = 58626;
+    NR = 2;
+    CONDITION = DIA_LEONARDO_SELLINGFISH_CONDITION;
+    INFORMATION = DIA_LEONARDO_SELLINGFISH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you sell fish for a living?";
+}
+
+func int DIA_LEONARDO_SELLINGFISH_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 83598)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEONARDO_SELLINGFISH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Leonardo_Sellingfish_15_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Sellingfish_13_12");
+    AI_OUTPUT(OTHER, SELF, "DIA_Leonardo_Sellingfish_15_13");
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Sellingfish_13_14");
+    LOG_CREATETOPIC(TOPIC_HAVENTRADER, LOG_NOTE);
+    AI_LOGENTRY(TOPIC_HAVENTRADER, LOG_TRADER_LEONARDO);
+}
+
+instance DIA_LEONARDO_TRADE(C_INFO) {
+    NPC = 58626;
+    NR = 997;
+    CONDITION = DIA_LEONARDO_TRADE_CONDITION;
+    INFORMATION = DIA_LEONARDO_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "I feel like eating fish.";
+}
+
+func int DIA_LEONARDO_TRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 83604)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEONARDO_TRADE_INFO() {
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Leonardo_Trade_15_00");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Trade_13_01");
+    B_GIVETRADEINV(SELF);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_LEONARDO_AMBIENT(C_INFO) {
+    NPC = 58626;
+    NR = 998;
+    CONDITION = DIA_LEONARDO_AMBIENT_CONDITION;
+    INFORMATION = DIA_LEONARDO_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_LEONARDO_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 83604)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEONARDO_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew4");
+    NPC_INITAMBIENTS(SELF, 3);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Ambient_13_01");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Ambient_13_02");
+        CREATEINVITEMS(SELF, 36363, 1);
+        B_USEITEM(SELF, 36363);
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (3)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Leonardo_Ambient_13_03");
+    };
+}
+
+instance DIA_LEONARDO_PICKPOCKET(C_INFO) {
+    NPC = 58626;
+    NR = 900;
+    CONDITION = DIA_LEONARDO_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_LEONARDO_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_LEONARDO_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEONARDO_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(83613);
+    INFO_ADDCHOICE(83613, DIALOG_BACK, 83617);
+    INFO_ADDCHOICE(83613, DIALOG_PICKPOCKET, 83616);
+}
+
+func void DIA_LEONARDO_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        CREATEINVITEMS(SELF, 36136, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 36136, 1);
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(83613);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(83613);
+}
+
+func void DIA_LEONARDO_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(83613);
+}
+

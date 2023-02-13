@@ -1,0 +1,45 @@
+func void QM301_CLEANUPMOVERS2() {
+    if (HLP_STRCMP(NPC_GETNEARESTWP(HERO), "PARTM2_QM301_PUDDLE_01")) {
+        if ((MOVER_QM301_PUDDLE_01) == (0)) {
+            MOVER_QM301_PUDDLE_01 = 1;
+            WLD_SENDTRIGGER("QM301_PUDDLE_01");
+            QM301_CLEANUPCOUNT();
+        };
+    };
+    if (HLP_STRCMP(NPC_GETNEARESTWP(HERO), "PARTM2_QM301_PUDDLE_02")) {
+        if ((MOVER_QM301_PUDDLE_02) == (0)) {
+            MOVER_QM301_PUDDLE_02 = 1;
+            WLD_SENDTRIGGER("QM301_PUDDLE_02");
+            QM301_CLEANUPCOUNT();
+        };
+    };
+    if (HLP_STRCMP(NPC_GETNEARESTWP(HERO), "PARTM2_QM301_PUDDLE_03")) {
+        if ((MOVER_QM301_PUDDLE_03) == (0)) {
+            MOVER_QM301_PUDDLE_03 = 1;
+            WLD_SENDTRIGGER("QM301_PUDDLE_03");
+            QM301_CLEANUPCOUNT();
+        };
+    };
+    if (HLP_STRCMP(NPC_GETNEARESTWP(HERO), "PARTM2_QM301_PUDDLE_04")) {
+        if ((MOVER_QM301_PUDDLE_04) == (0)) {
+            MOVER_QM301_PUDDLE_04 = 1;
+            WLD_SENDTRIGGER("QM301_PUDDLE_04");
+            QM301_CLEANUPCOUNT();
+        };
+    };
+    if (HLP_STRCMP(NPC_GETNEARESTWP(HERO), "PARTM2_QM301_PUDDLE_05")) {
+        if ((MOVER_QM301_PUDDLE_05) == (0)) {
+            MOVER_QM301_PUDDLE_05 = 1;
+            WLD_SENDTRIGGER("QM301_PUDDLE_05");
+            QM301_CLEANUPCOUNT();
+        };
+    };
+    if (HLP_STRCMP(NPC_GETNEARESTWP(HERO), "PARTM2_QM301_PUDDLE_06")) {
+        if ((MOVER_QM301_PUDDLE_06) == (0)) {
+            MOVER_QM301_PUDDLE_06 = 1;
+            WLD_SENDTRIGGER("QM301_PUDDLE_06");
+            QM301_CLEANUPCOUNT();
+        };
+    };
+}
+

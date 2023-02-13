@@ -1,0 +1,97 @@
+instance DIA_BRADLOCK_Q602_EXIT(C_INFO) {
+    NPC = 59925;
+    NR = 999;
+    CONDITION = DIA_BRADLOCK_Q602_EXIT_CONDITION;
+    INFORMATION = DIA_BRADLOCK_Q602_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_BRADLOCK_Q602_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_BRADLOCK_Q602_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_BRADLOCK_Q602_HELLO(C_INFO) {
+    NPC = 59925;
+    NR = 1;
+    CONDITION = DIA_BRADLOCK_Q602_HELLO_CONDITION;
+    INFORMATION = DIA_BRADLOCK_Q602_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_BRADLOCK_Q602_HELLO_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q602)) == (LOG_RUNNING)) && ((NPC_GETDISTTONPC(SELF, OTHER)) <= (500))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_BRADLOCK_Q602_HELLO_INFO() {
+    AI_TURNTONPC(NONE_10062_VOLKERGUARD_Q602, HERO);
+    AI_TURNTONPC(NONE_10063_VOLKERGUARD_Q602, HERO);
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Bradlock_Q602_Hello_03_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Bradlock_Q602_Hello_03_04");
+    INFO_CLEARCHOICES(90551);
+    INFO_ADDCHOICE(90551, "Tell me where the Usurer is.", 90556);
+    INFO_ADDCHOICE(90551, "Why did you kill Lorenzo?", 90554);
+    NPC_EXCHANGEROUTINE(SLD_10000_ADELARD_Q602, "Q602_LORENZO");
+}
+
+func void DIA_BRADLOCK_Q602_HELLO_WHY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Bradlock_Q602_Hello_Why_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Bradlock_Q602_Hello_Why_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Bradlock_Q602_Hello_Why_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Bradlock_Q602_Hello_Why_03_04");
+    INFO_ADDCHOICE(90551, "Why aren't you helping defend the city from the Wolf Sons?", 90555);
+}
+
+func void DIA_BRADLOCK_Q602_HELLO_WHY_HELP() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Bradlock_Q602_Hello_Help_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Bradlock_Q602_Hello_Help_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Bradlock_Q602_Hello_Help_03_03");
+}
+
+func void DIA_BRADLOCK_Q602_HELLO_WHERE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Bradlock_Q602_Hello_Where_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Bradlock_Q602_Hello_Where_03_02");
+    INFO_ADDCHOICE(90551, "Enough of this talk. The Usurer will receive the punishment he deserves.", 90560);
+    INFO_ADDCHOICE(90551, "I'll get him later today and gut him personally.", 90559);
+    INFO_ADDCHOICE(90551, "His head will sooner be impaled in front of the City Hall.", 90558);
+}
+
+func void DIA_BRADLOCK_Q602_HELLO_FIGHT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Bradlock_Q602_Hello_Fight_03_02");
+    INFO_CLEARCHOICES(90551);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_FUNCTION(SELF, 90561);
+    NPC_EXCHANGEROUTINE(NONE_2246_BRADLOCK_Q602, "Q602_FIGHT");
+}
+
+func void DIA_BRADLOCK_Q602_HELLO_WHERE_FIGHT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Bradlock_Q602_Hello_Fight_15_01");
+    DIA_BRADLOCK_Q602_HELLO_FIGHT();
+}
+
+func void DIA_BRADLOCK_Q602_HELLO_WHERE_ANGRY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Bradlock_Q602_Hello_Angry_15_01");
+    DIA_BRADLOCK_Q602_HELLO_FIGHT();
+}
+
+func void DIA_BRADLOCK_Q602_HELLO_WHERE_VOLKER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Bradlock_Q602_Hello_Volker_15_01");
+    DIA_BRADLOCK_Q602_HELLO_FIGHT();
+}
+
+func void BRADLOCK_STARTFIGHT() {
+    Q602_BRADLOCKFIGHT();
+}
+

@@ -1,0 +1,36 @@
+func void ZS_WOODCUTTER() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    if ((C_BODYSTATECONTAINS(SELF, BS_UNCONSCIOUS)) && (C_BODYSTATECONTAINS(SELF, BS_DEAD))) {
+        if ((NPC_HASITEMS(SELF, 34014)) == (1)) {
+            NPC_REMOVEINVITEM(SELF, 34014);
+        };
+    };
+    if ((NPC_HASITEMS(SELF, 34014)) == (0)) {
+        CREATEINVITEM(SELF, 34014);
+    };
+}
+
+func int ZS_WOODCUTTER_LOOP() {
+    var int RANDOM;
+    if ((!(C_BODYSTATECONTAINS(SELF, BS_SIT))) && (WLD_ISMOBAVAILABLE(SELF, "WOODCUTTER"))) {
+        AI_USEMOB(SELF, "WOODCUTTER", 1);
+    };
+    if ((NPC_GETSTATETIME(SELF)) > (12)) {
+        RANDOM = HLP_RANDOM(3);
+        if ((RANDOM) == (0)) {
+            AI_PLAYANIBS(SELF, "R_WOODCUTTER_RANDOM_01_BLEND", BS_STAND);
+        };
+        NPC_SETSTATETIME(SELF, 0);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_WOODCUTTER_END() {
+    AI_USEMOB(SELF, "WOODCUTTER", -(1));
+}
+

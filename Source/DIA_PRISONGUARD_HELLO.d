@@ -1,0 +1,56 @@
+instance DIA_PRISONGUARD_HELLO(C_INFO) {
+    NPC = 52771;
+    NR = 1;
+    CONDITION = DIA_PRISONGUARD_HELLO_CONDITION;
+    INFORMATION = DIA_PRISONGUARD_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_PRISONGUARD_HELLO_CONDITION() {
+    if (((OTHER.GUILD) == (GIL_MIL)) && ((BECOMEAGUARD_TAVERNPART) == (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PRISONGUARD_HELLO_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_PrisonGuard_HELLO_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_PrisonGuard_HELLO_03_02");
+    if ((FMQ003_PATROLSLUMSCHOSEN) == (TRUE)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_PrisonGuard_HELLO_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_PrisonGuard_HELLO_03_04");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_PrisonGuard_HELLO_03_05");
+    B_STOPLOOKAT(SELF);
+    CREATEINVITEMS(SELF, 33984, 1);
+    AI_USEITEM(SELF, 33984);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_PRISONGUARD_BUSY(C_INFO) {
+    NPC = 52771;
+    NR = 1;
+    CONDITION = DIA_PRISONGUARD_BUSY_CONDITION;
+    INFORMATION = DIA_PRISONGUARD_BUSY_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_PRISONGUARD_BUSY_CONDITION() {
+    if ((((OTHER.GUILD) == (GIL_MIL)) && ((BECOMEAGUARD_TAVERNPART) == (1))) && ((NPC_KNOWSINFO(OTHER, 67055)) == (FALSE))) {
+        return FALSE;
+    };
+    if (NPC_ISINSTATE(SELF, 61599)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_PRISONGUARD_BUSY_INFO() {
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        DIA_IMBUSY_ANGRY();
+    };
+    DIA_IMBUSY_CALM();
+}
+

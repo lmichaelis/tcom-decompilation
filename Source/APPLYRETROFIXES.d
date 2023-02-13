@@ -1,0 +1,5 @@
+func void APPLYRETROFIXES(var int SAVEVERSION, var int CURRENTVERSION) {
+    MEM_INFO(CS4("Applying retrofixes: from ", I2S(SAVEVERSION), " to ", I2S(CURRENTVERSION)));
+    FOREACHHNDL(21897, 94869);
+}
+

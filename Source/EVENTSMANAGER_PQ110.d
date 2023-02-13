@@ -1,0 +1,19 @@
+func void EVENTSMANAGER_PQ110() {
+    if ((LOG_GETSTATUS(MIS_PQ110)) != (LOG_RUNNING)) {
+        return;
+    };
+    if ((PQ110_FIGHTWITHTHIEF) == (1)) {
+        if (NPC_ISDEAD(NONE_14000_THIEF)) {
+            PQ110_FIGHTWITHTHIEF = 2;
+            B_LOGENTRY(TOPIC_PQ110, LOG_PQ110_THIEFISDEAD);
+        };
+    };
+    if ((PQ110_FIGHTWITHTHIEF) == (2)) {
+        if ((((NPC_HASITEMS(NONE_14000_THIEF, 37702)) == (0)) && ((NPC_HASITEMS(NONE_14000_THIEF, 37734)) == (0))) && ((NPC_HASITEMS(NONE_14000_THIEF, 38186)) == (0))) {
+            PQ110_FIGHTWITHTHIEF = 3;
+            PQ110_THIEFKILLEDROBBED = TRUE;
+            B_LOGENTRY(TOPIC_PQ110, LOG_PQ110_THIEFSCROLLS);
+        };
+    };
+}
+

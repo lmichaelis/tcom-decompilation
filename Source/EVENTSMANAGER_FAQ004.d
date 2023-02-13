@@ -1,0 +1,12 @@
+func void EVENTSMANAGER_FAQ004() {
+    if ((LOG_GETSTATUS(MIS_FAQ004)) != (LOG_RUNNING)) {
+        return;
+    };
+    if ((FAQ004_MARVINFOUNDLOSTFISHERMAN) == (FALSE)) {
+        if ((NPC_HASITEMS(HERO, 37177)) >= (1)) {
+            B_LOGENTRY(TOPIC_FAQ004, LOG_FAQ004_FOUNDFISHERMAN);
+            FAQ004_MARVINFOUNDLOSTFISHERMAN = TRUE;
+        };
+    };
+}
+

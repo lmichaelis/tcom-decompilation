@@ -1,0 +1,41 @@
+func void ZS_PLAY_LUTE_TAVERN01() {
+    PERCEPTION_SET_MINIMAL();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    if ((NPC_HASITEMS(SELF, 33676)) == (0)) {
+        CREATEINVITEM(SELF, 33676);
+    };
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_PLAY_LUTE_TAVERN01_LOOP() {
+    if (NPC_ISONFP(SELF, "LUTE")) {
+        AI_ALIGNTOFP(SELF);
+        if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+            SELF.AIVAR[19] = NOTINPOS;
+        };
+    };
+    if (WLD_ISFPAVAILABLE(SELF, "LUTE")) {
+        AI_GOTOFP(SELF, "LUTE");
+        AI_STANDUP(SELF);
+        AI_ALIGNTOFP(SELF);
+        SELF.AIVAR[19] = NOTINPOS_WALK;
+    };
+    AI_ALIGNTOWP(SELF);
+    if ((SELF.AIVAR[19]) == (NOTINPOS_WALK)) {
+        SELF.AIVAR[19] = NOTINPOS;
+    };
+    if ((SELF.AIVAR[19]) == (NOTINPOS)) {
+        AI_USEITEMTOSTATE(SELF, 33676, 1);
+        SELF.AIVAR[19] = ISINPOS;
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_PLAY_LUTE_TAVERN01_END() {
+    AI_USEITEMTOSTATE(SELF, 33676, -(1));
+}
+

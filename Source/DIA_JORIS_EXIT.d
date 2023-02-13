@@ -1,0 +1,170 @@
+instance DIA_JORIS_EXIT(C_INFO) {
+    NPC = 56176;
+    NR = 999;
+    CONDITION = DIA_JORIS_EXIT_CONDITION;
+    INFORMATION = DIA_JORIS_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_JORIS_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_JORIS_EXIT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Joris_EXIT_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Joris_EXIT_03_02");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_JORIS_WHO(C_INFO) {
+    NPC = 56176;
+    NR = 1;
+    CONDITION = DIA_JORIS_WHO_CONDITION;
+    INFORMATION = DIA_JORIS_WHO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_JORIS_WHO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_JORIS_WHO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Joris_Who_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Joris_Who_03_02");
+    INFO_CLEARCHOICES(78146);
+    INFO_ADDCHOICE(78146, "I don't know anything about mills.", 78149);
+    INFO_ADDCHOICE(78146, "It is indeed impressive.", 78150);
+}
+
+func void DIA_JORIS_WHO_DUNNO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Joris_Who_Dunno_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Joris_Who_Dunno_03_02");
+    INFO_CLEARCHOICES(78146);
+}
+
+func void DIA_JORIS_WHO_NICE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Joris_Who_Nice_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Joris_Who_Nice_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Joris_Who_Nice_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Joris_Who_Nice_03_04");
+    INFO_CLEARCHOICES(78146);
+}
+
+instance DIA_JORIS_BERMAR(C_INFO) {
+    NPC = 56176;
+    NR = 2;
+    CONDITION = DIA_JORIS_BERMAR_CONDITION;
+    INFORMATION = DIA_JORIS_BERMAR_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What can you tell me about Bermar?";
+}
+
+func int DIA_JORIS_BERMAR_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 78146)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JORIS_BERMAR_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Joris_Bermar_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Joris_Bermar_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Joris_Bermar_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Joris_Bermar_03_04");
+}
+
+instance DIA_JORIS_AMBIENT(C_INFO) {
+    NPC = 56176;
+    NR = 200;
+    CONDITION = DIA_JORIS_AMBIENT_CONDITION;
+    INFORMATION = DIA_JORIS_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_JORIS_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 78146)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JORIS_AMBIENT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Joris_Ambient_15_01");
+    NPC_INITAMBIENTS(SELF, 2);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Joris_Ambient_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Joris_Ambient_03_03");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Joris_Ambient_03_04");
+    };
+}
+
+instance DIA_JORIS_TRADE(C_INFO) {
+    NPC = 56176;
+    NR = 800;
+    CONDITION = DIA_JORIS_TRADE_CONDITION;
+    INFORMATION = DIA_JORIS_TRADE_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Show me your wares.";
+    TRADE = TRUE;
+}
+
+func int DIA_JORIS_TRADE_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 78146)) && ((KAPITEL) != (5))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JORIS_TRADE_INFO() {
+    var int JORIS_TRADE_CHECKINFO;
+    B_SAY(OTHER, SELF, "$MARVIN_LetsTrade2");
+    B_GIVETRADEINV(SELF);
+    if ((JORIS_TRADE_CHECKINFO) == (FALSE)) {
+        JORIS_TRADE_CHECKINFO = TRUE;
+        LOG_CREATETOPIC(TOPIC_OTHERTRADER, LOG_NOTE);
+        AI_LOGENTRY(TOPIC_OTHERTRADER, LOG_TRADER_JORIS);
+    };
+}
+
+instance DIA_JORIS_PICKPOCKET(C_INFO) {
+    NPC = 56176;
+    NR = 900;
+    CONDITION = DIA_JORIS_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_JORIS_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_JORIS_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JORIS_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(78161);
+    INFO_ADDCHOICE(78161, DIALOG_BACK, 78165);
+    INFO_ADDCHOICE(78161, DIALOG_PICKPOCKET, 78164);
+}
+
+func void DIA_JORIS_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(78161);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(78161);
+}
+
+func void DIA_JORIS_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(78161);
+}
+

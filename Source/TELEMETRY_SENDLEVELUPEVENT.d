@@ -1,0 +1,15 @@
+func void TELEMETRY_SENDLEVELUPEVENT(var int LEVEL) {
+}
+
+func void TELEMETRY_KILLNPCEVENT(var C_NPC NPC) {
+}
+
+func void TELEMETRY_PLAYERDEADEVENT(var C_NPC ATTACKER) {
+}
+
+func void TELEMETRY_PLAYERBUY(var int TRADER, var int ITEM, var int AMOUNT) {
+}
+
+func void TELEMETRY_PLAYERTEACHFIGHT(var C_NPC TEACHER, var int TALENT, var int PERCENT) {
+}
+

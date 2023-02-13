@@ -1,0 +1,172 @@
+instance DIA_ZACKY_EXIT(C_INFO) {
+    NPC = 56762;
+    NR = 999;
+    CONDITION = DIA_ZACKY_EXIT_CONDITION;
+    INFORMATION = DIA_ZACKY_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ZACKY_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ZACKY_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void TRAP24_ZACKY_GOLEM_SPAWN() {
+    WLD_PLAYEFFECT("spellFX_INCOVATION_BLUE", ICEGOLEM_ZACKY, ICEGOLEM_ZACKY, 0, 0, 0, FALSE);
+    WLD_INSERTNPC(50549, "PART8_MONASTERY_GOLEM");
+}
+
+instance DIA_ZACKY_ZACKYGOLEMSUMMON(C_INFO) {
+    NPC = 56762;
+    NR = 1;
+    CONDITION = DIA_ZACKY_ZACKYGOLEMSUMMON_CONDITION;
+    INFORMATION = DIA_ZACKY_ZACKYGOLEMSUMMON_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ZACKY_ZACKYGOLEMSUMMON_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ZACKY_ZACKYGOLEMSUMMON_INFO() {
+    SELF.AIVAR[15] = TRUE;
+    AI_PLAYANI(SELF, "T_PRACTICEMAGIC4");
+    AI_WAIT(HERO, 1073741824);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(HERO, 80351);
+}
+
+instance DIA_ZACKY_AFTEREVENT(C_INFO) {
+    NPC = 56762;
+    NR = 2;
+    CONDITION = DIA_ZACKY_AFTEREVENT_CONDITION;
+    INFORMATION = DIA_ZACKY_AFTEREVENT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ZACKY_AFTEREVENT_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 80352)) && (NPC_ISDEAD(ICEGOLEM_ZACKY))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACKY_AFTEREVENT_INFO() {
+    SELF.AIVAR[15] = FALSE;
+    AI_OUTPUT(SELF, OTHER, "DIA_Zacky_AfterEvent_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Zacky_AfterEvent_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zacky_AfterEvent_03_03");
+}
+
+instance DIA_ZACKY_WHATAREYOUDOINGHERE(C_INFO) {
+    NPC = 56762;
+    NR = 3;
+    CONDITION = DIA_ZACKY_WHATAREYOUDOINGHERE_CONDITION;
+    INFORMATION = DIA_ZACKY_WHATAREYOUDOINGHERE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What are you doing here?";
+}
+
+func int DIA_ZACKY_WHATAREYOUDOINGHERE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 80355)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACKY_WHATAREYOUDOINGHERE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zacky_WhatareYouDoingHere_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zacky_WhatareYouDoingHere_03_02");
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_WAIT(HERO, 1073741824);
+    AI_OUTPUT(SELF, OTHER, "DIA_Zacky_WhatareYouDoingHere_03_03");
+    LOG_CREATETOPIC(TOPIC_MONASTERYTRADER, LOG_NOTE);
+    AI_LOGENTRY(TOPIC_MONASTERYTRADER, LOG_TRADER_ZACKY);
+}
+
+instance DIA_ZACKY_SCROLLSTRADE(C_INFO) {
+    NPC = 56762;
+    NR = 1;
+    CONDITION = DIA_ZACKY_SCROLLSTRADE_CONDITION;
+    INFORMATION = DIA_ZACKY_SCROLLSTRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Let me see those scrolls.";
+}
+
+func int DIA_ZACKY_SCROLLSTRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 80358)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACKY_SCROLLSTRADE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zacky_ScrollsTrade_15_01");
+    B_GIVETRADEINV_ZACKY(SELF);
+}
+
+instance DIA_ZACKY_ABOUTCASPAR(C_INFO) {
+    NPC = 56762;
+    NR = 2;
+    CONDITION = DIA_ZACKY_ABOUTCASPAR_CONDITION;
+    INFORMATION = DIA_ZACKY_ABOUTCASPAR_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Did you hear about what was going on in the nearby cemetery?";
+}
+
+func int DIA_ZACKY_ABOUTCASPAR_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 80358)) && ((SQ508_RESULT) != (0))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACKY_ABOUTCASPAR_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Zacky_AboutCaspar_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zacky_AboutCaspar_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Zacky_AboutCaspar_15_03");
+    if ((SQ508_RESULT) == (1)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Zacky_AboutCaspar_15_04");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Zacky_AboutCaspar_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zacky_AboutCaspar_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Zacky_AboutCaspar_15_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Zacky_AboutCaspar_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zacky_AboutCaspar_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zacky_AboutCaspar_03_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Zacky_AboutCaspar_03_11");
+}
+
+instance DIA_ZACKY_AMBIENT(C_INFO) {
+    NPC = 56762;
+    NR = 990;
+    CONDITION = DIA_ZACKY_AMBIENT_CONDITION;
+    INFORMATION = DIA_ZACKY_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_ZACKY_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 80358)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ZACKY_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew4");
+    if (!(NPC_KNOWSINFO(OTHER, 80364))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Zacky_Ambient_03_01");
+    };
+    if (NPC_KNOWSINFO(OTHER, 80364)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Zacky_Ambient_03_02");
+    };
+}
+

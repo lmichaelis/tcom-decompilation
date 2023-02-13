@@ -1,0 +1,592 @@
+var int JAVAD_Q305_WHO;
+var int JAVAD_Q305_WHY;
+instance DIA_JAVAD_EXIT(C_INFO) {
+    NPC = 58566;
+    NR = 999;
+    CONDITION = DIA_JAVAD_EXIT_CONDITION;
+    INFORMATION = DIA_JAVAD_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_JAVAD_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_JAVAD_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_JAVAD_Q305(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_Q305_CONDITION;
+    INFORMATION = DIA_JAVAD_Q305_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_JAVAD_Q305_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q305)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 85173))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_Q305_INFO() {
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q305_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_Q305_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q305_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q305_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_Q305_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q305_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q305_03_07");
+    AI_STOPPROCESSINFOS(SELF);
+    B_ATTACK(SELF, OTHER, AR_KILL, 1);
+    Q305_JAVADFIGHT = 1;
+}
+
+instance DIA_JAVAD_KILLMARVIN(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_KILLMARVIN_CONDITION;
+    INFORMATION = DIA_JAVAD_KILLMARVIN_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_JAVAD_KILLMARVIN_CONDITION() {
+    if ((((NPC_HASITEMS(OTHER, 37256)) >= (1)) && ((LOG_GETSTATUS(MIS_Q305)) == (LOG_RUNNING))) && ((Q305_JAVAD_WENTTONEWHOME) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_KILLMARVIN_INFO() {
+    B_SAY(SELF, OTHER, "$DirtyThief");
+    AI_STOPPROCESSINFOS(SELF);
+    B_ATTACK(SELF, OTHER, AR_KILL, 1);
+    SELF.AIVAR[52] = TRUE;
+    AI_LOGENTRY(TOPIC_Q305, LOG_Q305_JAVAD_THIEF);
+}
+
+instance DIA_JAVAD_CALMDOWN(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_CALMDOWN_CONDITION;
+    INFORMATION = DIA_JAVAD_CALMDOWN_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_JAVAD_CALMDOWN_CONDITION() {
+    if (((Q305_JAVADFIGHT) == (2)) && (NPC_ISINSTATE(SELF, 61599))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_CALMDOWN_GONEWHOME() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Place_03_16");
+    AI_TAKEITEM(SELF, ITMIS_Q305_GOLDCHEST_TRACE_JAVAD);
+    INFO_CLEARCHOICES(83169);
+    AI_STOPPROCESSINFOS(SELF);
+    SELF.FLAGS = 2;
+    if ((Q305_JAVAD_WENTTONEWHOME) == (1)) {
+        NPC_EXCHANGEROUTINE(SELF, "PIRATES");
+    };
+    if ((Q305_JAVAD_WENTTONEWHOME) == (2)) {
+        NPC_EXCHANGEROUTINE(SELF, "CITY");
+    };
+    CREATEINVITEMS(SELF, 36437, 1);
+    AI_USEITEM(SELF, 36437);
+    SELF.ATTRIBUTE[0] = SELF.ATTRIBUTE[1];
+}
+
+func void DIA_JAVAD_CALMDOWN_INFO() {
+    B_HEALNPC_SELF();
+    B_STANDUP();
+    if ((NPC_HASITEMS(OTHER, 37256)) >= (1)) {
+        DIA_JAVAD_KILLMARVIN_INFO();
+    };
+    Q305_JAVADFIGHT = 3;
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_15_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_03_07");
+    INFO_CLEARCHOICES(83169);
+    INFO_ADDCHOICE(83169, "Maybe we can work something out?", 83175);
+    INFO_ADDCHOICE(83169, "Why are you still sitting here?", 83174);
+    INFO_ADDCHOICE(83169, "Who are you anyway?", 83173);
+}
+
+func void DIA_JAVAD_CALMDOWN_WHO() {
+    JAVAD_Q305_WHO = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Who_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Who_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Who_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Who_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Who_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Who_15_06");
+}
+
+func void DIA_JAVAD_CALMDOWN_WHY() {
+    JAVAD_Q305_WHY = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Why_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Why_03_02");
+}
+
+func void DIA_JAVAD_CALMDOWN_TALK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Talk_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Talk_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Talk_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Talk_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Talk_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Talk_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Talk_03_07");
+    INFO_CLEARCHOICES(83169);
+    INFO_ADDCHOICE(83169, "It will be easier if I kill you.", 83176);
+    INFO_ADDCHOICE(83169, "All right. I'll get those beasts. What about you?", 83177);
+}
+
+func void DIA_JAVAD_CALMDOWN_TALK_KILL() {
+    Q305_JAVADFIGHT = 4;
+    if ((NPC_HASEQUIPPEDMELEEWEAPON(SELF)) == (FALSE)) {
+        CREATEINVITEMS(SELF, 33730, 1);
+        AI_EQUIPBESTMELEEWEAPON(SELF);
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Kill_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Kill_03_02");
+    AI_LOGENTRY(TOPIC_Q305, LOG_Q305_JAVAD_FINALFIGHT);
+    SELF.AIVAR[52] = TRUE;
+    INFO_CLEARCHOICES(83169);
+    AI_STOPPROCESSINFOS(SELF);
+    B_ATTACK(SELF, OTHER, AR_KILL, 1);
+}
+
+func void DIA_JAVAD_CALMDOWN_TALK_SURE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Sure_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Sure_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Sure_03_03");
+    INFO_CLEARCHOICES(83169);
+    INFO_ADDCHOICE(83169, "I know where you can find warriors. (Send to Haven)", 83178);
+    INFO_ADDCHOICE(83169, "I know a place where you could be useful. (Send to town)", 83179);
+}
+
+func void DIA_JAVAD_CALMDOWN_TALK_SURE_WARRIORS() {
+    Q305_JAVAD_WENTTONEWHOME = 1;
+    Q305_ENOUGHSTUFF_COUNT = (Q305_ENOUGHSTUFF_COUNT) + (1);
+    PRINTD(CS2("Zdobyte przedmioty: ", INTTOSTRING(Q305_ENOUGHSTUFF_COUNT)));
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Warriors_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Warriors_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Warriors_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Warriors_03_04");
+    AI_LOGENTRY(TOPIC_Q305, LOG_Q305_JAVAD_WENTTO_HAVEN);
+    DIA_JAVAD_CALMDOWN_GONEWHOME();
+}
+
+func void DIA_JAVAD_CALMDOWN_TALK_SURE_WARRIORS_PLACE() {
+    Q305_JAVAD_WENTTONEWHOME = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Place_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Place_15_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Place_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_CalmDown_Place_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_CalmDown_Place_03_05");
+    AI_LOGENTRY(TOPIC_Q305, LOG_Q305_JAVAD_WENTTO_CITY);
+    DIA_JAVAD_CALMDOWN_GONEWHOME();
+}
+
+instance DIA_JAVAD_WHO(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_WHO_CONDITION;
+    INFORMATION = DIA_JAVAD_WHO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_JAVAD_WHO_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 83180)) && ((JAVAD_Q305_WHO) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_WHO_INFO() {
+    DIA_JAVAD_CALMDOWN_WHO();
+}
+
+instance DIA_JAVAD_WHY(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_WHY_CONDITION;
+    INFORMATION = DIA_JAVAD_WHY_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_JAVAD_WHY_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 83183)) && ((JAVAD_Q305_WHY) == (FALSE))) && ((Q305_JAVAD_WENTTONEWHOME) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_WHY_INFO() {
+    DIA_JAVAD_CALMDOWN_WHY();
+}
+
+instance DIA_JAVAD_TOURNAMENTFIGHT(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_TOURNAMENTFIGHT_CONDITION;
+    INFORMATION = DIA_JAVAD_TOURNAMENTFIGHT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_JAVAD_TOURNAMENTFIGHT_CONDITION() {
+    if (((Q306_STATE) == (9)) && ((SELF.AIVAR[45]) == (AF_NONE))) {
+        if (((NPC_GETDISTTOWP(SELF, "P17_HAVEN_ARENA_OPPONENT_02")) <= (500)) && ((NPC_GETDISTTOWP(HERO, "P17_HAVEN_ARENA_OPPONENT_01")) >= (500))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int Q306_FIGHTWITHJAVED;
+func void JAVAD_ARENAFIGHT() {
+    B_HEALNPC_SELF();
+    Q306_FIGHTWITHJAVED = 1;
+    HERO.AIVAR[95] = TRUE;
+    HERO.AIVAR[94] = TRUE;
+    SELF.AIVAR[94] = TRUE;
+    HERO.AIVAR[96] = 10;
+    SELF.AIVAR[96] = 10;
+    SELF.AIVAR[45] = AF_RUNNING;
+    B_ATTACK(SELF, HERO, AR_NONE, 1);
+}
+
+func void JAVAD_TOURNAMENT_CHANGEMUSIC() {
+    Q306_CHECKBABEMUSIC = 1;
+    MUSIC_OVERRIDETRACK(21947);
+    HERO.AIVAR[4] = FALSE;
+}
+
+func void DIA_JAVAD_TOURNAMENTFIGHT_INFO() {
+    if ((NPC_HASEQUIPPEDMELEEWEAPON(SELF)) == (FALSE)) {
+        CREATEINVITEMS(SELF, 39578, 1);
+        AI_EQUIPBESTMELEEWEAPON(SELF);
+    };
+    NONE_6331_JAVAD.FLAGS = NPC_FLAG_IMPORTANT;
+    Q306_STATE = 10;
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_TournamentFight_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_TournamentFight_15_02");
+    AI_FUNCTION(SELF, 83194);
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_TournamentFight_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_TournamentFight_03_04");
+    AI_FUNCTION(SELF, 83195);
+    INFO_CLEARCHOICES(83186);
+    INFO_ADDCHOICE(83186, "Javad, I have to win this tournament.", 83193);
+    INFO_ADDCHOICE(83186, "I'll be happy to check it out. Get your weapon!", 83192);
+}
+
+func void DIA_JAVAD_TOURNAMENTFIGHT_FIGHT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_TournamentFight_Fight_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_TournamentFight_Fight_03_02");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 83190);
+    JAVAD_ARENAFIGHT();
+}
+
+func void DIA_JAVAD_TOURNAMENTFIGHT_WIN() {
+    Q306_FIGHTWITHJAVED = 2;
+    SELF.AIVAR[45] = AF_RUNNING;
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_TournamentFight_Win_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_TournamentFight_Win_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_TournamentFight_Win_03_03");
+    INFO_CLEARCHOICES(83186);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 83190);
+    NPC_EXCHANGEROUTINE(SELF, "FAKEFIGHT");
+}
+
+func void JAVAD_ENABLECAMERA() {
+    DIACAM_ENABLE();
+}
+
+func void JAVAD_UNTRIGGERCAMERA() {
+    WLD_SENDUNTRIGGER("KM_ARENAFIGHT_3_01");
+}
+
+instance DIA_JAVAD_AFTERTOURNAMENTFIGHT(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_AFTERTOURNAMENTFIGHT_CONDITION;
+    INFORMATION = DIA_JAVAD_AFTERTOURNAMENTFIGHT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_JAVAD_AFTERTOURNAMENTFIGHT_CONDITION() {
+    if ((((SELF.AIVAR[64]) == (FALSE)) && ((SELF.AIVAR[0]) != (FIGHT_NONE))) && ((Q306_STATE) == (10))) {
+        if ((SELF.AIVAR[45]) != (AF_NONE)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_AFTERTOURNAMENTFIGHT_INFO() {
+    B_HEALNPC_SELF();
+    if ((SELF.AIVAR[0]) == (FIGHT_WON)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_AfterTournamentFight_03_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_AfterTournamentFight_03_06");
+    };
+    Q306_STATE = 11;
+    Q306_COUNTWINBATTLE = (Q306_COUNTWINBATTLE) + (1);
+    if ((Q306_FIGHTWITHJAVED) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_AfterTournamentFight_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_AfterTournamentFight_03_03");
+        AI_OUTPUT(OTHER, SELF, "DIA_Javad_AfterTournamentFight_15_04");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_AfterTournamentFight_03_01");
+    AI_FUNCTION(SELF, 83199);
+    SELF.AIVAR[45] = AF_NONE;
+    SELF.AIVAR[64] = TRUE;
+    NPC_EXCHANGEROUTINE(SELF, "ArenaFightWait");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void Q306_ENDJAVEDFIGHT() {
+    Q306_ALVAREZAFTERFIGHT = TRUE;
+    WLD_SENDTRIGGER("P17_HAVEN_ARENA_OPPONENT");
+    Q306_PREPARESAULFIGHT();
+}
+
+instance DIA_JAVAD_BEFOREFINAL(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_BEFOREFINAL_CONDITION;
+    INFORMATION = DIA_JAVAD_BEFOREFINAL_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_JAVAD_BEFOREFINAL_CONDITION() {
+    if ((Q306_STATE) == (23)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_BEFOREFINAL_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_BeforeFinal_13_01");
+    INFO_ADDCHOICE(83200, "No, I've already beaten plenty of opponents. Ben will be the next to fall.", 83205);
+    INFO_ADDCHOICE(83200, "Yeah, everyone talks about Ben like he's some kind of monster.", 83204);
+}
+
+func void DIA_JAVAD_BEFOREFINAL_END() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_BeforeFinal_End_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_BeforeFinal_End_13_02");
+    if ((Q306_FIGHTWITHJAVED) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_BeforeFinal_End_13_03");
+        B_GIVEINVITEMS(SELF, OTHER, 37432, 1);
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_BeforeFinal_End_13_04");
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_JAVAD_BEFOREFINAL_YES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_BeforeFinal_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_BeforeFinal_Yes_13_01");
+    DIA_JAVAD_BEFOREFINAL_END();
+}
+
+func void DIA_JAVAD_BEFOREFINAL_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_BeforeFinal_No_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_BeforeFinal_No_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_BeforeFinal_No_13_02");
+    DIA_JAVAD_BEFOREFINAL_END();
+}
+
+instance DIA_JAVAD_Q509_QUESTION(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_Q509_QUESTION_CONDITION;
+    INFORMATION = DIA_JAVAD_Q509_QUESTION_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Aren't you bored with this place already?";
+}
+
+func int DIA_JAVAD_Q509_QUESTION_CONDITION() {
+    if (((Q509_COUNTWARRIORS) < (4)) && ((LOG_GETSTATUS(MIS_Q509)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_Q509_QUESTION_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_Q509_Question_15_01");
+    if ((Q305_JAVAD_WENTTONEWHOME) == (2)) {
+        AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q509_Question_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q509_Question_03_03");
+    };
+    if ((Q305_JAVAD_WENTTONEWHOME) == (1)) {
+        AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q509_Question_03_04");
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q509_Question_03_05");
+    };
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_JAVAD_Q509_PREPARE(C_INFO) {
+    NPC = 58566;
+    NR = 1;
+    CONDITION = DIA_JAVAD_Q509_PREPARE_CONDITION;
+    INFORMATION = DIA_JAVAD_Q509_PREPARE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I'm preparing for a dangerous expedition...";
+}
+
+func int DIA_JAVAD_Q509_PREPARE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q509)) == (LOG_RUNNING)) && ((Q509_COUNTWARRIORS) < (4))) && (NPC_KNOWSINFO(OTHER, 83206))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_Q509_PREPARE_INFO() {
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_Q509_Prepare_15_01");
+    if ((Q305_JAVAD_WENTTONEWHOME) == (2)) {
+        AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q509_Prepare_03_02");
+        AI_LOGENTRY(TOPIC_Q509, LOG_Q509_JAVAD_NO);
+    };
+    if ((Q305_JAVAD_WENTTONEWHOME) == (1)) {
+        AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q509_Prepare_03_03");
+        AI_OUTPUT(OTHER, SELF, "DIA_Javad_Q509_Prepare_15_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q509_Prepare_03_05");
+        B_STANDUP();
+        AI_STOPPROCESSINFOS(SELF);
+        B_GIVEPLAYERXP(XP_VARHDAL_RECRUIT);
+        SELF.AIVAR[15] = TRUE;
+        SELF.FLAGS = 2;
+        Q509_JAVADVOLFZACKE = 1;
+        NPC_EXCHANGEROUTINE(SELF, "Q509_WAIT");
+        AI_LOGENTRY(TOPIC_Q509, LOG_Q509_JAVAD_YES);
+        AI_FUNCTION(SELF, 63308);
+    };
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_JAVAD_Q509_FEEL(C_INFO) {
+    NPC = 58566;
+    NR = 90;
+    CONDITION = DIA_JAVAD_Q509_FEEL_CONDITION;
+    INFORMATION = DIA_JAVAD_Q509_FEEL_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How's the morale?";
+}
+
+func int DIA_JAVAD_Q509_FEEL_CONDITION() {
+    if (((NPC_GETDISTTOWP(SELF, "PART5_Q509_JAVAD")) <= (2000)) && ((Q509_JAVADVOLFZACKE) == (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_Q509_FEEL_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_VolfzackMorale3");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Javad_Q509_Feel_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_JAVAD_HOWSTHERE(C_INFO) {
+    NPC = 58566;
+    NR = 900;
+    CONDITION = DIA_JAVAD_HOWSTHERE_CONDITION;
+    INFORMATION = DIA_JAVAD_HOWSTHERE_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How do you like it here?";
+}
+
+func int DIA_JAVAD_HOWSTHERE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q509)) == (LOG_RUNNING)) && ((Q509_COUNTWARRIORS) < (4))) && (NPC_KNOWSINFO(OTHER, 83206))) {
+        return FALSE;
+    };
+    if ((KAPITEL) >= (4)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_HOWSTHERE_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Javad_HowsThere_15_01");
+    if ((Q305_JAVAD_WENTTONEWHOME) == (2)) {
+        AI_STARTFACEANI(SELF, "S_SURPRISE", 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_HowsThere_03_02");
+    };
+    if ((Q305_JAVAD_WENTTONEWHOME) == (1)) {
+        AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Javad_HowsThere_03_03");
+    };
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_JAVAD_PICKPOCKET(C_INFO) {
+    NPC = 58566;
+    NR = 900;
+    CONDITION = DIA_JAVAD_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_JAVAD_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120;
+}
+
+func int DIA_JAVAD_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_JAVAD_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(83218);
+    INFO_ADDCHOICE(83218, DIALOG_BACK, 83222);
+    INFO_ADDCHOICE(83218, DIALOG_PICKPOCKET, 83221);
+}
+
+func void DIA_JAVAD_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        CREATEINVITEMS(SELF, 36359, 2);
+        B_GIVEINVITEMS(SELF, OTHER, 36359, 2);
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(83218);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(83218);
+}
+
+func void DIA_JAVAD_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(83218);
+}
+

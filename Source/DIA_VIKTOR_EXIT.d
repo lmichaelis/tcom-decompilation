@@ -1,0 +1,1187 @@
+instance DIA_VIKTOR_EXIT(C_INFO) {
+    NPC = 57528;
+    NR = 999;
+    CONDITION = DIA_VIKTOR_EXIT_CONDITION;
+    INFORMATION = DIA_VIKTOR_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_VIKTOR_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_VIKTOR_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_VIKTOR_MARTHATRIALOG(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_MARTHATRIALOG_CONDITION;
+    INFORMATION = DIA_VIKTOR_MARTHATRIALOG_INFO;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VIKTOR_MARTHATRIALOG_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q103)) == (LOG_RUNNING)) && ((Q102_JORNCHOSEN) == (TRUE))) {
+        if (NPC_KNOWSINFO(OTHER, 88127)) {
+            if (((NPC_GETDISTTOWP(BAU_703_MARTHA, BAU_703_MARTHA.WP)) <= (500)) && ((NPC_GETDISTTOWP(BAU_702_VIKTOR, BAU_702_VIKTOR.WP)) <= (500))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_MARTHATRIALOG_INFO() {
+    TRIA_INVITE(BAU_703_MARTHA);
+    TRIA_START();
+    AI_LOOKATNPC(OTHER, SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Martha_Q103_Hello_food_12_03");
+    TRIA_NEXT(BAU_703_MARTHA);
+    AI_OUTPUT(SELF, OTHER, "DIA_Martha_Q103_Hello_food_16_04");
+    TRIA_NEXT(BAU_702_VIKTOR);
+    AI_OUTPUT(SELF, OTHER, "DIA_Martha_Q103_Hello_food_12_05");
+    TRIA_NEXT(BAU_703_MARTHA);
+    AI_OUTPUT(SELF, OTHER, "DIA_Martha_Q103_Hello_food_16_06");
+    TRIA_NEXT(BAU_702_VIKTOR);
+    AI_OUTPUT(SELF, OTHER, "DIA_Martha_Q103_Hello_food_12_07");
+    INFO_CLEARCHOICES(88000);
+    INFO_ADDCHOICE(88000, "Do you have anything strong? After my recent experiences, I need a drink.", 88010);
+    INFO_ADDCHOICE(88000, "My brother's hurt. He's been bitten by bloodflies and needs help.", 88011);
+    INFO_ADDCHOICE(88000, "Food and a warm corner.", 88012);
+}
+
+var int VIKTORHELP;
+func void DIA_VIKTOR_MARTHATRIALOG_SOMETHINGELSE() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SomethingElse_12_01");
+    if ((VIKTORHELP) == (2)) {
+        VIKTORHELP = 3;
+        INFO_ADDCHOICE(88000, "Thanks for your help.", 88005);
+    };
+}
+
+func void DIA_VIKTOR_SOMETHINGELSE_THANKSFORHELP() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Somethingelse_Thanksforhelp_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Somethingelse_Thanksforhelp_12_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Somethingelse_Thanksforhelp_12_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Somethingelse_Thanksforhelp_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Somethingelse_Thanksforhelp_12_04");
+    INFO_CLEARCHOICES(88000);
+    INFO_ADDCHOICE(88000, "Could we postpone the conversation until later?", 88007);
+    INFO_ADDCHOICE(88000, "With my brother, we fled from Londram because of war.", 88009);
+}
+
+func void DIA_VIKTOR_SOMETHINGELSE_FINISHTRIALOG() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Somethingelse_talklater_12_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Somethingelse_talklater_15_02");
+    Q103_GIVEKEY();
+    SILBACHSLEEP = TRUE;
+    TRIA_FINISH();
+    AI_STOPLOOKAT(OTHER);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 62045);
+}
+
+func void DIA_VIKTOR_SOMETHINGELSE_TALKLATER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Somethingelse_talklater_15_00");
+    AI_LOGENTRY(TOPIC_Q103, LOG_Q103_MARTHATRIALOGTALKLATER);
+    DIA_VIKTOR_SOMETHINGELSE_FINISHTRIALOG();
+}
+
+var int VIKTORESCAPEWAR;
+func void DIA_VIKTOR_SOMETHINGELSE_ESCAPEWAR() {
+    VIKTORESCAPEWAR = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Somethingelse_escapewar_15_00");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Somethingelse_escapewar_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Somethingelse_escapewar_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Somethingelse_escapewar_12_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Somethingelse_escapewar_12_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Somethingelse_escapewar_12_05");
+    AI_LOGENTRY(TOPIC_Q103, LOG_Q103_MARTHATRIALOGESCAPEWAR);
+    DIA_VIKTOR_SOMETHINGELSE_FINISHTRIALOG();
+}
+
+func void DIA_MARTHA_Q103_HELLO_DRINK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Martha_Q103_Hello_drink_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Martha_Q103_Hello_drink_12_01");
+    DIA_VIKTOR_MARTHATRIALOG_SOMETHINGELSE();
+}
+
+func void DIA_MARTHA_Q103_HELLO_HURT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Martha_Q103_Hello_hurt_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Martha_Q103_Hello_hurt_12_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Martha_Q103_Hello_hurt_12_02");
+    VIKTORHELP = (VIKTORHELP) + (1);
+    DIA_VIKTOR_MARTHATRIALOG_SOMETHINGELSE();
+}
+
+func void DIA_MARTHA_Q103_HELLO_FOODANDWARMCORNER() {
+    TRIA_NEXT(BAU_702_VIKTOR);
+    AI_OUTPUT(OTHER, SELF, "DIA_Martha_Q103_Hello_foodandwarmcorner_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Martha_Q103_Hello_foodandwarmcorner_12_01");
+    TRIA_NEXT(BAU_702_VIKTOR);
+    VIKTORHELP = (VIKTORHELP) + (1);
+    DIA_VIKTOR_MARTHATRIALOG_SOMETHINGELSE();
+}
+
+instance DIA_VIKTOR_WAKEUP(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_WAKEUP_CONDITION;
+    INFORMATION = DIA_VIKTOR_WAKEUP_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VIKTOR_WAKEUP_CONDITION() {
+    if ((SILBACHSLEEP) == (2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_WAKEUP_INFO() {
+    if ((Q102_JORNCHOSEN) == (1)) {
+        SQ103_KILLMAIWENANDDARYLL();
+    };
+    SQ103_PREPARERUPERT();
+    Q103_CHANGEAIVARS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_WakeUp_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_12_01");
+    if (VIKTORESCAPEWAR) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_12_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_12_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_12_04");
+    INFO_CLEARCHOICES(88013);
+    INFO_ADDCHOICE(88013, "Where are the rest of my comrades now?", 88019);
+    INFO_ADDCHOICE(88013, "Have you seen Kurt anywhere along the way?", 88020);
+}
+
+func void DIA_VIKTOR_WAKEUP_JORN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_WakeUp_Jorn_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_Jorn_12_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_Jorn_12_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_Jorn_12_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_Jorn_12_05");
+    AI_LOGENTRY(TOPIC_Q103, LOG_Q103_VIKTORWAKEUP);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(BAU_702_VIKTOR, "Pub");
+}
+
+func void DIA_VIKTOR_WAKEUP_COUNT() {
+    var int VIKTORWAKEUPCHOICES;
+    VIKTORWAKEUPCHOICES = (VIKTORWAKEUPCHOICES) + (1);
+    if ((VIKTORWAKEUPCHOICES) == (2)) {
+        DIA_VIKTOR_WAKEUP_JORN();
+    };
+}
+
+func void DIA_VIKTOR_WAKEUP_WHERE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_WakeUp_where_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_where_12_02");
+    AI_LOGENTRY(TOPIC_Q103, LOG_Q103_EVERYONEINVILLAGE);
+    DIA_VIKTOR_WAKEUP_COUNT();
+}
+
+func void DIA_VIKTOR_WAKEUP_KURT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_WakeUp_kurt_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_kurt_12_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_WakeUp_kurt_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_kurt_12_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WakeUp_kurt_12_05");
+    DIA_VIKTOR_WAKEUP_COUNT();
+}
+
+instance DIA_VIKTOR_ABOUTSILBACH(C_INFO) {
+    NPC = 57528;
+    NR = 100;
+    CONDITION = DIA_VIKTOR_ABOUTSILBACH_CONDITION;
+    INFORMATION = DIA_VIKTOR_ABOUTSILBACH_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "What can you tell me about the village?";
+}
+
+var int ABOUTSILBACH_KURT;
+var int ABOUTSILBACH_TROUBLES;
+var int ABOUTSILBACH_HENDRIK;
+var int ABOUTSILBACH_PAY;
+func int DIA_VIKTOR_ABOUTSILBACH_CONDITION() {
+    if (((((((SILBACHSLEEP) < (2)) && ((ABOUTSILBACH_KURT) == (FALSE))) && ((NPC_KNOWSINFO(OTHER, 87790)) == (FALSE))) || (((ABOUTSILBACH_TROUBLES) == (FALSE)) && ((KAPITEL) == (1)))) || ((((ABOUTSILBACH_HENDRIK) == (FALSE)) && (NPC_KNOWSINFO(OTHER, 89381))) && ((KAPITEL) == (1)))) || ((ABOUTSILBACH_PAY) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_ABOUTSILBACH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_AboutSilbach_15_00");
+    INFO_CLEARCHOICES(88021);
+    INFO_ADDCHOICE(88021, DIALOG_BACK, 88032);
+    if ((((SILBACHSLEEP) < (2)) && ((ABOUTSILBACH_KURT) == (FALSE))) && ((NPC_KNOWSINFO(OTHER, 87790)) == (FALSE))) {
+        INFO_ADDCHOICE(88021, "Does a man named Kurt live here?", 88028);
+    };
+    if (((ABOUTSILBACH_TROUBLES) == (FALSE)) && ((KAPITEL) == (1))) {
+        INFO_ADDCHOICE(88021, "Won't we get you in trouble?", 88029);
+    };
+    if ((((ABOUTSILBACH_HENDRIK) == (FALSE)) && (NPC_KNOWSINFO(OTHER, 89381))) && ((KAPITEL) == (1))) {
+        INFO_ADDCHOICE(88021, "What do you know about the missing sentry?", 88030);
+    };
+    if ((ABOUTSILBACH_PAY) == (FALSE)) {
+        INFO_ADDCHOICE(88021, "What happens if I commit a crime?", 88031);
+    };
+}
+
+func void DIA_VIKTOR_ABOUTSILBACH_KURT() {
+    ABOUTSILBACH_KURT = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Kurtlive_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Kurtlive_12_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Kurtlive_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Kurtlive_12_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Kurtlive_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Kurtlive_12_05");
+    if (((Q102_FABIOCHOSEN) == (FALSE)) && ((SILBACHSLEEP) < (2))) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Kurtlive_15_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Kurtlive_12_07");
+    };
+}
+
+func void DIA_VIKTOR_ABOUTSILBACH_TROUBLES() {
+    ABOUTSILBACH_TROUBLES = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Problem_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Problem_12_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Problem_12_02");
+}
+
+func void DIA_VIKTOR_ABOUTSILBACH_HENDRIK() {
+    ABOUTSILBACH_HENDRIK = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_LostGuard_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_LostGuard_12_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_LostGuard_12_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_LostGuard_12_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_LostGuard_12_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_LostGuard_12_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_LostGuard_12_06");
+}
+
+func void DIA_VIKTOR_ABOUTSILBACH_PAY() {
+    ABOUTSILBACH_PAY = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Pay_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Pay_12_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Pay_12_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Pay_12_04");
+}
+
+func void DIA_VIKTOR_ABOUTSILBACH_BACK() {
+    INFO_CLEARCHOICES(88021);
+}
+
+instance DIA_VIKTOR_TEACHABOUTPLANTS(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_TEACHABOUTPLANTS_CONDITION;
+    INFORMATION = DIA_VIKTOR_TEACHABOUTPLANTS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You wouldn't happen to know who could teach me something about plants?";
+}
+
+func int DIA_VIKTOR_TEACHABOUTPLANTS_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 87790)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_TEACHABOUTPLANTS_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_teachaboutplants_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_teachaboutplants_12_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_teachaboutplants_12_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_teachaboutplants_12_03");
+}
+
+instance DIA_VIKTOR_WHEREISLOKVAR(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_WHEREISLOKVAR_CONDITION;
+    INFORMATION = DIA_VIKTOR_WHEREISLOKVAR_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Where can I find Lokvar?";
+}
+
+func int DIA_VIKTOR_WHEREISLOKVAR_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 88033)) && ((NPC_KNOWSINFO(OTHER, 88371)) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_WHEREISLOKVAR_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_whereisLokvar_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_whereisLokvar_12_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_whereisLokvar_12_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_whereisLokvar_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_whereisLokvar_12_04");
+}
+
+instance DIA_VIKTOR_WHATSGOINGON(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_WHATSGOINGON_CONDITION;
+    INFORMATION = DIA_VIKTOR_WHATSGOINGON_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VIKTOR_WHATSGOINGON_CONDITION() {
+    if ((NPC_HASITEMS(OTHER, 37068)) && ((LOG_GETSTATUS(MIS_Q106)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_WHATSGOINGON_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_WhatsGoingOn_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_WhatsGoingOn_12_02");
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, "GQ001Beggining");
+}
+
+instance DIA_VIKTOR_SQ103_POTION(C_INFO) {
+    NPC = 57528;
+    NR = 10;
+    CONDITION = DIA_VIKTOR_SQ103_POTION_CONDITION;
+    INFORMATION = DIA_VIKTOR_SQ103_POTION_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you know where I could get some medicine?";
+}
+
+func int DIA_VIKTOR_SQ103_POTION_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_SQ103)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_SQ103_POTION_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ103_Potion_Potion_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ103_Potion_Potion_12_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ103_Potion_Potion_15_03");
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ103_Potion_Potion_12_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ103_Potion_Potion_15_05");
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ103_Potion_Potion_12_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ103_Potion_Potion_15_07");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ103_Potion_Potion_12_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ103_Potion_Potion_12_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ103_Potion_Potion_12_10");
+    AI_LOGENTRY(TOPIC_SQ103, LOG_SQ103_VIKTOR_POTION);
+}
+
+instance DIA_VIKTOR_GQ001AFTERKURT(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_GQ001AFTERKURT_CONDITION;
+    INFORMATION = DIA_VIKTOR_GQ001AFTERKURT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VIKTOR_GQ001AFTERKURT_CONDITION() {
+    if ((GQ001_FALKARDINFO) >= (2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_GQ001AFTERKURT_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_GQ001afterkurt_12_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_GQ001afterkurt_15_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_GQ001afterkurt_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_GQ001afterkurt_12_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_GQ001afterkurt_12_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_GQ001afterkurt_12_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_GQ001afterkurt_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_GQ001afterkurt_12_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_GQ001afterkurt_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_GQ001afterkurt_12_10");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_GQ001afterkurt_15_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_GQ001afterkurt_12_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_GQ001afterkurt_12_13");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_GQ001afterkurt_15_14");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_GQ001afterkurt_12_15");
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, "PUB");
+    AI_LOGENTRY(TOPIC_GQ001, LOG_GQ001_VIKTOR);
+}
+
+instance DIA_VIKTOR_Q205(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_Q205_CONDITION;
+    INFORMATION = DIA_VIKTOR_Q205_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Am I interrupting?";
+}
+
+func int DIA_VIKTOR_Q205_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q205)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 88261))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_Q205_VIKTOR_LONG_THANKS() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_Thanks_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Thanks_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Thanks_03_03");
+    AI_LOGENTRY(TOPIC_Q205, LOG_Q205_VIKTOR);
+}
+
+func void DIA_VIKTOR_Q205_VIKTOR() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Viktor_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_Viktor_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Viktor_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Viktor_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Viktor_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_Viktor_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Viktor_03_07");
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_PLAYANI(SELF, R_SCRATCHHEAD);
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Viktor_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Viktor_03_09");
+    if (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Viktor_03_10");
+    };
+    INFO_CLEARCHOICES(88048);
+    INFO_ADDCHOICE(88048, "Did they sit at the inn long?", 88055);
+}
+
+func void DIA_VIKTOR_Q205_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_15_01");
+    if (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_03_03");
+        INFO_CLEARCHOICES(88048);
+        INFO_ADDCHOICE(88048, "That's what reason dictates.", 88053);
+        INFO_ADDCHOICE(88048, "Maybe they can help me find my brother.", 88054);
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_03_04");
+    DIA_VIKTOR_Q205_VIKTOR();
+}
+
+func void DIA_VIKTOR_Q205_MIL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_MIL_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_MIL_03_02");
+    DIA_VIKTOR_Q205_VIKTOR();
+}
+
+func void DIA_VIKTOR_Q205_BROTHER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_Brother_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Brother_03_02");
+    DIA_VIKTOR_Q205_VIKTOR();
+}
+
+func void DIA_VIKTOR_Q205_VIKTOR_LONG() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_Long_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Long_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_Long_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Long_03_04");
+    INFO_CLEARCHOICES(88048);
+    INFO_ADDCHOICE(88048, "Do you have a problem with bandits here?", 88058);
+    INFO_ADDCHOICE(88048, "What did those guards look like?", 88059);
+}
+
+func void DIA_VIKTOR_Q205_COUNT() {
+    var int VIKTOR_Q205_RENEGADEINFORMATIONS;
+    VIKTOR_Q205_RENEGADEINFORMATIONS = (VIKTOR_Q205_RENEGADEINFORMATIONS) + (1);
+    if ((VIKTOR_Q205_RENEGADEINFORMATIONS) == (2)) {
+        DIA_VIKTOR_Q205_VIKTOR_LONG_THANKS();
+    };
+}
+
+func void DIA_VIKTOR_Q205_VIKTOR_LONG_BANDIT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_Bandit_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Bandit_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Bandit_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Bandit_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Bandit_03_05");
+    DIA_VIKTOR_Q205_COUNT();
+}
+
+func void DIA_VIKTOR_Q205_VIKTOR_LONG_VISUAL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q205_Visual_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Visual_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q205_Visual_03_03");
+    DIA_VIKTOR_Q205_COUNT();
+}
+
+instance DIA_VIKTOR_SQ225_GIANTBUG(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_SQ225_GIANTBUG_CONDITION;
+    INFORMATION = DIA_VIKTOR_SQ225_GIANTBUG_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What does the damage done by the field raiders look like?";
+}
+
+func int DIA_VIKTOR_SQ225_GIANTBUG_CONDITION() {
+    if (((SQ225_ANDERASWAY_AGREED) == (TRUE)) && ((LOG_GETSTATUS(MIS_SQ225)) == (LOG_RUNNING))) {
+        if (((NPC_KNOWSINFO(OTHER, 65171)) == (FALSE)) && ((NPC_KNOWSINFO(OTHER, 72217)) == (FALSE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_SQ225_GIANTBUG_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ225_GiantBug_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ225_GiantBug_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ225_GiantBug_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ225_GiantBug_03_04");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ225_GiantBug_03_05");
+    INFO_CLEARCHOICES(88060);
+    INFO_ADDCHOICE(88060, "I've been dreaming about this for a long time.", 88063);
+}
+
+func void DIA_VIKTOR_SQ225_GIANTBUG_YES() {
+    SQ225_GIANTBUG_IDEA_LOGENTRY = 1;
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ225_Yes_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ225_Yes_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ225_Yes_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ225_Yes_03_04");
+    AI_LOGENTRY(TOPIC_SQ225, LOG_SQ225_VIKTOR_ADVICE);
+}
+
+instance DIA_VIKTOR_SQ213(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_SQ213_CONDITION;
+    INFORMATION = DIA_VIKTOR_SQ213_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I have an unusual case.";
+}
+
+func int DIA_VIKTOR_SQ213_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 88165)) && ((LOG_GETSTATUS(MIS_SQ213)) == (LOG_RUNNING))) {
+        if (!(NPC_KNOWSINFO(OTHER, 88270))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_SQ213_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ213_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ213_15_03");
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_03_04");
+    INFO_CLEARCHOICES(88064);
+    INFO_ADDCHOICE(88064, "The quarrels of lovers... and all that.", 88067);
+    INFO_ADDCHOICE(88064, "It's not about me. Lutz is back.", 88068);
+}
+
+func void DIA_VIKTOR_SQ213_YES() {
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ213_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_Yes_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_Yes_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_Yes_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ213_Yes_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_Yes_03_06");
+    AI_LOGENTRY(TOPIC_SQ213, LOG_SQ213_VICTORORCHARD);
+    INFO_CLEARCHOICES(88064);
+    SQ213_VIKTORWAY = 1;
+}
+
+func void DIA_VIKTOR_SQ213_NO() {
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ213_No_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_No_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ213_No_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_No_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_No_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ213_No_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ213_No_03_07");
+    AI_LOGENTRY(TOPIC_SQ213, LOG_SQ213_VICTORANDLUTZ);
+    INFO_CLEARCHOICES(88064);
+    SQ213_VIKTORWAY = 2;
+}
+
+instance DIA_VIKTOR_SQ410_PROBLEM(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_SQ410_PROBLEM_CONDITION;
+    INFORMATION = DIA_VIKTOR_SQ410_PROBLEM_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I heard something was bothering you.";
+}
+
+func int DIA_VIKTOR_SQ410_PROBLEM_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ410)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 88293))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_FISTFIGHT() {
+    OTHER.AIVAR[94] = TRUE;
+    SELF.AIVAR[94] = TRUE;
+    SELF.AIVAR[96] = 15;
+    SELF.AIVAR[45] = AF_RUNNING;
+    INFO_CLEARCHOICES(88069);
+    AI_STOPPROCESSINFOS(SELF);
+    B_ATTACK(SELF, OTHER, AR_NONE, 1);
+}
+
+func void DIA_VIKTOR_SQ410_PROBLEM_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Problem_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Problem_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Problem_15_03");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Problem_03_04");
+    INFO_CLEARCHOICES(88069);
+    INFO_ADDCHOICE(88069, "Try your luck!", 88075);
+    INFO_ADDCHOICE(88069, "Easy there buddy, I wanted to check, just to make sure everything was ok.", 88076);
+}
+
+var int VIKTOR_SQ410_MARVINKNOWTHEPROBLEM;
+func void DIA_VIKTOR_SQ410_PROBLEM_NEXT() {
+    VIKTOR_SQ410_MARVINKNOWTHEPROBLEM = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Problem_Next_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Problem_Next_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Problem_Next_03_03");
+    INFO_CLEARCHOICES(88069);
+    INFO_CLEARCHOICES(88077);
+}
+
+func void DIA_VIKTOR_SQ410_PROBLEM_FIGHT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Problem_Fight_15_01");
+    AI_WAITTILLEND(SELF, OTHER);
+    DIA_VIKTOR_FISTFIGHT();
+}
+
+func void DIA_VIKTOR_SQ410_PROBLEM_CALM() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Problem_Calm_15_01");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Problem_Calm_03_02");
+    DIA_VIKTOR_SQ410_PROBLEM_NEXT();
+}
+
+instance DIA_VIKTOR_SQ410_AFTERFISTFIGHT(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_SQ410_AFTERFISTFIGHT_CONDITION;
+    INFORMATION = DIA_VIKTOR_SQ410_AFTERFISTFIGHT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VIKTOR_SQ410_AFTERFISTFIGHT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ410)) == (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 61599))) {
+        if (((SELF.AIVAR[64]) == (FALSE)) && ((SELF.AIVAR[0]) != (FIGHT_NONE))) {
+            if ((SELF.AIVAR[45]) != (AF_NONE)) {
+                if (((SELF.AIVAR[0]) == (FIGHT_LOST)) || ((SELF.AIVAR[0]) == (FIGHT_WON))) {
+                    return TRUE;
+                };
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_SQ410_AFTERFISTFIGHT_INFO() {
+    SELF.AIVAR[45] = AF_NONE;
+    SELF.AIVAR[64] = TRUE;
+    OTHER.AIVAR[94] = FALSE;
+    SELF.AIVAR[94] = FALSE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_AfterFistFight_15_01");
+    if ((SELF.AIVAR[0]) == (FIGHT_LOST)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_AfterFistFight_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_AfterFistFight_03_03");
+    DIA_VIKTOR_SQ410_PROBLEM_NEXT();
+}
+
+instance DIA_VIKTOR_SQ410_JEALOUS(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_SQ410_JEALOUS_CONDITION;
+    INFORMATION = DIA_VIKTOR_SQ410_JEALOUS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Are you jealous?";
+}
+
+func int DIA_VIKTOR_SQ410_JEALOUS_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ410)) == (LOG_RUNNING)) && ((VIKTOR_SQ410_MARVINKNOWTHEPROBLEM) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_SQ410_JEALOUS_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Jealous_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Jealous_03_02");
+    AI_STARTFACEANI(OTHER, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Jealous_15_03");
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Jealous_15_04");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Jealous_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Jealous_15_06");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Jealous_03_07");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Jealous_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Jealous_03_09");
+    AI_RESETFACEANI(SELF);
+    AI_LOGENTRY(TOPIC_SQ410, LOG_SQ410_VIKTOR_JEALOUS);
+}
+
+instance DIA_VIKTOR_SQ410_DECISION(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_SQ410_DECISION_CONDITION;
+    INFORMATION = DIA_VIKTOR_SQ410_DECISION_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Listen to me carefully.";
+}
+
+func int DIA_VIKTOR_SQ410_DECISION_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ410)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 67165))) {
+        if (((SQ410_ENDING_V1) == (0)) && ((SQ410_ENDING_V2) == (0))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_SQ410_DECISION_INFO() {
+    INFO_CLEARCHOICES(88083);
+    INFO_ADDCHOICE(88083, DIALOG_BACK, 88088);
+    INFO_ADDCHOICE(88083, "(Don't let Viktor know about the plan)", 88087);
+    INFO_ADDCHOICE(88083, "(Let Viktor know about the plan)", 88086);
+}
+
+func void DIA_VIKTOR_SQ410_DECISION_ENDINGV1() {
+    SQ410_ENDING_V2 = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Decision_EndingV1_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Decision_EndingV1_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Decision_EndingV1_15_03");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Decision_EndingV1_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Decision_EndingV1_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Decision_EndingV1_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Decision_EndingV1_03_07");
+    INFO_CLEARCHOICES(88083);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_SQ410, LOG_SQ410_VIKTOR_BADIDEA);
+}
+
+func void DIA_VIKTOR_SQ410_DECISION_ENDINGV2() {
+    SQ410_ENDING_V1 = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Decision_EndingV2_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Decision_EndingV2_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Decision_EndingV2_15_03");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Decision_EndingV2_03_04");
+    B_STANDUP();
+    INFO_CLEARCHOICES(88083);
+    NPC_EXCHANGEROUTINE(SELF, "SQ410_OUTSIDEINN");
+    SQ410_VIKTOR_RTNCHECK = 2;
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_VIKTOR_SQ410_DECISION_BACK() {
+    INFO_CLEARCHOICES(88083);
+}
+
+instance DIA_VIKTOR_SQ410_LUTZGONE(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_SQ410_LUTZGONE_CONDITION;
+    INFORMATION = DIA_VIKTOR_SQ410_LUTZGONE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VIKTOR_SQ410_LUTZGONE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ410)) == (LOG_SUCCESS)) && (NPC_ISINSTATE(SELF, 61599))) && (NPC_KNOWSINFO(OTHER, 67168))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_SQ410_GOODLUCK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_LutzGone_15_08");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_LutzGone_03_09");
+    if (((SQ410_ENDING_V2) >= (1)) && ((LOG_GETSTATUS(MIS_SQ410)) == (LOG_RUNNING))) {
+        AI_LOGENTRY(TOPIC_SQ410, LOG_SQ410_VIKTOR_ABOUTLUTZ);
+    };
+}
+
+func void DIA_VIKTOR_SQ410_LUTZGONE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_LutzGone_15_01");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_LutzGone_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_LutzGone_15_03");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_LutzGone_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_LutzGone_15_05");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_LutzGone_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_LutzGone_15_07");
+    DIA_VIKTOR_SQ410_GOODLUCK();
+}
+
+instance DIA_VIKTOR_SQ410_SORRY(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_SQ410_SORRY_CONDITION;
+    INFORMATION = DIA_VIKTOR_SQ410_SORRY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I wanted to apologize to you...";
+}
+
+func int DIA_VIKTOR_SQ410_SORRY_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 67172)) {
+        if (((LOG_GETSTATUS(MIS_SQ410)) == (LOG_RUNNING)) || ((LOG_GETSTATUS(MIS_SQ410)) == (LOG_SUCCESS))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_SQ410_SORRY_INFO() {
+    AI_STARTFACEANI(OTHER, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_SQ410_Sorry_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_SQ410_Sorry_03_02");
+    DIA_VIKTOR_SQ410_GOODLUCK();
+}
+
+instance DIA_VIKTOR_CHAPTER5HELLO(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_CHAPTER5HELLO_CONDITION;
+    INFORMATION = DIA_VIKTOR_CHAPTER5HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_VIKTOR_CHAPTER5HELLO_CONDITION() {
+    if ((KAPITEL) == (5)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_CHAPTER5HELLO_INFO() {
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Chapter5Hello_03_01");
+    INFO_CLEARCHOICES(88096);
+    INFO_ADDCHOICE(88096, "Jorn is dead, and I nearly suffered the same fate.", 88100);
+    INFO_ADDCHOICE(88096, "I'd rather not talk about it.", 88099);
+}
+
+func void DIA_VIKTOR_CHAPTER5HELLO_NO() {
+    AI_STARTFACEANI(OTHER, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Chapter5Hello_No_15_01");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Chapter5Hello_No_03_02");
+    INFO_CLEARCHOICES(88096);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+func void DIA_VIKTOR_CHAPTER5HELLO_YES() {
+    AI_STARTFACEANI(OTHER, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Chapter5Hello_Yes_15_01");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Chapter5Hello_Yes_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Chapter5Hello_Yes_03_03");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Chapter5Hello_Yes_03_04");
+    INFO_CLEARCHOICES(88096);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_VIKTOR_WAREHOUSE(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_WAREHOUSE_CONDITION;
+    INFORMATION = DIA_VIKTOR_WAREHOUSE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What are you doing here? Guarding the warehouse?";
+}
+
+func int DIA_VIKTOR_WAREHOUSE_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 88096)) && ((NPC_GETDISTTOWP(SELF, "VILLAGE_PLACE_10")) <= (600))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int VIKTOR_ORCRESULT;
+func void DIA_VIKTOR_WAREHOUSE_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Warehouse_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Warehouse_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Warehouse_03_03");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Warehouse_03_04");
+    INFO_CLEARCHOICES(88101);
+    if ((LOG_GETSTATUS(MIS_KQ407)) == (LOG_SUCCESS)) {
+        INFO_ADDCHOICE(88101, "The orcs have been repulsed...", 88108);
+    };
+    INFO_ADDCHOICE(88101, "More orc patrols are appearing on Archolos...", 88107);
+    INFO_ADDCHOICE(88101, "Rest assured, there are no orcs on Archolos.", 88106);
+}
+
+func void DIA_VIKTOR_WAREHOUSE_NEXT() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Warehouse_Next_03_01");
+    INFO_CLEARCHOICES(88101);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+func void DIA_VIKTOR_WAREHOUSE_RELAX() {
+    VIKTOR_ORCRESULT = 1;
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Warehouse_Relax_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Warehouse_Relax_03_02");
+    INFO_CLEARCHOICES(88101);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+func void DIA_VIKTOR_WAREHOUSE_SOME() {
+    VIKTOR_ORCRESULT = 2;
+    AI_STARTFACEANI(OTHER, S_TIRED, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Warehouse_Some_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Warehouse_Some_03_02");
+    DIA_VIKTOR_WAREHOUSE_NEXT();
+}
+
+func void DIA_VIKTOR_WAREHOUSE_WEWON() {
+    VIKTOR_ORCRESULT = 2;
+    AI_STARTFACEANI(OTHER, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Warehouse_WeWon_15_01");
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Warehouse_WeWon_03_02");
+    DIA_VIKTOR_WAREHOUSE_NEXT();
+}
+
+instance DIA_VIKTOR_Q505_HELP(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_Q505_HELP_CONDITION;
+    INFORMATION = DIA_VIKTOR_Q505_HELP_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I am preparing for a dangerous mission and will need equipment.";
+}
+
+func int DIA_VIKTOR_Q505_HELP_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q505)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 80244))) && (NPC_KNOWSINFO(OTHER, 88101))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_Q505_HELP_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q505_Help_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q505_Help_03_02");
+    if ((VIKTOR_ORCRESULT) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q505_Help_03_03");
+        AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+        AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q505_Help_15_04");
+        CREATEINVITEMS(SELF, 37609, 1);
+    };
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q505_Help_03_05");
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q505_Help_15_06");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_VIKTOR_Q505_DOG(C_INFO) {
+    NPC = 57528;
+    NR = 1;
+    CONDITION = DIA_VIKTOR_Q505_DOG_CONDITION;
+    INFORMATION = DIA_VIKTOR_Q505_DOG_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Have you ever taken care of a dog?";
+}
+
+func int DIA_VIKTOR_Q505_DOG_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q505)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 80244))) && ((TAKEDOGGO) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_Q505_DOG_INFO() {
+    Q505_VIKTORDOG = 1;
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q505_Dog_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q505_Dog_03_02");
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q505_Dog_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q505_Dog_03_04");
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(88112);
+    INFO_ADDCHOICE(88112, "I have to say goodbye to him and I'll bring him to Silbach.", 88115);
+}
+
+func void DIA_VIKTOR_Q505_DOG_GOODBYE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q505_Dog_Goodbye_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Q505_Dog_Goodbye_03_02");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Viktor_Q505_Dog_Goodbye_15_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(88112);
+    LOG_CREATETOPIC(TOPIC_OURHOUME, LOG_NOTE);
+    B_LOGENTRY(TOPIC_OURHOUME, LOG_OURHOME_DOGGO_VIKTOR);
+}
+
+instance DIA_VIKTOR_AMBIENT(C_INFO) {
+    NPC = 57528;
+    NR = 950;
+    CONDITION = DIA_VIKTOR_AMBIENT_CONDITION;
+    INFORMATION = DIA_VIKTOR_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_VIKTOR_AMBIENT_CONDITION() {
+    if ((NPC_GETDISTTOWP(SELF, "VILLAGE_PUB_29")) <= (1500)) {
+        if ((NPC_KNOWSINFO(OTHER, 88000)) || ((SILBACHSLEEP) >= (1))) {
+            if ((LOG_GETSTATUS(MIS_SQ410)) == (LOG_RUNNING)) {
+                return FALSE;
+            };
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_AMBIENT_INFO() {
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew4");
+    if (((NPC_HASGUILDARMOREQUIPPED(HERO, GIL_MIL)) || (NPC_HASGUILDARMOREQUIPPED(HERO, GIL_SLD))) || ((LOG_GETSTATUS(MIS_SQ416)) == (LOG_SUCCESS))) {
+        NPC_INITAMBIENTS(SELF, 4);
+    };
+    NPC_INITAMBIENTS(SELF, 3);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        if ((LOG_GETSTATUS(MIS_Q201)) == (LOG_RUNNING)) {
+            AI_STARTFACEANI(SELF, "S_TIRED", 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_08");
+            AI_STARTFACEANI(SELF, "S_SAD", 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_09");
+        };
+        if (((SILBACHSLEEP) == (2)) && ((LOG_GETSTATUS(MIS_Q104)) != (LOG_SUCCESS))) {
+            AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_07");
+        } else if ((SILBACHSLEEP) == (1)) {
+            AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_06");
+        } else {
+            AI_STARTFACEANI(SELF, "S_TIRED", 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_01");
+        };
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_03");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (3)) {
+        AI_STARTFACEANI(SELF, "S_TIRED", 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_05");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (4)) {
+        if ((LOG_GETSTATUS(MIS_SQ416)) == (LOG_SUCCESS)) {
+            AI_STARTFACEANI(SELF, "S_THINK", 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_10");
+            AI_STARTFACEANI(SELF, "S_TIRED", 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_11");
+        } else if (NPC_HASGUILDARMOREQUIPPED(HERO, GIL_MIL)) {
+            AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_13");
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_14");
+        } else if (NPC_HASGUILDARMOREQUIPPED(HERO, GIL_SLD)) {
+            AI_STARTFACEANI(SELF, "S_SURPRISE", 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_15");
+            AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Viktor_Ambient_03_16");
+        };
+    };
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_VIKTOR_PICKPOCKET(C_INFO) {
+    NPC = 57528;
+    NR = 900;
+    CONDITION = DIA_VIKTOR_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_VIKTOR_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_VIKTOR_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_VIKTOR_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(88119);
+    INFO_ADDCHOICE(88119, DIALOG_BACK, 88123);
+    INFO_ADDCHOICE(88119, DIALOG_PICKPOCKET, 88122);
+}
+
+func void DIA_VIKTOR_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        CREATEINVITEMS(SELF, 37055, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 37055, 1);
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(88119);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(88119);
+}
+
+func void DIA_VIKTOR_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(88119);
+}
+

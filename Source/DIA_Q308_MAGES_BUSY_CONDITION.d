@@ -1,0 +1,53 @@
+func int DIA_Q308_MAGES_BUSY_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q312)) == (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 61599))) || (((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 61599)))) {
+        return FALSE;
+    };
+    if (NPC_ISINSTATE(SELF, 61599)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_Q308_MAGES_BUSY_INFO() {
+    DIA_IMBUSY_CALM();
+}
+
+instance DIA_Q308_MAGES_WHAT(C_INFO) {
+    NR = 1;
+    CONDITION = DIA_Q308_MAGES_WHAT_CONDITION;
+    INFORMATION = DIA_Q308_MAGES_WHAT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_Q308_MAGES_WHAT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q312)) == (LOG_RUNNING)) || ((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING))) {
+        if (NPC_ISINSTATE(SELF, 61599)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void QA306_WHATSGOINGONHERE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Loafs_QA306_JUDGMENT_What_15_01");
+}
+
+func void DIA_Q308_MAGES_WHAT_INFO() {
+    QA306_WHATSGOINGONHERE();
+    if ((SELF.VOICE) == (13)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Q308_Mages_What_03_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Q308_Mages_What_03_02");
+    };
+    if ((SELF.VOICE) == (45)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Q308_Mages_V2_What_03_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Q308_Mages_V2_What_03_02");
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void B_ASSIGNAMBIENTINFOS_Q308_MAGES(var C_NPC SLF) {
+    DIA_Q308_MAGES_WHAT.NPC = HLP_GETINSTANCEID(SLF);
+    DIA_Q308_MAGES_BUSY.NPC = HLP_GETINSTANCEID(SLF);
+}
+

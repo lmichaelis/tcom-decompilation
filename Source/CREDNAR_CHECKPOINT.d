@@ -1,0 +1,722 @@
+const string CREDNAR_CHECKPOINT = "WOLFSDEN_PATH_01";
+var int CREDNAR_FIRSTTALKKAPITEL4;
+var int CREDNAR_ALLOWUSTOGO;
+var int CREDNAR_LONGSTORY;
+instance DIA_CREDNAR_EXIT(C_INFO) {
+    NPC = 58254;
+    NR = 999;
+    CONDITION = DIA_CREDNAR_EXIT_CONDITION;
+    INFORMATION = DIA_CREDNAR_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_CREDNAR_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_CREDNAR_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+var int CREDNAR_LASTPETZCOUNTER;
+var int CREDNAR_LASTPETZCRIME;
+instance DIA_CREDNAR_PMDEBTS(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_PMDEBTS_CONDITION;
+    INFORMATION = DIA_CREDNAR_PMDEBTS_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_CREDNAR_PMDEBTS_CONDITION() {
+    if (((NPC_ISINSTATE(SELF, 61599)) && ((CREDNAR_DEBTS) > (0))) && ((B_GETGREATESTPETZCRIME(SELF)) <= (CREDNAR_LASTPETZCRIME))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_PMDEBTS_INFO() {
+    var int DIFF;
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_00");
+    if ((B_GETTOTALPETZCOUNTER(SELF)) > (CREDNAR_LASTPETZCOUNTER)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_02");
+        if ((CREDNAR_DEBTS) < (1000)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_03");
+            AI_OUTPUT(OTHER, SELF, "DIA_Crednar_PMAdd_15_00");
+            DIFF = (B_GETTOTALPETZCOUNTER(SELF)) - (CREDNAR_LASTPETZCOUNTER);
+            if ((DIFF) > (0)) {
+                CREDNAR_DEBTS = (CREDNAR_DEBTS) + ((DIFF) * (50));
+            };
+            if ((CREDNAR_DEBTS) > (1000)) {
+                CREDNAR_DEBTS = 1000;
+            };
+            B_SAY_GOLD(SELF, OTHER, CREDNAR_DEBTS);
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_04");
+        };
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) < (CREDNAR_LASTPETZCRIME)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_05");
+        if ((CREDNAR_LASTPETZCRIME) == (CRIME_MURDER)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_06");
+        };
+        if (((CREDNAR_LASTPETZCRIME) == (CRIME_THEFT)) || (((CREDNAR_LASTPETZCRIME) > (CRIME_THEFT)) && ((B_GETGREATESTPETZCRIME(SELF)) < (CRIME_THEFT)))) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_07");
+        };
+        if (((CREDNAR_LASTPETZCRIME) == (CRIME_ATTACK)) || (((CREDNAR_LASTPETZCRIME) > (CRIME_ATTACK)) && ((B_GETGREATESTPETZCRIME(SELF)) < (CRIME_ATTACK)))) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_08");
+        };
+        if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_NONE)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_09");
+        };
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_10");
+        if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_NONE)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_11");
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_12");
+            CREDNAR_DEBTS = 0;
+            CREDNAR_LASTPETZCOUNTER = 0;
+            CREDNAR_LASTPETZCRIME = CRIME_NONE;
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_13");
+            B_SAY_GOLD(SELF, OTHER, CREDNAR_DEBTS);
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PMDebts_08_14");
+        };
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) != (CRIME_NONE)) {
+        INFO_CLEARCHOICES(81417);
+        INFO_CLEARCHOICES(81422);
+        INFO_ADDCHOICE(81417, "I don't have that much gold.", 81426);
+        INFO_ADDCHOICE(81417, "How much was it supposed to be?", 81421);
+        if ((NPC_HASITEMS(OTHER, 34203)) >= (CREDNAR_DEBTS)) {
+            INFO_ADDCHOICE(81417, "I want to pay the fine!", 81425);
+        };
+    };
+}
+
+func void DIA_CREDNAR_PMDEBTS_HOWMUCHAGAIN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_PMDebts_HowMuchAgain_15_00");
+    B_SAY_GOLD(SELF, OTHER, CREDNAR_DEBTS);
+    INFO_CLEARCHOICES(81417);
+    INFO_CLEARCHOICES(81422);
+    INFO_ADDCHOICE(81417, "I don't have that much gold.", 81426);
+    INFO_ADDCHOICE(81417, "How much was it supposed to be?", 81421);
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (CREDNAR_DEBTS)) {
+        INFO_ADDCHOICE(81417, "I want to pay the fine!", 81425);
+    };
+}
+
+instance DIA_CREDNAR_PETZMASTER(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_PETZMASTER_CONDITION;
+    INFORMATION = DIA_CREDNAR_PETZMASTER_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_CREDNAR_PETZMASTER_CONDITION() {
+    if ((B_GETGREATESTPETZCRIME(SELF)) > (CREDNAR_LASTPETZCRIME)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_PETZMASTER_INFO() {
+    CREDNAR_DEBTS = 0;
+    if ((SELF.AIVAR[5]) == (FALSE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_00");
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_MURDER)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_02");
+        CREDNAR_DEBTS = (B_GETTOTALPETZCOUNTER(SELF)) * (50);
+        CREDNAR_DEBTS = (CREDNAR_DEBTS) + (500);
+        if ((((PETZCOUNTER_WOLFSLAIR_THEFT) + (PETZCOUNTER_WOLFSLAIR_ATTACK)) + (PETZCOUNTER_WOLFSLAIR_SHEEPKILLER)) > (0)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_03");
+        };
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_07");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_08");
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_THEFT)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_09");
+        if (((PETZCOUNTER_WOLFSLAIR_ATTACK) + (PETZCOUNTER_WOLFSLAIR_SHEEPKILLER)) > (0)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_10");
+        };
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_11");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_12");
+        CREDNAR_DEBTS = (B_GETTOTALPETZCOUNTER(SELF)) * (50);
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_ATTACK)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_13");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_14");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_16");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_08_17");
+        CREDNAR_DEBTS = (B_GETTOTALPETZCOUNTER(SELF)) * (50);
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_PETZMASTER_15_21");
+    if ((CREDNAR_DEBTS) > (1000)) {
+        CREDNAR_DEBTS = 1000;
+    };
+    B_SAY_GOLD(SELF, OTHER, CREDNAR_DEBTS);
+    INFO_CLEARCHOICES(81417);
+    INFO_CLEARCHOICES(81422);
+    INFO_ADDCHOICE(81422, "I don't have that much gold.", 81426);
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (CREDNAR_DEBTS)) {
+        INFO_ADDCHOICE(81422, "I want to pay the fine!", 81425);
+    };
+}
+
+func void DIA_CREDNAR_PETZMASTER_PAYNOW() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_PETZMASTER_PayNow_15_00");
+    B_GIVEINVITEMS(OTHER, SELF, 34203, CREDNAR_DEBTS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_PayNow_08_01");
+    B_GRANTABSOLUTION(LOC_WOLFSLAIR);
+    CREDNAR_DEBTS = 0;
+    CREDNAR_LASTPETZCOUNTER = 0;
+    CREDNAR_LASTPETZCRIME = CRIME_NONE;
+    INFO_CLEARCHOICES(81422);
+    INFO_CLEARCHOICES(81417);
+}
+
+func void DIA_CREDNAR_PETZMASTER_PAYLATER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_PETZMASTER_PayLater_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_PayLater_08_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_PETZMASTER_PayLater_08_02");
+    CREDNAR_LASTPETZCOUNTER = B_GETTOTALPETZCOUNTER(SELF);
+    CREDNAR_LASTPETZCRIME = B_GETGREATESTPETZCRIME(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_CREDNAR_FIRSTWARN(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_FIRSTWARN_CONDITION;
+    INFORMATION = DIA_CREDNAR_FIRSTWARN_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_CREDNAR_FIRSTWARN_CONDITION() {
+    if (((CREDNAR_DEBTS) == (0)) && ((B_GETGREATESTPETZCRIME(SELF)) == (0))) {
+        if (((LOG_GETSTATUS(MIS_Q400)) != (LOG_SUCCESS)) || ((CREDNAR_FIRSTTALKKAPITEL4) == (TRUE))) {
+            if ((CREDNAR_ALLOWUSTOGO) == (TRUE)) {
+                SELF.AIVAR[14] = TRUE;
+            };
+            if ((NPC_GETDISTTONPC(SELF, OTHER)) <= (700)) {
+                if (((((SELF.AIVAR[12]) == (GP_NONE)) && ((SELF.AIVAR[14]) == (FALSE))) && ((HLP_STRCMP(NPC_GETNEARESTWP(SELF), SELF.WP)) == (TRUE))) && ((NPC_REFUSETALK(SELF)) == (FALSE))) {
+                    return TRUE;
+                };
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void CREDNAR_KILLHERO() {
+    AI_DRAWWEAPON(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+    B_ATTACK(SELF, OTHER, AR_GUARDSTOPSINTRUDER, 1);
+    OTHER.AIVAR[13] = 0;
+    SELF.AIVAR[12] = GP_NONE;
+}
+
+func void DIA_CREDNAR_FIRSTWARN_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_FIRSTWARN_03_01");
+    OTHER.AIVAR[13] = NPC_GETDISTTOWP(OTHER, CREDNAR_CHECKPOINT);
+    SELF.AIVAR[12] = GP_FIRSTWARNGIVEN;
+    if ((KAPITEL) != (4)) {
+        AI_STOPPROCESSINFOS(SELF);
+    };
+}
+
+instance DIA_CREDNAR_SECONDWARN(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_SECONDWARN_CONDITION;
+    INFORMATION = DIA_CREDNAR_SECONDWARN_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_CREDNAR_SECONDWARN_CONDITION() {
+    if (((CREDNAR_DEBTS) == (0)) && ((B_GETGREATESTPETZCRIME(SELF)) == (0))) {
+        if (((((SELF.AIVAR[12]) == (GP_FIRSTWARNGIVEN)) && ((SELF.AIVAR[14]) == (FALSE))) && ((HLP_STRCMP(NPC_GETNEARESTWP(SELF), SELF.WP)) == (TRUE))) && ((NPC_GETDISTTOWP(OTHER, CREDNAR_CHECKPOINT)) < ((OTHER.AIVAR[13]) - (50)))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_SECONDWARN_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_SecondWarn_03_01");
+    OTHER.AIVAR[13] = NPC_GETDISTTOWP(OTHER, CREDNAR_CHECKPOINT);
+    SELF.AIVAR[12] = GP_SECONDWARNGIVEN;
+    if ((KAPITEL) != (4)) {
+        AI_STOPPROCESSINFOS(SELF);
+    };
+}
+
+instance DIA_CREDNAR_LASTWARN(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_LASTWARN_CONDITION;
+    INFORMATION = DIA_CREDNAR_LASTWARN_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_CREDNAR_LASTWARN_CONDITION() {
+    if (((CREDNAR_DEBTS) == (0)) && ((B_GETGREATESTPETZCRIME(SELF)) == (0))) {
+        if (((((SELF.AIVAR[12]) == (GP_SECONDWARNGIVEN)) && ((SELF.AIVAR[14]) == (FALSE))) && ((HLP_STRCMP(NPC_GETNEARESTWP(SELF), SELF.WP)) == (TRUE))) && ((NPC_GETDISTTOWP(OTHER, CREDNAR_CHECKPOINT)) < ((OTHER.AIVAR[13]) - (50)))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_LASTWARN_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_LastWarn_03_01");
+    CREDNAR_KILLHERO();
+}
+
+instance DIA_CREDNAR_WAITTHERE(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_WAITTHERE_CONDITION;
+    INFORMATION = DIA_CREDNAR_WAITTHERE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_CREDNAR_WAITTHERE_CONDITION() {
+    if (((CREDNAR_DEBTS) == (0)) && ((B_GETGREATESTPETZCRIME(SELF)) == (0))) {
+        if ((((KAPITEL) == (4)) && ((LOG_GETSTATUS(MIS_Q400)) == (LOG_RUNNING))) && (NPC_KNOWSINFO(OTHER, 83058))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_WAITTHERE_INFO() {
+    CREDNAR_FIRSTTALKKAPITEL4 = TRUE;
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WaitThere_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_WaitThere_15_02");
+    if ((NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_MIL)) || (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_SLD))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WaitThere_03_03");
+        AI_OUTPUT(OTHER, SELF, "DIA_Crednar_WaitThere_15_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WaitThere_03_05");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WaitThere_03_06");
+    INFO_CLEARCHOICES(81437);
+    INFO_ADDCHOICE(81437, "I have important business to attend to in the Den.", 81440);
+}
+
+func void DIA_CREDNAR_WAITTHERE_CASE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_WaitThere_Case_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WaitThere_Case_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WaitThere_Case_03_03");
+    INFO_CLEARCHOICES(81437);
+    OTHER.AIVAR[13] = NPC_GETDISTTOWP(OTHER, CREDNAR_CHECKPOINT);
+    SELF.AIVAR[12] = GP_FIRSTWARNGIVEN;
+}
+
+instance DIA_CREDNAR_WHATDO(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_WHATDO_CONDITION;
+    INFORMATION = DIA_CREDNAR_WHATDO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What do I have to do for you to let me in?";
+}
+
+func int DIA_CREDNAR_WHATDO_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 81437)) {
+        if (((Q401_FABIOANDGANGGONE) == (0)) && ((Q401_REFUGEEAREDEAD) == (FALSE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_WHATDO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_WhatDo_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WhatDo_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_WhatDo_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WhatDo_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WhatDo_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WhatDo_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_WhatDo_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WhatDo_03_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_WhatDo_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_WhatDo_03_10");
+    B_GIVEPLAYERXP(XP_Q400_FINISH);
+    LOG_SETSTATUS(_@(MIS_Q400), TOPIC_Q400, LOG_SUCCESS);
+    AI_LOGENTRY(TOPIC_Q400, LOG_Q400_FINISH);
+    LOG_CREATETOPIC(TOPIC_Q401, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_Q401), TOPIC_Q401, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_Q401, LOG_Q401_STARTQUEST);
+    AI_FUNCTION(SELF, 63717);
+}
+
+instance DIA_CREDNAR_SCARE(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_SCARE_CONDITION;
+    INFORMATION = DIA_CREDNAR_SCARE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Did you try to chase them away?";
+}
+
+func int DIA_CREDNAR_SCARE_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 81441)) && ((LOG_GETSTATUS(MIS_Q401)) == (LOG_RUNNING))) {
+        if (((Q401_FABIOANDGANGGONE) == (0)) && ((Q401_REFUGEEAREDEAD) == (FALSE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_SCARE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Scare_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Scare_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Scare_03_03");
+}
+
+instance DIA_CREDNAR_DEALER(C_INFO) {
+    NPC = 58254;
+    NR = 2;
+    CONDITION = DIA_CREDNAR_DEALER_CONDITION;
+    INFORMATION = DIA_CREDNAR_DEALER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "The previous growers have disappeared?";
+}
+
+func int DIA_CREDNAR_DEALER_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 81441)) && ((LOG_GETSTATUS(MIS_Q401)) == (LOG_RUNNING))) {
+        if (((Q401_FABIOANDGANGGONE) == (0)) && ((Q401_REFUGEEAREDEAD) == (FALSE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_DEALER_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Dealer_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Dealer_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_03_05");
+    INFO_CLEARCHOICES(81447);
+    INFO_ADDCHOICE(81447, "Long.", 81451);
+    INFO_ADDCHOICE(81447, "Short.", 81452);
+}
+
+func void DIA_CREDNAR_DEALER_STORY() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_01");
+    if ((CREDNAR_LONGSTORY) == (TRUE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_03");
+        AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Dealer_Story_15_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_07");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_08");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_09");
+    if ((CREDNAR_LONGSTORY) == (TRUE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_10");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_13");
+    if ((CREDNAR_LONGSTORY) == (TRUE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_14");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_15");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_16");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_17");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Dealer_Story_15_18");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Dealer_Story_15_19");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_20");
+    if ((CREDNAR_LONGSTORY) == (TRUE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_21");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_22");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Dealer_Story_03_23");
+    AI_LOGENTRY(TOPIC_Q401, LOG_Q401_JOINTSWAMP);
+    INFO_CLEARCHOICES(81447);
+}
+
+func void DIA_CREDNAR_DEALER_LONG() {
+    CREDNAR_LONGSTORY = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Dealer_Long_15_01");
+    DIA_CREDNAR_DEALER_STORY();
+}
+
+func void DIA_CREDNAR_DEALER_SHORT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Dealer_Short_15_01");
+    DIA_CREDNAR_DEALER_STORY();
+}
+
+instance DIA_CREDNAR_FABIOANDGANGGONE(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_FABIOANDGANGGONE_CONDITION;
+    INFORMATION = DIA_CREDNAR_FABIOANDGANGGONE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Have you noticed any change?";
+}
+
+func int DIA_CREDNAR_FABIOANDGANGGONE_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q401)) == (LOG_RUNNING)) {
+        if (((Q401_FABIOANDGANGGONE) >= (1)) || ((Q401_REFUGEEAREDEAD) == (TRUE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_FABIOANDGANGGONE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_FabioAndGangGone_15_01");
+    if ((Q401_FABIOANDGANGGONE) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_FabioAndGangGone_03_02");
+        AI_OUTPUT(OTHER, SELF, "DIA_Crednar_FabioAndGangGone_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_FabioAndGangGone_03_04");
+        AI_OUTPUT(OTHER, SELF, "DIA_Crednar_FabioAndGangGone_15_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_FabioAndGangGone_03_06");
+        Q401_REMOVEYEZEGAN();
+    };
+    if ((Q401_REFUGEEAREDEAD) == (TRUE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_FabioAndGangGone_03_09");
+        Q401_REMOVEYEZEGAN();
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_FabioAndGangGone_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_FabioAndGangGone_03_08");
+}
+
+instance DIA_CREDNAR_COMEIN(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_COMEIN_CONDITION;
+    INFORMATION = DIA_CREDNAR_COMEIN_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Can I come inside?";
+}
+
+func int DIA_CREDNAR_COMEIN_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 81453)) && ((LOG_GETSTATUS(MIS_Q401)) == (LOG_RUNNING))) {
+        if (((Q401_FABIOANDGANGGONE) == (1)) || ((Q401_REFUGEEAREDEAD) == (TRUE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void CREDNAR_CHANGEIVYRTN() {
+    B_STARTOTHERROUTINE(NONE_16_IVY, "WOLFSDENINSIDE_DIALOGUE");
+    NPC_REFRESH(NONE_16_IVY);
+}
+
+func void DIA_CREDNAR_ALLOWUSTOGO() {
+    CREDNAR_ALLOWUSTOGO = TRUE;
+    WLD_SENDTRIGGER("WOLFSDENGATE");
+    if ((Q401_FABIOANDGANGGONE) == (1)) {
+        AI_LOGENTRY(TOPIC_Q401, LOG_Q401_FINISHV1);
+    };
+    AI_LOGENTRY(TOPIC_Q401, LOG_Q401_FINISHV2);
+    LOG_SETSTATUS(_@(MIS_Q401), TOPIC_Q401, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_Q401_FINISH);
+    if (((Q401_DUSTERBIZZAREADVENTURE) >= (1)) && ((Q401_DUSTERBIZZAREADVENTURE) < (5))) {
+        RESTOREROUTINE_DUSTER();
+    };
+    AI_FUNCTION(SELF, 81458);
+    B_STARTOTHERROUTINE(DJG_10026_LUCY, START);
+    NPC_REFRESH(DJG_10026_LUCY);
+    B_STARTOTHERROUTINE(BAU_2277_LOWELL, START);
+    NPC_REFRESH(BAU_2277_LOWELL);
+}
+
+func void DIA_CREDNAR_COMEIN_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_ComeIn_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_ComeIn_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_ComeIn_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_ComeIn_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_ComeIn_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_ComeIn_03_06");
+    DIA_CREDNAR_ALLOWUSTOGO();
+}
+
+instance DIA_CREDNAR_GOODNEWS(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_GOODNEWS_CONDITION;
+    INFORMATION = DIA_CREDNAR_GOODNEWS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You know what the positive of this situation is?";
+}
+
+func int DIA_CREDNAR_GOODNEWS_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 81453)) && ((LOG_GETSTATUS(MIS_Q401)) == (LOG_RUNNING))) && ((Q401_FABIOANDGANGGONE) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_GOODNEWS_INFO() {
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_GoodNews_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_GoodNews_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_GoodNews_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_GoodNews_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_GoodNews_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_GoodNews_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_GoodNews_03_07");
+    AI_RESETFACEANI(OTHER);
+    DIA_CREDNAR_ALLOWUSTOGO();
+}
+
+instance DIA_CREDNAR_SMITH(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_SMITH_CONDITION;
+    INFORMATION = DIA_CREDNAR_SMITH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Where can I find your blacksmith?";
+}
+
+func int DIA_CREDNAR_SMITH_CONDITION() {
+    if (((CREDNAR_ALLOWUSTOGO) == (TRUE)) && ((NPC_KNOWSINFO(OTHER, 81485)) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_SMITH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Smith_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Smith_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Smith_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Smith_15_04");
+}
+
+instance DIA_CREDNAR_SQ419_ENTERWOODCUTTERS(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_SQ419_ENTERWOODCUTTERS_CONDITION;
+    INFORMATION = DIA_CREDNAR_SQ419_ENTERWOODCUTTERS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Can't you just let those woodcutters in?";
+}
+
+func int DIA_CREDNAR_SQ419_ENTERWOODCUTTERS_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ419)) == (LOG_RUNNING)) && ((NPC_KNOWSINFO(OTHER, 81545)) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_SQ419_ENTERWOODCUTTERS_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_SQ419_EnterWoodcutters_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_SQ419_EnterWoodcutters_03_02");
+    AI_LOGENTRY(TOPIC_SQ419, LOG_SQ419_CREDNAR_NOENTRY);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_CREDNAR_SQ419_EINAR(C_INFO) {
+    NPC = 58254;
+    NR = 1;
+    CONDITION = DIA_CREDNAR_SQ419_EINAR_CONDITION;
+    INFORMATION = DIA_CREDNAR_SQ419_EINAR_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Einar has a receipt for you.";
+}
+
+func int DIA_CREDNAR_SQ419_EINAR_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ419)) == (LOG_RUNNING)) && ((NPC_HASITEMS(OTHER, 37411)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_SQ419_EINAR_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_SQ419_Einar_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 37411, 1);
+    B_STANDUP();
+    B_USEFAKESCROLL();
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Crednar_SQ419_Einar_03_02");
+    AI_LOGENTRY(TOPIC_SQ419, LOG_SQ419_CREDNAR_ENTRY);
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_CREDNAR_AMBIENT(C_INFO) {
+    NPC = 58254;
+    NR = 850;
+    CONDITION = DIA_CREDNAR_AMBIENT_CONDITION;
+    INFORMATION = DIA_CREDNAR_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_CREDNAR_AMBIENT_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q401)) == (LOG_SUCCESS)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_AMBIENT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Crednar_Ambient_15_01");
+    if ((Q404_MARVINFINISHEDMINE) < (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Ambient_03_02");
+    };
+    if ((Q404_MARVINFINISHEDMINE) >= (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Crednar_Ambient_03_03");
+    };
+}
+
+instance DIA_CREDNAR_PICKPOCKET(C_INFO) {
+    NPC = 58254;
+    NR = 900;
+    CONDITION = DIA_CREDNAR_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_CREDNAR_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120;
+}
+
+func int DIA_CREDNAR_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CREDNAR_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(81476);
+    INFO_ADDCHOICE(81476, DIALOG_BACK, 81480);
+    INFO_ADDCHOICE(81476, DIALOG_PICKPOCKET, 81479);
+}
+
+func void DIA_CREDNAR_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(81476);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(81476);
+}
+
+func void DIA_CREDNAR_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(81476);
+}
+

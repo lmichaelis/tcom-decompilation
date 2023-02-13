@@ -1,0 +1,18 @@
+const int SPL_COST_ICEBOLT = 6;
+const int SPL_DAMAGE_ICEBOLT = 40;
+instance SPELL_ICEBOLT(C_SPELL_PROTO) {
+    C_SPELL_PROTO();
+    TIME_PER_MANA = 0;
+    DAMAGE_PER_LEVEL = SPL_DAMAGE_ICEBOLT;
+}
+
+func int SPELL_LOGIC_ICEBOLT(var int MANAINVESTED) {
+    if ((NPC_GETACTIVESPELLISSCROLL(SELF)) && ((SELF.ATTRIBUTE[2]) >= (SPL_COST_SCROLL))) {
+        return SPL_SENDCAST;
+    };
+    if ((SELF.ATTRIBUTE[2]) >= (SPL_COST_ICEBOLT)) {
+        return SPL_SENDCAST;
+    };
+    return SPL_SENDSTOP;
+}
+

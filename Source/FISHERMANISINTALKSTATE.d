@@ -1,0 +1,46 @@
+var int FISHERMANISINTALKSTATE;
+func void ZS_SIT_NETREPAIR() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    if (!(C_BODYSTATECONTAINS(SELF, BS_SIT))) {
+        AI_SETWALKMODE(SELF, NPC_WALK);
+        if ((HLP_STRCMP(NPC_GETNEARESTWP(SELF), SELF.WP)) == (FALSE)) {
+            AI_GOTOWP(SELF, SELF.WP);
+        };
+    };
+}
+
+func int ZS_SIT_NETREPAIR_LOOP() {
+    if ((!(C_BODYSTATECONTAINS(SELF, BS_SIT))) && (WLD_ISMOBAVAILABLE(SELF, "CHAIR"))) {
+        MDL_APPLYOVERLAYMDS(SELF, "HumanS_FishRepair.mds");
+        AI_USEMOB(SELF, "CHAIR", 1);
+    };
+    if ((NPC_ISINSTATE(SELF, 61599)) && ((FISHERMANISINTALKSTATE) == (FALSE))) {
+        AI_PLAYANI(SELF, "R_CHAIR_RANDOM_1");
+        FISHERMANISINTALKSTATE = TRUE;
+    };
+    if ((!(NPC_ISINSTATE(SELF, 61599))) && ((FISHERMANISINTALKSTATE) == (TRUE))) {
+        AI_PLAYANI(SELF, "R_CHAIR_RANDOM_1");
+        FISHERMANISINTALKSTATE = FALSE;
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_SIT_NETREPAIR_END() {
+    AI_USEMOB(SELF, "CHAIR", -(1));
+}
+
+func void REMOVESITFISHMENOVERLAY() {
+    MDL_REMOVEOVERLAYMDS(SELF, "HumanS_FishRepair.mds");
+}
+
+func void CHANGEMDS1() {
+    MDL_REMOVEOVERLAYMDS(SELF, "HumanS_FishRepair.mds");
+    MDL_APPLYOVERLAYMDS(SELF, "HumanS_FishWait.mds");
+}
+
+func void CHANGEMDS2() {
+    MDL_REMOVEOVERLAYMDS(SELF, "HumanS_FishWait.mds");
+    MDL_APPLYOVERLAYMDS(SELF, "HumanS_FishRepair.mds");
+}
+

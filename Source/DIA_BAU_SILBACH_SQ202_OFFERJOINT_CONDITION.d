@@ -1,0 +1,98 @@
+func int DIA_BAU_SILBACH_SQ202_OFFERJOINT_CONDITION() {
+    if (((((LOG_GETSTATUS(MIS_SQ202)) == (LOG_RUNNING)) && ((NPC_HASITEMS(OTHER, 34194)) >= (1))) && ((SQ202_OPENDFREDRIKJOINTS) == (TRUE))) && ((SQ202_FARMERGOODCOUNT) != (10))) {
+        if (((SELF.AIVAR[93]) <= (WLD_GETDAY())) && ((SELF.NPCTYPE) == (NPCTYPE_AMBIENT))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_BAU_SILBACH_SQ202_OFFERJOINT_INFO() {
+    var int RNGFARMERTAKE;
+    var int RNGOFFERMARVIN;
+    SQ202_FARMERGOODCOUNT = (SQ202_FARMERGOODCOUNT) + (1);
+    PRINTD(CS2("Liczba skrêtów: ", INTTOSTRING(SQ202_FARMERGOODCOUNT)));
+    SQ202_EARNEDGOLD = (SQ202_EARNEDGOLD) + (5);
+    RNGOFFERMARVIN = HLP_RANDOM(2);
+    AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+    if ((RNGOFFERMARVIN) == (0)) {
+        B_SAY(OTHER, SELF, "$SQ202_Marvin_OfferJoint_V1");
+    };
+    if ((RNGOFFERMARVIN) == (1)) {
+        B_SAY(OTHER, SELF, "$SQ202_Marvin_OfferJoint_V2");
+    };
+    if ((RNGFARMERTAKE) == (2)) {
+        B_SAY(OTHER, SELF, "$SQ202_Marvin_OfferJoint_V3");
+    };
+    B_MARVIN_USEFAKEJOINTTHROW();
+    B_SAY(OTHER, SELF, "$SQ202_Marvin_TellPrice");
+    RNGFARMERTAKE = HLP_RANDOM(4);
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    if ((RNGFARMERTAKE) == (0)) {
+        B_SAY(SELF, OTHER, "$SQ202_Farmer_TakeJoint_V1");
+    };
+    if ((RNGFARMERTAKE) == (1)) {
+        B_SAY(SELF, OTHER, "$SQ202_Farmer_TakeJoint_V2");
+    };
+    if ((RNGFARMERTAKE) == (2)) {
+        B_SAY(SELF, OTHER, "$SQ202_Farmer_TakeJoint_V3");
+    };
+    if ((RNGFARMERTAKE) == (3)) {
+        B_SAY(SELF, OTHER, "$SQ202_Farmer_TakeJoint_V4");
+    };
+    B_GIVEINVITEMS(OTHER, SELF, 34194, 1);
+    CREATEINVITEMS(SELF, 34203, SQ202_JOINTCOST);
+    if ((SQ202_RASCOWANTSJOINT) == (FALSE)) {
+        SQ202_RASCOWANTSJOINT = TRUE;
+        B_SAY(SELF, OTHER, "$SQ202_Farmer_AboutRasco");
+    };
+    B_GIVEINVITEMS(SELF, OTHER, 34203, SQ202_JOINTCOST);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_FUNCTION(SELF, 64108);
+    SELF.AIVAR[93] = (WLD_GETDAY()) + (1);
+}
+
+instance DIA_BAU_SILBACH_SQ416_GOODJOB(C_INFO) {
+    NR = 1;
+    CONDITION = DIA_BAU_SILBACH_SQ416_GOODJOB_CONDITION;
+    INFORMATION = DIA_BAU_SILBACH_SQ416_GOODJOB_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_BAU_SILBACH_SQ416_GOODJOB_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ416)) == (LOG_SUCCESS)) || ((LOG_GETSTATUS(MIS_SQ416)) == (LOG_RUNNING))) {
+        if (NPC_ISINSTATE(SELF, 61599)) {
+            if (((SQ416_RAMSEYPARTY) != (2)) && ((SQ416_PARTYCUTSCENEENABLE) >= (2))) {
+                if ((NPC_GETDISTTOWP(SELF, "VILLAGE_PATH_44")) <= (5000)) {
+                    return TRUE;
+                };
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_BAU_SILBACH_SQ416_GOODJOB_INFO() {
+    var int RNGANWSER;
+    RNGANWSER = HLP_RANDOM(3);
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    if ((RNGANWSER) == (0)) {
+        B_SAY(SELF, OTHER, "$SQ416_GOODJOB_01");
+    };
+    if ((RNGANWSER) == (1)) {
+        B_SAY(SELF, OTHER, "$SQ416_GOODJOB_02");
+    };
+    if ((RNGANWSER) == (2)) {
+        B_SAY(SELF, OTHER, "$SQ416_GOODJOB_03");
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void B_ASSIGNAMBIENTINFOS_BAU_SILBACH(var C_NPC SLF) {
+    DIA_BAU_SILBACH_SQ202_OFFERJOINT.NPC = HLP_GETINSTANCEID(SLF);
+    DIA_BAU_SILBACH_SQ416_GOODJOB.NPC = HLP_GETINSTANCEID(SLF);
+}
+

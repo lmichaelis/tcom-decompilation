@@ -1,0 +1,3617 @@
+var int RODERICH_BECOMEAGUARD_JOINEDMILITIA;
+instance DIA_RODERICH_EXIT(C_INFO) {
+    NPC = 52807;
+    NR = 999;
+    CONDITION = DIA_RODERICH_EXIT_CONDITION;
+    INFORMATION = DIA_RODERICH_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_RODERICH_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_RODERICH_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+var int RODERICH_LASTPETZCOUNTER;
+var int RODERICH_LASTPETZCRIME;
+instance DIA_RODERICH_PMDEBTS(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_PMDEBTS_CONDITION;
+    INFORMATION = DIA_RODERICH_PMDEBTS_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_PMDEBTS_CONDITION() {
+    if (NPC_ISINSTATE(SELF, 61599)) {
+        if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && ((Q308_TOTHEOLDTOWN_EVENTS) == (4))) {
+            return FALSE;
+        };
+        if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS)) && ((NPC_KNOWSINFO(OTHER, 83035)) == (FALSE))) {
+            return FALSE;
+        };
+        if (((RODERICH_DEBTS) > (0)) && ((B_GETGREATESTPETZCRIME(SELF)) <= (RODERICH_LASTPETZCRIME))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_PMDEBTS_INFO() {
+    var int DIFF;
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_00");
+    if ((B_GETTOTALPETZCOUNTER(SELF)) > (RODERICH_LASTPETZCOUNTER)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_02");
+        if ((RODERICH_DEBTS) < (1000)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_03");
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_PMAdd_15_00");
+            DIFF = (B_GETTOTALPETZCOUNTER(SELF)) - (RODERICH_LASTPETZCOUNTER);
+            if ((DIFF) > (0)) {
+                RODERICH_DEBTS = (RODERICH_DEBTS) + ((DIFF) * (50));
+            };
+            if ((RODERICH_DEBTS) > (1000)) {
+                RODERICH_DEBTS = 1000;
+            };
+            B_SAY_GOLD(SELF, OTHER, RODERICH_DEBTS);
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_04");
+        };
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) < (RODERICH_LASTPETZCRIME)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_05");
+        if ((RODERICH_LASTPETZCRIME) == (CRIME_MURDER)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_06");
+        };
+        if (((RODERICH_LASTPETZCRIME) == (CRIME_THEFT)) || (((RODERICH_LASTPETZCRIME) > (CRIME_THEFT)) && ((B_GETGREATESTPETZCRIME(SELF)) < (CRIME_THEFT)))) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_07");
+        };
+        if (((RODERICH_LASTPETZCRIME) == (CRIME_ATTACK)) || (((RODERICH_LASTPETZCRIME) > (CRIME_ATTACK)) && ((B_GETGREATESTPETZCRIME(SELF)) < (CRIME_ATTACK)))) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_08");
+        };
+        if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_NONE)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_09");
+        };
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_10");
+        if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_NONE)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_11");
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_12");
+            RODERICH_DEBTS = 0;
+            RODERICH_LASTPETZCOUNTER = 0;
+            RODERICH_LASTPETZCRIME = CRIME_NONE;
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_13");
+            B_SAY_GOLD(SELF, OTHER, RODERICH_DEBTS);
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PMDebts_08_14");
+        };
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) != (CRIME_NONE)) {
+        INFO_CLEARCHOICES(65989);
+        INFO_CLEARCHOICES(65994);
+        INFO_ADDCHOICE(65989, "I don't have that much gold.", 65998);
+        INFO_ADDCHOICE(65989, "How much was it supposed to be?", 65993);
+        if ((NPC_HASITEMS(OTHER, 34203)) >= (RODERICH_DEBTS)) {
+            INFO_ADDCHOICE(65989, "I want to pay the fine!", 65997);
+        };
+    };
+}
+
+func void DIA_RODERICH_PMDEBTS_HOWMUCHAGAIN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_PMDebts_HowMuchAgain_15_00");
+    B_SAY_GOLD(SELF, OTHER, RODERICH_DEBTS);
+    INFO_CLEARCHOICES(65989);
+    INFO_CLEARCHOICES(65994);
+    INFO_ADDCHOICE(65989, "I don't have that much gold.", 65998);
+    INFO_ADDCHOICE(65989, "How much was it supposed to be?", 65993);
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (RODERICH_DEBTS)) {
+        INFO_ADDCHOICE(65989, "I want to pay the fine!", 65997);
+    };
+}
+
+instance DIA_RODERICH_PETZMASTER(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_PETZMASTER_CONDITION;
+    INFORMATION = DIA_RODERICH_PETZMASTER_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_PETZMASTER_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && ((Q308_TOTHEOLDTOWN_EVENTS) == (4))) {
+        return FALSE;
+    };
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS)) && ((NPC_KNOWSINFO(OTHER, 83035)) == (FALSE))) {
+        return FALSE;
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) > (RODERICH_LASTPETZCRIME)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_PETZMASTER_INFO() {
+    RODERICH_DEBTS = 0;
+    if ((SELF.AIVAR[5]) == (FALSE)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_00");
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_MURDER)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_02");
+        RODERICH_DEBTS = (B_GETTOTALPETZCOUNTER(SELF)) * (50);
+        RODERICH_DEBTS = (RODERICH_DEBTS) + (500);
+        if ((((PETZCOUNTER_CITY_THEFT) + (PETZCOUNTER_CITY_ATTACK)) + (PETZCOUNTER_CITY_SHEEPKILLER)) > (0)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_03");
+        };
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_07");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_08");
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_THEFT)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_09");
+        if (((PETZCOUNTER_CITY_ATTACK) + (PETZCOUNTER_CITY_SHEEPKILLER)) > (0)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_10");
+        };
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_11");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_12");
+        RODERICH_DEBTS = (B_GETTOTALPETZCOUNTER(SELF)) * (50);
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_ATTACK)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_13");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_14");
+        if ((PETZCOUNTER_CITY_SHEEPKILLER) > (0)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_15");
+        };
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_16");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_17");
+        RODERICH_DEBTS = (B_GETTOTALPETZCOUNTER(SELF)) * (50);
+    };
+    if ((B_GETGREATESTPETZCRIME(SELF)) == (CRIME_SHEEPKILLER)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_18");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_19");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_08_20");
+        RODERICH_DEBTS = 100;
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_PETZMASTER_15_21");
+    if ((RODERICH_DEBTS) > (1000)) {
+        RODERICH_DEBTS = 1000;
+    };
+    B_SAY_GOLD(SELF, OTHER, RODERICH_DEBTS);
+    INFO_CLEARCHOICES(65989);
+    INFO_CLEARCHOICES(65994);
+    INFO_ADDCHOICE(65994, "I don't have that much gold.", 65998);
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (RODERICH_DEBTS)) {
+        INFO_ADDCHOICE(65994, "I want to pay the fine!", 65997);
+    };
+}
+
+func void DIA_RODERICH_PETZMASTER_PAYNOW() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_PETZMASTER_PayNow_15_00");
+    B_GIVEINVITEMS(OTHER, SELF, 34203, RODERICH_DEBTS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_PayNow_08_01");
+    B_GRANTABSOLUTION(LOC_CITY);
+    RODERICH_DEBTS = 0;
+    RODERICH_LASTPETZCOUNTER = 0;
+    RODERICH_LASTPETZCRIME = CRIME_NONE;
+    INFO_CLEARCHOICES(65994);
+    INFO_CLEARCHOICES(65989);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_RODERICH_PETZMASTER_PAYLATER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_PETZMASTER_PayLater_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_PayLater_08_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_PETZMASTER_PayLater_08_02");
+    RODERICH_LASTPETZCOUNTER = B_GETTOTALPETZCOUNTER(SELF);
+    RODERICH_LASTPETZCRIME = B_GETGREATESTPETZCRIME(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_RODERICH_LEAVEGUILDFOREVER() {
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LeaveGuildForever_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LeaveGuildForever_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LeaveGuildForever_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_YesSir_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 66223);
+    AI_FUNCTION(SELF, 63592);
+}
+
+instance DIA_RODERICH_HELLO(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_HELLO_CONDITION;
+    INFORMATION = DIA_RODERICH_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_HELLO_CONDITION() {
+    if ((NPC_ISINSTATE(SELF, 61599)) && ((SELF.AIVAR[5]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_HELLO_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_HELLO_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_HELLO_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_HELLO_03_03");
+}
+
+instance DIA_RODERICH_WHO(C_INFO) {
+    NPC = 52807;
+    NR = 2;
+    CONDITION = DIA_RODERICH_WHO_CONDITION;
+    INFORMATION = DIA_RODERICH_WHO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_RODERICH_WHO_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 66000)) || ((SELF.AIVAR[5]) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_WHO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Who_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Who_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Who_03_03");
+}
+
+instance DIA_RODERICH_Q203(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_Q203_CONDITION;
+    INFORMATION = DIA_RODERICH_Q203_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "I'd like to join the city guard.";
+}
+
+func int DIA_RODERICH_Q203_CONDITION() {
+    if (((((NPC_KNOWSINFO(OTHER, 66003)) && ((FMQ001_RODEIRCHSENTTOTRAINING) == (FALSE))) && ((LOG_GETSTATUS(MIS_Q209)) == (LOG_SUCCESS))) && ((KAPITEL) == (2))) && ((HERO.GUILD) != (GIL_SLD))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_Q203_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_13_02");
+    if ((RODERICHBECOMEGUARD) == (FALSE)) {
+        RODERICHBECOMEGUARD = TRUE;
+    };
+    INFO_CLEARCHOICES(66006);
+    INFO_ADDCHOICE(66006, "Unfortunately, no.", 66009);
+    if ((NPC_HASITEMS(OTHER, 37138)) >= (1)) {
+        INFO_ADDCHOICE(66006, "Here, here's my pass.", 66010);
+    };
+}
+
+func void DIA_RODERICH_Q203_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_NO_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_NO_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_NO_13_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_NO_13_03");
+    if ((LOG_GETSTATUS(MIS_Q203)) != (LOG_RUNNING)) {
+        LOG_CREATETOPIC(TOPIC_Q203, LOG_MISSION);
+        LOG_SETSTATUS(_@(MIS_Q203), TOPIC_Q203, LOG_RUNNING);
+        AI_LOGENTRY(TOPIC_Q203, LOG_Q203_START);
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_RODERICH_Q203_YES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_YES_15_00");
+    B_GIVEINVITEMS(OTHER, SELF, 37138, 1);
+    B_STANDUP();
+    B_USEFAKESCROLL();
+    B_GIVEINVITEMS(SELF, OTHER, 37138, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_YES_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_YES_13_02");
+    INFO_CLEARCHOICES(66006);
+    INFO_ADDCHOICE(66006, "There is an issue I want to address as a guard...", 66012);
+}
+
+func void DIA_RODERICH_Q203_NEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Next_13_01");
+    INFO_CLEARCHOICES(66006);
+    INFO_ADDCHOICE(66006, "So what's it like to work in the guard?", 66013);
+}
+
+func void DIA_RODERICH_Q203_LOOKINGFORJORN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_lookingforJorn_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_lookingforJorn_13_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_lookingforJorn_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_lookingforJorn_13_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_lookingforJorn_13_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_lookingforJorn_15_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_lookingforJorn_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_lookingforJorn_13_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_lookingforJorn_13_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_lookingforJorn_13_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_lookingforJorn_13_10");
+    DIA_RODERICH_Q203_NEXT();
+}
+
+func void DIA_RODERICH_Q203_HOWISIT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_howisit_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_howisit_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_howisit_13_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_howisit_13_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_howisit_13_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_howisit_13_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_howisit_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_howisit_13_09");
+    INFO_CLEARCHOICES(66006);
+    INFO_ADDCHOICE(66006, "Well, I happened to chase off a couple of meatbugs...", 66015);
+    INFO_ADDCHOICE(66006, "Or even a whole dozen of them!", 66016);
+}
+
+func void DIA_RODERICH_Q203_COMMONEND() {
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_TRAINING);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_goodfighter_13_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_goodfighter_13_03");
+    FMQ001_RODEIRCHSENTTOTRAINING = TRUE;
+    FMQ001_RODEIRCHSENTTOTRAINING_DAY = WLD_GETDAY();
+    if ((LOG_GETSTATUS(MIS_Q203)) != (LOG_RUNNING)) {
+        LOG_CREATETOPIC(TOPIC_Q203, LOG_MISSION);
+        LOG_SETSTATUS(_@(MIS_Q203), TOPIC_Q203, LOG_RUNNING);
+    };
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_TRAINING);
+    LOG_CREATETOPIC(TOPIC_FMQ001, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_FMQ001), TOPIC_FMQ001, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_FMQ001, LOG_FMQ001_START);
+    INFO_CLEARCHOICES(66006);
+}
+
+func void DIA_RODERICH_Q203_GOODFIGHTER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_goodfighter_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_goodfighter_13_01");
+    DIA_RODERICH_Q203_COMMONEND();
+}
+
+func void DIA_RODERICH_Q203_BADFIGHTER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_badfighter_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_badfighter_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_badfighter_13_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_badfighter_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_badfighter_13_04");
+    DIA_RODERICH_Q203_COMMONEND();
+}
+
+instance DIA_RODERICH_FMQ003DONE(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_FMQ003DONE_CONDITION;
+    INFORMATION = DIA_RODERICH_FMQ003DONE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I report that I finished my patrol last night.";
+}
+
+func int DIA_RODERICH_FMQ003DONE_CONDITION() {
+    if ((((NPC_KNOWSINFO(OTHER, 66500)) && (WLD_ISTIME(8, 0, 22, 0))) && ((NPC_GETDISTTOWP(SELF, "PARTM3_RODERICH_BOOKSTAND")) <= (450))) && ((NPC_GETDISTTOWP(MIL_4016_WEGAR, "PARTM3_RODERICH_WAIT")) <= (450))) {
+        if ((HERO.GUILD) != (GIL_SLD)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_FMQ003DONE_INFO() {
+    AI_FUNCTION(SELF, 62803);
+    AI_FUNCTION(SELF, 62802);
+    AI_FUNCTION(SELF, 41897);
+    TRIA_INVITE(MIL_4016_WEGAR);
+    TRIA_START();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ003Done_03_03");
+    if ((FMQ003_PATROLVILLACHOSEN) == (TRUE)) {
+        if ((FMQ003_ANGRYVLKTALK) == (1)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_04");
+        } else if ((FMQ003_ANGRYVLKTALK) == (2)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_05");
+        } else if ((FMQ003_ANGRYVLKTALK) == (3)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_06");
+        };
+    };
+    if ((FMQ003_PATROLGUILDCHOSEN) == (TRUE)) {
+        if ((FMQ003_CITIZENTALK) == (1)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_07");
+        } else if ((FMQ003_CITIZENTALK) == (2)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_08");
+        } else if ((FMQ003_CITIZENTALK) == (3)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_09");
+        };
+    };
+    if ((FMQ003_PATROLFIREMAGESCHOSEN) == (TRUE)) {
+        if ((FMQ003_NOVICETALK) == (1)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_10");
+        } else if ((FMQ003_NOVICETALK) == (2)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_11");
+        } else if ((FMQ003_NOVICETALK) == (3)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_12");
+        };
+    };
+    if ((FMQ003_PATROLCHURCHCHOSEN) == (TRUE)) {
+        if ((FMQ003_THIEFTALK) == (1)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_13");
+        } else if ((FMQ003_THIEFTALK) == (3)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_14");
+        } else if ((FMQ003_THIEFTALK) == (4)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_15");
+        };
+    };
+    if ((FMQ003_PATROLCRAFTCHOSEN) == (TRUE)) {
+        if ((FMQ003_HOMELESSTALK) == (1)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_16");
+        } else if ((FMQ003_HOMELESSTALK) == (2)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_17");
+        } else if ((FMQ003_HOMELESSTALK) == (3)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_18");
+        };
+    };
+    if ((FMQ003_PATROLWATERMAGESCHOSEN) == (TRUE)) {
+        if ((FMQ003_FANATICTALK) == (1)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_19");
+        } else if ((FMQ003_FANATICTALK) == (2)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_20");
+        };
+    };
+    if ((FMQ003_PATROLSLUMSCHOSEN) == (TRUE)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_21");
+        TRIA_WAIT();
+        TRIA_NEXT(MIL_4016_WEGAR);
+        AI_TURNTONPC(SELF, MIL_4016_WEGAR);
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ003Done_03_22");
+        TRIA_WAIT();
+        TRIA_NEXT(MIL_4000_RODERICH);
+        AI_LOOKATNPC(SELF, OTHER);
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ003Done_03_23");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ003Done_15_24");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ003Done_03_25");
+    TRIA_FINISH();
+    AI_STOPLOOKAT(SELF);
+    AI_STOPLOOKAT(OTHER);
+    AI_LOGENTRY(TOPIC_FMQ003, LOG_FMQ003_RODERICH_WELLDONE);
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_AFTERPATROL);
+    LOG_SETSTATUS(_@(MIS_FMQ003), TOPIC_FMQ003, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_FMQ003_FINISH);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(MIL_4016_WEGAR, START);
+    RESTOREROUTINE_RODERICH();
+}
+
+instance DIA_RODERICH_FMQ001_FINISH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_FMQ001_FINISH_CONDITION;
+    INFORMATION = DIA_RODERICH_FMQ001_FINISH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I was at the training.";
+}
+
+func int DIA_RODERICH_FMQ001_FINISH_CONDITION() {
+    if (((FMQ001_FINISHTRAINING) == (1)) || ((FMQ001_FINISHTRAINING) == (2))) {
+        if ((HERO.GUILD) != (GIL_SLD)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_FMQ001_FINISH_INFO() {
+    AI_FUNCTION(SELF, 62795);
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ001_Finish_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_02");
+    if ((FMQ001_FINISHTRAINING) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_04");
+    };
+    if ((FMQ001_FINISHTRAINING) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_06");
+    };
+    if ((FMQ001_TRAININGREMATCHFIGHTRESULT) == (5)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_07");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_08");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_10");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ001_Finish_15_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_04_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FMQ001_Finish_03_13");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FMQ001_Finish_15_14");
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_AFTERTRAINING);
+    AI_LOGENTRY(TOPIC_FMQ001, LOG_FMQ001_FINISH);
+    LOG_SETSTATUS(_@(MIS_FMQ001), TOPIC_FMQ001, LOG_SUCCESS);
+    TELEPORTNPCTOWP(52384, "PARTM3_LEAN_03");
+    NPC_EXCHANGEROUTINE(MIL_4017_ARWID, "CHAT");
+    ARWID_CHAT = TRUE;
+    if ((FMQ001_TRAININGREMATCHFIGHTRESULT) == (5)) {
+        B_GIVEPLAYERXP((FMQ001_FINISH) / (2));
+    };
+    if ((FMQ001_FINISHTRAINING) == (2)) {
+        B_GIVEPLAYERXP((FMQ001_FINISH) * (2));
+    };
+    B_GIVEPLAYERXP(FMQ001_FINISH);
+}
+
+instance DIA_RODERICH_GUARDWEAPON(C_INFO) {
+    NPC = 52807;
+    NR = 2;
+    CONDITION = DIA_RODERICH_GUARDWEAPON_CONDITION;
+    INFORMATION = DIA_RODERICH_GUARDWEAPON_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Why should I get my own weapon?";
+}
+
+func int DIA_RODERICH_GUARDWEAPON_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 66020)) && ((HERO.GUILD) != (GIL_SLD))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_GUARDWEAPON_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_GuardWeapon_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_GuardWeapon_04_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_GuardWeapon_04_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_GuardWeapon_04_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_GuardWeapon_04_05");
+    LOG_CREATETOPIC(TOPIC_FMQ002, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_FMQ002), TOPIC_FMQ002, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_FMQ002, LOG_FMQ002_START);
+    B_STARTOTHERROUTINE(MIL_4017_ARWID, "GUARDARMS");
+    NPC_REFRESH(MIL_4017_ARWID);
+    TELEPORTNPCTOWP(52384, MIL_4017_ARWID.WP);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RODERICH_MARVINGOTWEAPON(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_MARVINGOTWEAPON_CONDITION;
+    INFORMATION = DIA_RODERICH_MARVINGOTWEAPON_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I already have a weapon.";
+}
+
+func int DIA_RODERICH_MARVINGOTWEAPON_CONDITION() {
+    if ((((FMQ002_GOTSWORD) == (1)) && ((HERO.GUILD) != (GIL_SLD))) && ((LOG_GETSTATUS(MIS_FMQ002)) == (LOG_RUNNING))) {
+        if (((((NPC_HASITEMS(OTHER, 39498)) >= (1)) || ((NPC_HASITEMS(OTHER, 39500)) >= (1))) || ((NPC_HASITEMS(OTHER, 39499)) >= (1))) || ((NPC_HASITEMS(OTHER, 39501)) >= (1))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_MARVINGOTWEAPON_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_MarvinGotWeapon_15_01");
+    B_STANDUP();
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_MarvinGotWeapon_04_02");
+    FMQ002_GIVERODERICHSWORD();
+    B_USEFAKECHECKSWORD_MILITIA();
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_MarvinGotWeapon_04_03");
+    FMQ002_GIVESWORDBACK();
+    FMQ002_RESTARTNPC();
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_MarvinGotWeapon_04_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_MarvinGotWeapon_04_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_MarvinGotWeapon_04_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_MarvinGotWeapon_04_07");
+    CREATEINVITEMS(SELF, 35485, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 35485, 1);
+    AI_EQUIPARMOR(OTHER, 35485);
+    AI_LOGENTRY(TOPIC_FMQ002, LOG_FMQ002_FINISH);
+    FMQ002_FINISHQUEST();
+}
+
+instance DIA_RODERICH_LASTQUEST(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_LASTQUEST_CONDITION;
+    INFORMATION = DIA_RODERICH_LASTQUEST_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What is the last task?";
+}
+
+func int DIA_RODERICH_LASTQUEST_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 66026)) && ((HERO.GUILD) != (GIL_SLD))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_LASTQUEST_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_LastQuest_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_03_04");
+    INFO_CLEARCHOICES(66029);
+    INFO_ADDCHOICE(66029, "How should I proceed?", 66032);
+    INFO_ADDCHOICE(66029, "If something happens, can I count on this Weigar?", 66033);
+    INFO_ADDCHOICE(66029, "All clear.", 66034);
+}
+
+func void DIA_RODERICH_LASTQUEST_WHAT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_LastQuest_What_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_What_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_What_03_03");
+}
+
+func void DIA_RODERICH_LASTQUEST_WEGAR() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_LastQuest_Wegar_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_Wegar_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_Wegar_03_03");
+}
+
+func void DIA_RODERICH_LASTQUEST_YESSIR() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_LastQuest_YesSir_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_YesSir_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_LastQuest_YesSir_15_03");
+    B_STARTOTHERROUTINE(MIL_4016_WEGAR, "WAITFORQUEST");
+    AI_PLAYANI(SELF, T_GREETGRD);
+    INFO_CLEARCHOICES(66029);
+    AI_STOPPROCESSINFOS(SELF);
+    LOG_CREATETOPIC(TOPIC_FMQ003, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_FMQ003), TOPIC_FMQ003, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_FMQ003, LOG_FMQ003_START);
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_AFTERSWORD);
+}
+
+instance DIA_RODERICH_Q203_MILITIAREADY(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_Q203_MILITIAREADY_CONDITION;
+    INFORMATION = DIA_RODERICH_Q203_MILITIAREADY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I've done all the work I was asked to do.";
+}
+
+func int DIA_RODERICH_Q203_MILITIAREADY_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 66017)) && ((HERO.GUILD) != (GIL_SLD))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_Q203_MILITIAREADY_INFO() {
+    ACH_4_CANJOIN_MILITIA = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_MilitiaReady_15_01");
+    B_STANDUP();
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_03_08");
+    INFO_CLEARCHOICES(66035);
+    INFO_ADDCHOICE(66035, "Joining the guard was the wrong decision.", 66040);
+    INFO_ADDCHOICE(66035, "I need to think about this some more.", 66039);
+    INFO_ADDCHOICE(66035, "Yes, I'm ready.", 66038);
+}
+
+func void DIA_RODERICH_Q203_MILITIAREADY_YES() {
+    RODERICH_BECOMEAGUARD_JOINEDMILITIA = TRUE;
+    if (MARVINCANJOINMERCENARIES) {
+        GAMESERVICES_UNLOCKACHIEVEMENT(ACH_4);
+    };
+    Q204_FAILQUESTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_MilitiaReady_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_Yes_03_02");
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_ALLDONE);
+    AI_FUNCTION(SELF, 64011);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_RODERICH_Q203_MILITIAREADY_RETHINK() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_MilitiaReady_Rethink_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_Rethink_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_Rethink_03_03");
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_NOTSURE);
+    INFO_CLEARCHOICES(66035);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_RODERICH_Q203_MILITIAREADY_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_MilitiaReady_No_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_No_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_MilitiaReady_No_03_03");
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_NOTSURE);
+    INFO_CLEARCHOICES(66035);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RODERICH_JOINMILITIA(C_INFO) {
+    NPC = 52807;
+    NR = 20;
+    CONDITION = DIA_RODERICH_JOINMILITIA_CONDITION;
+    INFORMATION = DIA_RODERICH_JOINMILITIA_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Yes, I'm ready to be a guard.";
+}
+
+func int DIA_RODERICH_JOINMILITIA_CONDITION() {
+    if ((((NPC_KNOWSINFO(OTHER, 66035)) && ((RODERICH_BECOMEAGUARD_JOINEDMILITIA) == (FALSE))) && ((KAPITEL) == (2))) && ((HERO.GUILD) == (GIL_VLK))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_JOINMILITIA_INFO() {
+    DIA_RODERICH_Q203_MILITIAREADY_YES();
+}
+
+instance DIA_RODERICH_Q203_VOW(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_Q203_VOW_CONDITION;
+    INFORMATION = DIA_RODERICH_Q203_VOW_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_Q203_VOW_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q203)) == (LOG_RUNNING)) && ((Q203_JOININGMILITIA) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_Q203_VOW_INFO() {
+    AI_TURNTONPC(OTHER, SELF);
+    AI_TURNTONPC(SELF, OTHER);
+    AI_LOOKATNPC(OTHER, SELF);
+    AI_LOOKATNPC(SELF, OTHER);
+    AI_FUNCTION(SELF, 64012);
+    AI_PLAYANIBS(OTHER, "T_STAND_2_MILSTAND_HERO", BS_SIT);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_06");
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_PLAYANIBS(OTHER, "T_MILSTAND_2_MILJOIN_HERO", BS_SIT);
+    AI_FUNCTION(SELF, 64013);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_07");
+    INFO_CLEARCHOICES(66044);
+    INFO_ADDCHOICE(66044, "I swear to serve the city and its king.", 66054);
+    INFO_ADDCHOICE(66044, "I swear to serve the city and its rulers.", 66055);
+    INFO_ADDCHOICE(66044, "I swear to serve the city and its government.", 66053);
+}
+
+func void DIA_RODERICH_Q203_VOW_LINEV2() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_11");
+    INFO_CLEARCHOICES(66044);
+    INFO_ADDCHOICE(66044, "To be a shield to its enemies and a sword to its citizens.", 66058);
+    INFO_ADDCHOICE(66044, "Be a shield for its citizens and a sword to its enemy.", 66057);
+    INFO_ADDCHOICE(66044, "Be a shield to its citizens and a sword to its enemies.", 66056);
+}
+
+func void DIA_RODERICH_Q203_VOW_LINEV3() {
+    WLD_SENDTRIGGER("KM_MILITIAJOIN_02");
+    WLD_SENDUNTRIGGER("KM_MILITIAJOIN_01");
+    TELEPORTNPCTOWP(52807, "PARTM3_RODERICH_SPEECH");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_12");
+    INFO_CLEARCHOICES(66044);
+    INFO_ADDCHOICE(66044, "Obey the laws granted by the sole and undividable grace of the King of Myrtana.", 66060);
+    INFO_ADDCHOICE(66044, "Obey the laws granted by the sole and undivided grace of the King of Myrtana.", 66059);
+    INFO_ADDCHOICE(66044, "Obey the laws given by the sore and undivided grace of the King of Myrtana.", 66061);
+}
+
+func void DIA_RODERICH_Q203_VOW_LINEV4() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_13");
+    INFO_CLEARCHOICES(66044);
+    INFO_ADDCHOICE(66044, "Perform duty faithfully and uphold the good name of the guard.", 66063);
+    INFO_ADDCHOICE(66044, "Perform duties faithfully and uphold the good name of the guard.", 66062);
+    INFO_ADDCHOICE(66044, "Perform duties faithfully and ensure the good name of the guard.", 66064);
+}
+
+func void DIA_RODERICH_Q203_VOW_LINEV5() {
+    WLD_SENDTRIGGER("KM_MILITIAJOIN_03");
+    WLD_SENDUNTRIGGER("KM_MILITIAJOIN_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_14");
+    INFO_CLEARCHOICES(66044);
+    INFO_ADDCHOICE(66044, "Never draw a weapon for an unjust cause.", 66065);
+    INFO_ADDCHOICE(66044, "Never draw a weapon for a just cause.", 66066);
+    INFO_ADDCHOICE(66044, "Never draw weapons for an unjust cause.", 66067);
+}
+
+func void DIA_RODERICH_Q203_VOW_LINEV6() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_15");
+    INFO_CLEARCHOICES(66044);
+    INFO_ADDCHOICE(66044, "And if the time comes, to give mine life in the line of duty.", 66069);
+    INFO_ADDCHOICE(66044, "And if the time should come, to give my life in the line of duty.", 66070);
+    INFO_ADDCHOICE(66044, "And if the time comes, to give my life in the line of duty.", 66068);
+}
+
+func void DIA_RODERICH_Q203_VOW_DONE() {
+    WLD_SENDTRIGGER("KM_MILITIAJOIN_04");
+    WLD_SENDUNTRIGGER("KM_MILITIAJOIN_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_31");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_32");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_33");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q203_Vow_Yes_03_34");
+    AI_STOPLOOKAT(SELF);
+    AI_STOPLOOKAT(OTHER);
+    INFO_CLEARCHOICES(66044);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 64015);
+    AI_FUNCTION(HERO, 64014);
+}
+
+func void DIA_RODERICH_Q203_VOW_V1G1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_08");
+    Q203_MILITIASPEACHCOUNT = (Q203_MILITIASPEACHCOUNT) + (1);
+    DIA_RODERICH_Q203_VOW_LINEV2();
+}
+
+func void DIA_RODERICH_Q203_VOW_V1B1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_09");
+    DIA_RODERICH_Q203_VOW_LINEV2();
+}
+
+func void DIA_RODERICH_Q203_VOW_V1B2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_10");
+    DIA_RODERICH_Q203_VOW_LINEV2();
+}
+
+func void DIA_RODERICH_Q203_VOW_V2G1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_16");
+    Q203_MILITIASPEACHCOUNT = (Q203_MILITIASPEACHCOUNT) + (1);
+    DIA_RODERICH_Q203_VOW_LINEV3();
+}
+
+func void DIA_RODERICH_Q203_VOW_V2B1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_17");
+    DIA_RODERICH_Q203_VOW_LINEV3();
+}
+
+func void DIA_RODERICH_Q203_VOW_V2B2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_18");
+    DIA_RODERICH_Q203_VOW_LINEV3();
+}
+
+func void DIA_RODERICH_Q203_VOW_V3G1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_19");
+    Q203_MILITIASPEACHCOUNT = (Q203_MILITIASPEACHCOUNT) + (1);
+    DIA_RODERICH_Q203_VOW_LINEV4();
+}
+
+func void DIA_RODERICH_Q203_VOW_V3B1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_20");
+    DIA_RODERICH_Q203_VOW_LINEV4();
+}
+
+func void DIA_RODERICH_Q203_VOW_V3B2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_21");
+    DIA_RODERICH_Q203_VOW_LINEV4();
+}
+
+func void DIA_RODERICH_Q203_VOW_V4G1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_22");
+    Q203_MILITIASPEACHCOUNT = (Q203_MILITIASPEACHCOUNT) + (1);
+    DIA_RODERICH_Q203_VOW_LINEV5();
+}
+
+func void DIA_RODERICH_Q203_VOW_V4B1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_23");
+    DIA_RODERICH_Q203_VOW_LINEV5();
+}
+
+func void DIA_RODERICH_Q203_VOW_V4B2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_24");
+    DIA_RODERICH_Q203_VOW_LINEV5();
+}
+
+func void DIA_RODERICH_Q203_VOW_V5G1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_25");
+    Q203_MILITIASPEACHCOUNT = (Q203_MILITIASPEACHCOUNT) + (1);
+    DIA_RODERICH_Q203_VOW_LINEV6();
+}
+
+func void DIA_RODERICH_Q203_VOW_V5B1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_26");
+    DIA_RODERICH_Q203_VOW_LINEV6();
+}
+
+func void DIA_RODERICH_Q203_VOW_V5B2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_27");
+    DIA_RODERICH_Q203_VOW_LINEV6();
+}
+
+func void DIA_RODERICH_Q203_VOW_V6G1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_28");
+    Q203_MILITIASPEACHCOUNT = (Q203_MILITIASPEACHCOUNT) + (1);
+    DIA_RODERICH_Q203_VOW_DONE();
+}
+
+func void DIA_RODERICH_Q203_VOW_V6B1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_29");
+    DIA_RODERICH_Q203_VOW_DONE();
+}
+
+func void DIA_RODERICH_Q203_VOW_V6B2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q203_Vow_Yes_15_30");
+    DIA_RODERICH_Q203_VOW_DONE();
+}
+
+instance DIA_RODERICH_WELCOMEMIL(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_WELCOMEMIL_CONDITION;
+    INFORMATION = DIA_RODERICH_WELCOMEMIL_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_WELCOMEMIL_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 68651)) && ((OTHER.GUILD) == (GIL_MIL))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_WELCOMEMIL_INFO() {
+    B_STARTOTHERROUTINE(MIL_4017_ARWID, "JOININGMILITIA_TAVERN_CHAT");
+    NPC_REFRESH(MIL_4017_ARWID);
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_WELCOMEMIL_03_01");
+    if ((Q203_MILITIASPEACHCOUNT) < (5)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_WELCOMEMIL_03_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_WELCOMEMIL_03_03");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_WELCOMEMIL_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_WELCOMEMIL_03_05");
+    INFO_CLEARCHOICES(66071);
+    INFO_ADDCHOICE(66071, "I'll try not to disappoint.", 66075);
+    INFO_ADDCHOICE(66071, "This is a great honor for me.", 66076);
+}
+
+func void DIA_RODERICH_WELCOMEMIL_TOMMOROW() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_WELCOMEMIL_Try_03_03");
+    INFO_CLEARCHOICES(66071);
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_RODERICHTOMORROW);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+}
+
+func void DIA_RODERICH_WELCOMEMIL_TRY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_WELCOMEMIL_Try_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_WELCOMEMIL_Try_03_02");
+    DIA_RODERICH_WELCOMEMIL_TOMMOROW();
+}
+
+func void DIA_RODERICH_WELCOMEMIL_HONOR() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_WELCOMEMIL_Honor_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_WELCOMEMIL_Honor_03_02");
+    DIA_RODERICH_WELCOMEMIL_TOMMOROW();
+}
+
+instance DIA_RODERICH_AFTERPARTY(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_AFTERPARTY_CONDITION;
+    INFORMATION = DIA_RODERICH_AFTERPARTY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Where should I begin my service as a guard?";
+}
+
+func int DIA_RODERICH_AFTERPARTY_CONDITION() {
+    if ((BECOMEAGUARD_TAVERNPART) == (2)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_AFTERPARTY_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AFTERPARTY_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_03_11");
+    INFO_CLEARCHOICES(66077);
+    INFO_ADDCHOICE(66077, "What will be my responsibilities?", 66080);
+}
+
+func void DIA_RODERICH_AFTERPARTY_DUTY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AFTERPARTY_Duty_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_Duty_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_Duty_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_Duty_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_Duty_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_Duty_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_Duty_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_Duty_03_08");
+    CREATEINVITEMS(SELF, 37171, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 37171, 1);
+    MILITIA_WEKNOWMILITIATRAINING = TRUE;
+    INFO_CLEARCHOICES(66077);
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_AFTERPARTY);
+    RESTOREROUTINE_RODERICH();
+    RESTOREROUTINE_OKTAV();
+}
+
+instance DIA_RODERICH_Q205(C_INFO) {
+    NPC = 52807;
+    NR = 2;
+    CONDITION = DIA_RODERICH_Q205_CONDITION;
+    INFORMATION = DIA_RODERICH_Q205_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I'm ready.";
+}
+
+func int DIA_RODERICH_Q205_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 66368)) && (NPC_KNOWSINFO(OTHER, 68654))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_Q205_GOODENOUGH_TRY_GO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Go_03_01");
+    INFO_CLEARCHOICES(66081);
+    AI_STOPPROCESSINFOS(SELF);
+    LOG_CREATETOPIC(TOPIC_Q205, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_Q205), TOPIC_Q205, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_Q205, LOG_Q205_START);
+    Q205_PREPARESCENE();
+}
+
+func void DIA_RODERICH_Q205_INFO() {
+    AI_LOGENTRY(TOPIC_Q203, LOG_Q203_FINNISH);
+    LOG_SETSTATUS(_@(MIS_Q203), TOPIC_Q203, LOG_SUCCESS);
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AFTERPARTY_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_03_06");
+    INFO_CLEARCHOICES(66081);
+    INFO_ADDCHOICE(66081, "Maybe, in that case, they weren't so good after all?", 66085);
+}
+
+func void DIA_RODERICH_Q205_GOODENOUGH() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_GoodEnough_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_GoodEnough_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_GoodEnough_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_GoodEnough_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_GoodEnough_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_GoodEnough_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_GoodEnough_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_GoodEnough_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_GoodEnough_03_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_GoodEnough_03_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_GoodEnough_03_12");
+    INFO_CLEARCHOICES(66081);
+    INFO_ADDCHOICE(66081, "I'll do my best to find them...", 66088);
+    INFO_ADDCHOICE(66081, "Sure thing.", 66087);
+    INFO_ADDCHOICE(66081, "Yes, sir!", 66086);
+}
+
+func void DIA_RODERICH_Q205_GOODENOUGH_YESSIR() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_YesSir_15_01");
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_PLAYANI(OTHER, T_GREETGRD);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_YesSir_03_02");
+    B_GIVEPLAYERXP(XP_Q205_BONUSDISCIPLINE);
+    DIA_RODERICH_Q205_GOODENOUGH_TRY_GO();
+}
+
+func void DIA_RODERICH_Q205_GOODENOUGH_YES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Yes_03_02");
+    DIA_RODERICH_Q205_GOODENOUGH_TRY_GO();
+}
+
+func void DIA_RODERICH_Q205_GOODENOUGH_TRY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Try_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Try_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Try_15_03");
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_PLAYANI(OTHER, R_SCRATCHHEAD);
+    DIA_RODERICH_Q205_GOODENOUGH_TRY_GO();
+}
+
+instance DIA_RODERICH_Q205_FINISH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_Q205_FINISH_CONDITION;
+    INFORMATION = DIA_RODERICH_Q205_FINISH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I report my return from the mission!";
+}
+
+func int DIA_RODERICH_Q205_FINISH_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q205)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 78509))) && (NPC_KNOWSINFO(OTHER, 78645))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int RODERICH_Q205_FINISH_SILBACH;
+var int RODERICH_Q205_FINISH_CAVE;
+var int RODERICH_Q205_FINISH_BERTO;
+var int RODERICH_Q205_FINISH_DOCS;
+var int RODERICH_Q205_FINISH_ARMOR;
+var int RODERICH_Q205_FINISH_BROTHER;
+func void DIA_RODERICH_Q205_FINISH_CHOICES() {
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(66089);
+    if ((RODERICH_Q205_FINISH_SILBACH) == (FALSE)) {
+        INFO_ADDCHOICE(66089, "I got to Silbach.", 66099);
+    };
+    if ((RODERICH_Q205_FINISH_CAVE) == (FALSE)) {
+        INFO_ADDCHOICE(66089, "The renegades hid in a cave near Silbach.", 66100);
+    };
+    if (((RODERICH_Q205_FINISH_ARMOR) == (FALSE)) && ((NPC_HASITEMS(OTHER, 35509)) >= (1))) {
+        INFO_ADDCHOICE(66089, "I got this armor from the renegades.", 66106);
+    };
+    if ((((RODERICH_Q205_FINISH_BERTO) == (TRUE)) && ((RODERICH_Q205_FINISH_DOCS) == (TRUE))) && ((RODERICH_Q205_FINISH_BROTHER) == (TRUE))) {
+        INFO_ADDCHOICE(66089, "That's all I've been able to find out.", 66108);
+    };
+    if ((RODERICH_Q205_FINISH_BERTO) == (FALSE)) {
+        INFO_ADDCHOICE(66089, "There are still loyal guards in Gerwin's unit, including Berto.", 66104);
+    };
+    if ((RODERICH_Q205_FINISH_DOCS) == (FALSE)) {
+        INFO_ADDCHOICE(66089, "The Renegades are planning some sort of a major attack.", 66105);
+    };
+    if ((RODERICH_Q205_FINISH_BROTHER) == (FALSE)) {
+        INFO_ADDCHOICE(66089, "I came across a potential lead on my brother.", 66107);
+    };
+}
+
+func void DIA_RODERICH_Q205_FINISH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_15_01");
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_03_02");
+    DIA_RODERICH_Q205_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q205_FINISH_SILBACH() {
+    RODERICH_Q205_FINISH_SILBACH = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Silbach_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Silbach_15_02");
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Silbach_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Silbach_15_04");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Silbach_03_05");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Silbach_03_06");
+    INFO_CLEARCHOICES(66089);
+    if ((NPC_HASITEMS(OTHER, 37184)) >= (1)) {
+        INFO_ADDCHOICE(66089, "I found Gerwin's body.", 66101);
+    };
+    INFO_ADDCHOICE(66089, "Unfortunately, I wasn't able to find him.", 66102);
+}
+
+func void DIA_RODERICH_Q205_FINISH_CAVE() {
+    RODERICH_Q205_FINISH_CAVE = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Cave_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Cave_15_02");
+    if ((Q205_MEETPART4RENEGADES) == (TRUE)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Cave_15_03");
+    };
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Cave_03_04");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Cave_03_05");
+    INFO_CLEARCHOICES(66089);
+    INFO_ADDCHOICE(66089, "The cave has two exits...", 66103);
+}
+
+func void DIA_RODERICH_Q205_FINISH_SILBACH_FOUNDGERWIN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_FoundGerwin_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_FoundGerwin_03_02");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_FoundGerwin_03_03");
+    B_GIVEINVITEMS(OTHER, SELF, 37184, 1);
+    B_GIVEPLAYERXP(XP_Q205_FOUNDGERWIN);
+    DIA_RODERICH_Q205_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q205_FINISH_SILBACH_NOFOUND() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_NoFound_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_NoFound_03_02");
+    DIA_RODERICH_Q205_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q205_FINISH_CAVE_EXIT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Exit_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Exit_03_02");
+    AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Exit_03_03");
+    DIA_RODERICH_Q205_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q205_FINISH_BERTO() {
+    RODERICH_Q205_FINISH_BERTO = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Berto_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Berto_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Berto_15_03");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Berto_03_04");
+    DIA_RODERICH_Q205_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q205_FINISH_DOCS() {
+    RODERICH_Q205_FINISH_DOCS = TRUE;
+    B_GIVEINVITEMS(OTHER, SELF, 37185, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Docs_15_01");
+    B_USEFAKESCROLL();
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Docs_03_02");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Docs_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Docs_15_04");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Docs_03_05");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Docs_03_06");
+    DIA_RODERICH_Q205_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q205_FINISH_ARMOR() {
+    RODERICH_Q205_FINISH_ARMOR = TRUE;
+    Q205_RENEGADEARMOR_SHOW();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Armor_15_01");
+    AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Armor_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Armor_03_03");
+    Q205_RENEGADEARMOR_HIDE_RODERICH();
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Armor_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Armor_03_05");
+    DIA_RODERICH_Q205_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q205_FINISH_BROTHER() {
+    RODERICH_Q205_FINISH_BROTHER = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Brother_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Brother_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_Brother_15_03");
+    AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Brother_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Brother_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_Brother_03_06");
+    AI_LOGENTRY(TOPIC_Q207, LOG_Q207_RODERICH_OPINION);
+    DIA_RODERICH_Q205_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q205_FINISH_ALL() {
+    Q205_REMOVESCENE();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q205_Finish_All_15_01");
+    AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_All_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_All_03_03");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_All_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_All_03_05");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q205_Finish_All_03_06");
+    INFO_CLEARCHOICES(66089);
+    AI_LOGENTRY(TOPIC_Q205, LOG_Q205_FINISH);
+    LOG_SETSTATUS(_@(MIS_Q205), TOPIC_Q205, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_Q205_FINISH);
+    Q207_PREPARESCENE();
+}
+
+instance DIA_RODERICH_SQ229_RAPORT(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_SQ229_RAPORT_CONDITION;
+    INFORMATION = DIA_RODERICH_SQ229_RAPORT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I met fishermen who were carrying packages of swampweed.";
+}
+
+func int DIA_RODERICH_SQ229_RAPORT_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_SQ229)) == (LOG_RUNNING)) {
+        if (((SQ229_GOTWEED) == (TRUE)) && ((HERO.GUILD) == (GIL_MIL))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_SQ229_RAPORT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ229_Raport_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ229_Raport_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ229_Raport_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ229_Raport_03_04");
+    INFO_CLEARCHOICES(66109);
+    if ((NPC_HASITEMS(OTHER, 37205)) >= (1)) {
+        INFO_ADDCHOICE(66109, "Yes.", 66112);
+    };
+    INFO_ADDCHOICE(66109, "No, she went down with one of the fishermen.", 66113);
+}
+
+func void DIA_RODERICH_Q229_FINISH_MIL() {
+    NPC_REMOVEINVITEM(SELF, 37205);
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q229_Finish_MIL_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 37205, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q229_Finish_MIL_03_02");
+    INFO_CLEARCHOICES(66109);
+    CREATEINVITEMS(SELF, 34354, 5);
+    B_GIVEINVITEMS(SELF, OTHER, 34354, 5);
+    AI_LOGENTRY(TOPIC_SQ229, LOG_SQ229_MILFINISH);
+    LOG_SETSTATUS(_@(MIS_SQ229), TOPIC_SQ229, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_SQ228_RODERICHKNOW_V1);
+    NPC_EXCHANGEROUTINE(NONE_6266_NEVIL, TOT);
+}
+
+func void DIA_RODERICH_Q229_ENDRAPORT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q229_EndRaport_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q229_EndRaport_03_02");
+    INFO_CLEARCHOICES(66109);
+    if ((LOG_GETSTATUS(MIS_SQ229)) == (LOG_RUNNING)) {
+        AI_LOGENTRY(TOPIC_SQ229, LOG_SQ229_MILRAPORT);
+    };
+    B_GIVEPLAYERXP(XP_SQ228_RODERICHKNOW_V2);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RODERICH_SQ311_MINE(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_SQ311_MINE_CONDITION;
+    INFORMATION = DIA_RODERICH_SQ311_MINE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "The salt mine boss is doing illegal business.";
+}
+
+func int DIA_RODERICH_SQ311_MINE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ311)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 80916))) && ((NPC_HASITEMS(OTHER, 37241)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_SQ311_MINE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Mine_15_01");
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Mine_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Mine_15_05");
+    B_GIVEINVITEMS(OTHER, SELF, 37241, 1);
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    B_USEFAKESCROLL();
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_03_07");
+    INFO_CLEARCHOICES(66114);
+    INFO_ADDCHOICE(66114, "But it would be useful to investigate...", 66119);
+    INFO_ADDCHOICE(66114, "So you're not gonna do anything about it?", 66118);
+}
+
+func void DIA_RODERICH_SQ311_MINE_NEXT() {
+    AI_STARTFACEANI(SELF, S_DOUBT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_Next_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Mine_Next_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_Next_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_Next_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_Next_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Mine_Next_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_Next_03_07");
+    if (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_SLD)) {
+        AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_Next_03_08");
+    };
+    INFO_CLEARCHOICES(66114);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_SQ311, LOG_SQ311_RODERICH_TASK);
+    SQ311_PREPAREMILITIA();
+}
+
+func void DIA_RODERICH_SQ311_MINE_NOTHING() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Mine_Nothing_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_Nothing_03_02");
+    DIA_RODERICH_SQ311_MINE_NEXT();
+}
+
+func void DIA_RODERICH_SQ311_MINE_WHATNEXT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Mine_WhatNext_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Mine_WhatNext_03_02");
+    DIA_RODERICH_SQ311_MINE_NEXT();
+}
+
+instance DIA_RODERICH_SQ311_FINISH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_SQ311_FINISH_CONDITION;
+    INFORMATION = DIA_RODERICH_SQ311_FINISH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Lewko tried to murder me.";
+}
+
+func int DIA_RODERICH_SQ311_FINISH_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ311)) == (LOG_RUNNING)) && ((SQ311_FIGHTWITHLEWKO) == (3))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_SQ311_FINISH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Finish_15_01");
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Finish_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Finish_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Finish_15_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ311_Finish_15_05");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Finish_03_06");
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        CREATEINVITEMS(SELF, 34203, SQ311_REWARD);
+        B_GIVEINVITEMS(SELF, OTHER, 34203, SQ311_REWARD);
+    };
+    if (((HERO.GUILD) == (GIL_MIL)) && ((MARVIN_MILITIASPECIALIZATION) < (3))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Finish_03_07");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ311_Finish_03_08");
+    };
+    AI_STOPPROCESSINFOS(SELF);
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_LOGENTRY(TOPIC_SQ311, LOG_SQ311_RODERICH_LORENZO);
+    };
+    AI_LOGENTRY(TOPIC_SQ311, LOG_SQ311_FINISH_V1);
+    AI_FUNCTION(SELF, 62399);
+}
+
+instance DIA_RODERICH_Q312_FINISH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_Q312_FINISH_CONDITION;
+    INFORMATION = DIA_RODERICH_Q312_FINISH_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_Q312_FINISH_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q312)) == (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 61599))) {
+        if ((OTHER.GUILD) == (GIL_MIL)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_Q312_FINISH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_03_05");
+    INFO_CLEARCHOICES(66123);
+    INFO_ADDCHOICE(66123, "State of emergency?", 66126);
+}
+
+func void DIA_RODERICH_Q312_FINISH_SPECIAL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Special_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Special_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Special_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Special_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Special_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Special_03_06");
+    INFO_CLEARCHOICES(66123);
+    INFO_ADDCHOICE(66123, "An attack on Volker?", 66132);
+}
+
+var int RODERICH_AFTERHAVEN_WHO;
+var int RODERICH_AFTERHAVEN_WHY;
+var int RODERICH_AFTERHAVEN_ME;
+var int RODERICH_AFTERHAVEN_WHERE;
+func void DIA_RODERICH_Q312_FINISH_CHOICES() {
+    INFO_CLEARCHOICES(66123);
+    if ((RODERICH_AFTERHAVEN_WHERE) == (FALSE)) {
+        INFO_ADDCHOICE(66123, "Where can I find Volker's mansion?", 66136);
+    };
+    if ((RODERICH_AFTERHAVEN_ME) == (FALSE)) {
+        INFO_ADDCHOICE(66123, "Why should I deal with it?", 66135);
+    };
+    if (((RODERICH_AFTERHAVEN_WHO) == (TRUE)) && ((RODERICH_AFTERHAVEN_WHY) == (TRUE))) {
+        INFO_ADDCHOICE(66123, "That's all I needed to know.", 66137);
+    };
+    if ((RODERICH_AFTERHAVEN_WHY) == (FALSE)) {
+        INFO_ADDCHOICE(66123, "Why is the governor so anxious to find the guilty party?", 66134);
+    };
+    if ((RODERICH_AFTERHAVEN_WHO) == (FALSE)) {
+        INFO_ADDCHOICE(66123, "Who's the suspect?", 66133);
+    };
+}
+
+func void DIA_RODERICH_Q312_FINISH_VOLKER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Volker_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Volker_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Volker_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Volker_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Volker_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Volker_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Volker_03_07");
+    DIA_RODERICH_Q312_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q312_FINISH_WHO() {
+    RODERICH_AFTERHAVEN_WHO = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Who_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Who_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Who_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Who_03_04");
+    DIA_RODERICH_Q312_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q312_FINISH_WHY() {
+    RODERICH_AFTERHAVEN_WHY = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Why_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Why_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Why_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Why_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Why_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Why_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Why_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Why_03_08");
+    DIA_RODERICH_Q312_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q312_FINISH_ME() {
+    RODERICH_AFTERHAVEN_ME = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Me_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Me_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Me_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Me_03_04");
+    DIA_RODERICH_Q312_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q312_FINISH_WHERE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Where_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Where_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Where_03_03");
+    RODERICH_AFTERHAVEN_WHERE = TRUE;
+    DIA_RODERICH_Q312_FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q312_FINISH_ALL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_InvestigationAll_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_InvestigationAll_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_InvestigationAll_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_InvestigationAll_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_InvestigationAll_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_All_03_06");
+    INFO_CLEARCHOICES(66123);
+    INFO_ADDCHOICE(66123, "Turns out one of my brother's kidnappers...", 66138);
+}
+
+func void DIA_RODERICH_Q312_FINISH_BEN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Information_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Information_03_02");
+    if (NPC_ISDEAD(NONE_7500_BEN)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Information_15_03");
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Information_15_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Information_03_05");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Information_15_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Information_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Information_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Information_03_09");
+    INFO_CLEARCHOICES(66123);
+    INFO_ADDCHOICE(66123, "They call it 'Scoundrels' Haven'.", 66139);
+}
+
+func void DIA_RODERICH_Q312_FINISH_HAVEN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Haven_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Haven_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Haven_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Haven_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Haven_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Haven_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Haven_03_07");
+    CREATEINVITEMS(SELF, 38213, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 38213, 1);
+    INFO_CLEARCHOICES(66123);
+    INFO_ADDCHOICE(66123, "What about my brother?", 66140);
+}
+
+func void DIA_RODERICH_Q312_FINISH_BROTHER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Brother_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Brother_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Brother_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Brother_03_04");
+    INFO_CLEARCHOICES(66123);
+    INFO_ADDCHOICE(66123, "With your help I would have found him long ago.", 66142);
+    INFO_ADDCHOICE(66123, "Thank you, Captain.", 66143);
+}
+
+func void DIA_RODERICH_Q312_FINISH_ENDDIALOLGUE() {
+    LOG_SETSTATUS(_@(MIS_Q312), TOPIC_Q312, LOG_SUCCESS);
+    AI_LOGENTRY(TOPIC_Q312, LOG_Q312_FINISH_MIL);
+    B_GIVEPLAYERXP(XP_Q312_FINISH);
+    LOG_CREATETOPIC(TOPIC_Q308, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_Q308), TOPIC_Q308, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_Q308, LOG_Q308_START_MIL);
+    Q308_PREPAREIVY();
+    INFO_CLEARCHOICES(66123);
+}
+
+func void DIA_RODERICH_Q312_FINISH_CHAD() {
+    MARVIN_LOSTGUILD_MIL_COUNT = (MARVIN_LOSTGUILD_MIL_COUNT) + (1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Chad_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Chad_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Chad_03_03");
+    if ((MARVIN_LOSTGUILD_MIL_COUNT) == (2)) {
+        DIA_RODERICH_LEAVEGUILDFOREVER();
+    };
+    DIA_RODERICH_Q312_FINISH_ENDDIALOLGUE();
+}
+
+func void DIA_RODERICH_Q312_FINISH_BETA() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q312_Finish_Beta_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q312_Finish_Beta_03_02");
+    DIA_RODERICH_Q312_FINISH_ENDDIALOLGUE();
+}
+
+instance DIA_RODERICH_Q308FINISH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_Q308FINISH_CONDITION;
+    INFORMATION = DIA_RODERICH_Q308FINISH_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_Q308FINISH_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && ((Q308_TOTHEOLDTOWN_EVENTS) == (4))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void RODERICH_Q308_PRINTPOINTS() {
+    PRINTD(CS2("Punkty Arsa: ", INTTOSTRING(Q308_ARSPOINTS)));
+    PRINTD(CS2("Punkty Wywrotowców: ", INTTOSTRING(Q308_AGAINSTARSPOINTS)));
+}
+
+func void DIA_RODERICH_Q308FINISH_INFO() {
+    if ((NPC_ISINSTATE(SELF, 46645)) == (FALSE)) {
+        TELEPORTNPCTOWP(53804, VLK_6388_MORRIS.WP);
+        NPC_CLEARAIQUEUE(VLK_6388_MORRIS);
+    };
+    B_STANDUP();
+    AI_LOOKATNPC(OTHER, SELF);
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_03_01");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_03_02");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_03_05");
+    INFO_CLEARCHOICES(66144);
+    if (NPC_KNOWSINFO(OTHER, 69904)) {
+        INFO_ADDCHOICE(66144, "Yes.", 66151);
+    };
+    INFO_ADDCHOICE(66144, "No.", 66162);
+}
+
+var int RODERICH_Q308FINISH_BOLT;
+func void DIA_RODERICH_Q308FINISH_CHOICES() {
+    if ((RODERICH_Q308FINISH_BOLT) == (FALSE)) {
+        INFO_CLEARCHOICES(66144);
+        INFO_ADDCHOICE(66144, "I managed to get the bolthead.", 66163);
+    };
+}
+
+func void RODERICH_Q308_FAILEDSQ305() {
+    if ((LOG_GETSTATUS(MIS_SQ305)) == (LOG_RUNNING)) {
+        LOG_SETSTATUS(_@(MIS_SQ305), TOPIC_SQ305, LOG_FAILED);
+        AI_LOGENTRY(TOPIC_SQ305, LOG_SQ305_FAILED);
+    };
+}
+
+func void DIA_RODERICH_Q308FINISH_TALKEDYES() {
+    Q308_AGAINSTARSPOINTS = (Q308_AGAINSTARSPOINTS) + (1);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_TalkedYes_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_TalkedYes_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_TalkedYes_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_TalkedYes_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_TalkedYes_03_06");
+    INFO_CLEARCHOICES(66144);
+    if (NPC_KNOWSINFO(OTHER, 71631)) {
+        INFO_ADDCHOICE(66144, "One of his fellow inmates says otherwise.", 66152);
+    };
+    INFO_ADDCHOICE(66144, "I have a hunch.", 66153);
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPGOOD() {
+    Q308_AGAINSTARSPOINTS = (Q308_AGAINSTARSPOINTS) + (1);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_OsipGood_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_OsipGood_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_OsipGood_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_OsipGood_03_05");
+    INFO_CLEARCHOICES(66144);
+    if (NPC_KNOWSINFO(OTHER, 69060)) {
+        INFO_ADDCHOICE(66144, "I managed to get to Blake.", 66154);
+    };
+    INFO_ADDCHOICE(66144, "That's all I know.", 66159);
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPBAD() {
+    Q308_ARSPOINTS = (Q308_ARSPOINTS) + (2);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_OsipBad_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_OsipBad_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_OsipBad_03_03");
+    RODERICH_Q308_FAILEDSQ305();
+    DIA_RODERICH_Q308FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPGOOD_BLAKEGOOD() {
+    Q308_ARSPOINTS = (Q308_ARSPOINTS) + (1);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_BlakeGood_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_BlakeGood_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeGood_03_03");
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "Southerners are men of honor.", 66156);
+    INFO_ADDCHOICE(66144, "Ars couldn't shoot a crossbow.", 66157);
+    INFO_ADDCHOICE(66144, "Blake wanted revenge on the authorities, not the nobility.", 66158);
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPGOOD_BLAKEGOOD_BLAKEV2_WHATBLAKE() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WhatBlake_03_01");
+    if (NPC_ISDEAD(NONE_6410_BLAKE)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_WhatBlake_15_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WhatBlake_03_03");
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_WhatBlake_15_04");
+        if ((HERO.GUILD) == (GIL_MIL)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WhatBlake_03_05");
+        } else if ((HERO.GUILD) == (GIL_SLD)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WhatBlake_03_07");
+        };
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_WhatBlake_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WhatBlake_03_10");
+    DIA_RODERICH_Q308FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPGOOD_BLAKEGOOD_BLAKEV1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_BlakeV1_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_BlakeV1_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeV1_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeV1_03_04");
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPGOOD_BLAKEGOOD_BLAKEV2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_BlakeV2_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeV2_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_BlakeV2_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeV2_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeV2_03_05");
+    DIA_RODERICH_Q308FINISH_YES_OSIPGOOD_BLAKEGOOD_BLAKEV2_WHATBLAKE();
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPGOOD_BLAKEGOOD_BLAKEV3() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_BlakeV3_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeV3_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeV3_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeV3_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_BlakeV3_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_BlakeV3_03_06");
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPGOOD_NOBLAKE() {
+    Q308_AGAINSTARSPOINTS = (Q308_AGAINSTARSPOINTS) + (1);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_NoBlake_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NoBlake_03_02");
+    RODERICH_Q308_FAILEDSQ305();
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "I'm sorry, but no.", 66160);
+    if (NPC_KNOWSINFO(OTHER, 69060)) {
+        INFO_ADDCHOICE(66144, "In one of the houses in the harbor.", 66161);
+    };
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPGOOD_NOBLAKE_DONTKNOW() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_DontKnow_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_DontKnow_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_DontKnow_03_03");
+    RODERICH_Q308_FAILEDSQ305();
+    DIA_RODERICH_Q308FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q308FINISH_YES_OSIPGOOD_NOBLAKE_KNOW() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Know_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Know_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Know_03_03");
+    DIA_RODERICH_Q308FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q308FINISH_NOTALKED() {
+    Q308_ARSPOINTS = (Q308_ARSPOINTS) + (3);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_NoTalked_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NoTalked_03_02");
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NoTalked_03_03");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NoTalked_03_04");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NoTalked_03_05");
+    RODERICH_Q308_FAILEDSQ305();
+    DIA_RODERICH_Q308FINISH_CHOICES();
+}
+
+func void DIA_RODERICH_Q308FINISH_BOLT() {
+    RODERICH_Q308FINISH_BOLT = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Bolt_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Bolt_03_02");
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "I took it out of Norman's body.", 66164);
+    INFO_ADDCHOICE(66144, "Clearly they weren't trying very well.", 66166);
+}
+
+func void DIA_RODERICH_Q308FINISH_BOLT_NORMAN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Norman_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Norman_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Norman_03_03");
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "I had no other choice.", 66167);
+    INFO_ADDCHOICE(66144, "You don't approve?", 66168);
+}
+
+func void DIA_RODERICH_Q308FINISH_BOLT_NEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Next_03_01");
+    if ((NPC_HASITEMS(SELF, 36067)) == (0)) {
+        AI_STOPLOOKAT(SELF);
+        CREATEINVITEM(SELF, 36067);
+        AI_USEITEMTOSTATE(SELF, 36067, 1);
+        AI_WAIT(SELF, 1077936128);
+        AI_USEITEMTOSTATE(SELF, 36067, -(1));
+        AI_LOOKATNPC(SELF, OTHER);
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Next_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Next_03_03");
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "Someone from the Wolf Den.", 66169);
+}
+
+func void DIA_RODERICH_Q308FINISH_BOLT_NOTGOOD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_NotGood_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NotGood_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NotGood_03_03");
+    DIA_RODERICH_Q308FINISH_BOLT_NEXT();
+}
+
+func void DIA_RODERICH_Q308FINISH_BOLT_NORMAN_NOCHOICE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_NoChoice_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NoChoice_03_02");
+    DIA_RODERICH_Q308FINISH_BOLT_NEXT();
+}
+
+func void DIA_RODERICH_Q308FINISH_BOLT_NORMAN_NOGOOD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_NoGood_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NoGood_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_NoGood_03_03");
+    DIA_RODERICH_Q308FINISH_BOLT_NEXT();
+}
+
+func void DIA_RODERICH_Q308FINISH_BOLT_NORMAN_NOGOOD_NEXT_WOLFSDEN() {
+    Q308_AGAINSTARSPOINTS = (Q308_AGAINSTARSPOINTS) + (1);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_WolfsDen_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WolfsDen_03_02");
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_WolfsDen_15_03");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_WolfsDen_15_04");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_WolfsDen_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WolfsDen_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WolfsDen_03_07");
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WolfsDen_03_08");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WolfsDen_03_09");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WolfsDen_03_10");
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_WolfsDen_15_11");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WolfsDen_03_12");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WolfsDen_03_13");
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_WolfsDen_15_14");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WolfsDen_03_15");
+    };
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "I collected it into a flask and went to a specialist.", 66170);
+}
+
+func void DIA_RODERICH_Q308FINISH_BLOOD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Blood_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Blood_15_03");
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "Slager told me it was molerat's blood...", 66175);
+    INFO_ADDCHOICE(66144, "One of Volker's men told me that Slager identified the blood...", 66176);
+}
+
+func void DIA_RODERICH_Q308FINISH_BLOOD_NEXT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Bloodnext_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Bloodnext_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Bloodnext_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Bloodnext_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Bloodnext_03_05");
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "I think it may have been done by the servants of the rich in Old Town.", 66173);
+    INFO_ADDCHOICE(66144, "I don't have any suspects at this point.", 66174);
+}
+
+func void DIA_RODERICH_Q308FINISH_BLOOD_NEXT2() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Bloodnext_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Bloodnext_03_07");
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "A writer named Venzel.", 66178);
+    INFO_ADDCHOICE(66144, "Not really, but I know who distributes them.", 66179);
+}
+
+func void DIA_RODERICH_Q308FINISH_BLOOD_WORKERS() {
+    Q308_AGAINSTARSPOINTS = (Q308_AGAINSTARSPOINTS) + (2);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Blood_Workers_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Blood_Workers_03_02");
+    DIA_RODERICH_Q308FINISH_BLOOD_NEXT2();
+}
+
+func void DIA_RODERICH_Q308FINISH_BLOOD_NOONE() {
+    Q308_ARSPOINTS = (Q308_ARSPOINTS) + (2);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Blood_NoOne_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Blood_NoOne_03_02");
+    DIA_RODERICH_Q308FINISH_BLOOD_NEXT2();
+}
+
+func void DIA_RODERICH_Q308FINISH_BLOOD_SLAGER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Slager_15_01");
+    DIA_RODERICH_Q308FINISH_BLOOD_NEXT();
+}
+
+func void DIA_RODERICH_Q308FINISH_BLOOD_VOLKER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Volker_15_01");
+    DIA_RODERICH_Q308FINISH_BLOOD_NEXT();
+}
+
+func void DIA_RODERICH_Q308FINISH_WHATNEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_WhatNext_03_01");
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "That's all I found out.", 66185);
+}
+
+func void DIA_RODERICH_Q308FINISH_POSTERV1() {
+    SQ225_REMOVEVENZELFRIEND();
+    Q308_AGAINSTARSPOINTS = (Q308_AGAINSTARSPOINTS) + (1);
+    RODERICH_Q308_PRINTPOINTS();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_PosterV1_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV1_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_PosterV1_15_05");
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV1_03_06");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV1_03_08");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV1_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV1_03_10");
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "Not exactly. Venzel was all about the money.", 66180);
+}
+
+func void DIA_RODERICH_Q308FINISH_POSTERV2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_PosterV2_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV2_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_PosterV2_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV2_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV2_03_05");
+    if ((Q311_PROPAGANDISTCOUNT) == (3)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_PosterV2_15_11");
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_PosterV2_15_12");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV2_03_13");
+    };
+    if ((Q311_PROPAGANDISTCOUNT) == (2)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_PosterV2_15_06");
+        if (NPC_KNOWSINFO(OTHER, 76597)) {
+            if ((Q311_TAVERNCUTSCENE) == (2)) {
+                AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_PosterV2_15_07");
+            } else if ((Q311_PROPAGANDIST02FLEE) == (2)) {
+                AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_PosterV2_15_08");
+            };
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_PosterV2_03_14");
+    INFO_CLEARCHOICES(66144);
+    if (NPC_KNOWSINFO(OTHER, 76597)) {
+        INFO_ADDCHOICE(66144, "They were led by a man named Ludlof.", 66182);
+    };
+    INFO_ADDCHOICE(66144, "That's it.", 66183);
+}
+
+func void DIA_RODERICH_Q308FINISH_POSTERV1_MONEY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Money_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Money_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Money_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Money_15_04");
+    B_USEFAKECOIN_SILVERCOIN_MARVIN();
+    NPC_REMOVEINVITEMS(SELF, 37297, 2);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Money_03_05");
+    B_GIVEINVITEMS(OTHER, SELF, 37297, 1);
+    INFO_CLEARCHOICES(66144);
+    INFO_ADDCHOICE(66144, "From Venzel. Someone gave him a whole bag of them.", 66181);
+}
+
+func void DIA_RODERICH_Q308FINISH_POSTERV1_MONEY_VENZEL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Venzel_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Venzel_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Venzel_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Venzel_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Venzel_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Venzel_03_06");
+    DIA_RODERICH_Q308FINISH_WHATNEXT();
+}
+
+func void DIA_RODERICH_Q308FINISH_POSTERV2_LUDLOF() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Ludlof_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Ludlof_03_02");
+    if ((Q311_LUDLOFRIOT) == (2)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Ludlof_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Ludlof_03_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Ludlof_03_06");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_Ludlof_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Ludlof_03_08");
+    DIA_RODERICH_Q308FINISH_WHATNEXT();
+}
+
+func void DIA_RODERICH_Q308FINISH_POSTERV2_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_No_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_No_03_02");
+    DIA_RODERICH_Q308FINISH_WHATNEXT();
+}
+
+func void DIA_RODERICH_Q308FINISH_FINISH() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308FINISH_Finish_03_01");
+    INFO_CLEARCHOICES(66144);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_STOPPROCESSINFOS(HERO);
+    AI_FUNCTION(SELF, 66186);
+}
+
+func void DIA_RODERICH_Q308FINISH_POSTERV2_NO_NEXT_ALL() {
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308FINISH_All_15_01");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        B_SAY(OTHER, SELF, "$MARVIN_GiveItem5");
+    };
+    DIA_RODERICH_Q308FINISH_FINISH();
+}
+
+func void RODERICH_FINISHQ308() {
+    DIACAM_DISABLE();
+    PRINTD("Cutscenka");
+    Q308_JUDGECUTSCENEAVAILABLE = 1;
+    PRINTD(CS2("Punkty Arsa: ", INTTOSTRING(Q308_ARSPOINTS)));
+    PRINTD(CS2("Punkty Wywrotowców: ", INTTOSTRING(Q308_AGAINSTARSPOINTS)));
+}
+
+instance DIA_RODERICH_QM401_START(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_QM401_START_CONDITION;
+    INFORMATION = DIA_RODERICH_QM401_START_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_QM401_START_CONDITION() {
+    if (((HERO.GUILD) == (GIL_MIL)) && ((KAPITEL) == (5))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_QM401_START_INFO() {
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Start_03_01");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Start_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Start_03_03");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Start_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Start_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Start_03_06");
+    INFO_CLEARCHOICES(66187);
+    INFO_ADDCHOICE(66187, "Yes, sir!", 66191);
+}
+
+func void DIA_RODERICH_QM401_START_END() {
+    INFO_CLEARCHOICES(66187);
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    LOG_CREATETOPIC(TOPIC_QM401, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_QM401), TOPIC_QM401, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_QM401, LOG_QM401_START);
+    QM401_PREPARENPC();
+}
+
+func void DIA_RODERICH_QM401_START_YES() {
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_Start_Yes_15_01");
+    AI_PLAYANI(OTHER, T_GREETGRD);
+    DIA_RODERICH_QM401_START_END();
+}
+
+instance DIA_RODERICH_QM401_CAVEATTACK(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_QM401_CAVEATTACK_CONDITION;
+    INFORMATION = DIA_RODERICH_QM401_CAVEATTACK_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_QM401_CAVEATTACK_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_QM401)) == (LOG_RUNNING)) && ((NPC_HASITEMS(OTHER, 37315)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_QM401_CAVEATTACK_NEXT() {
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_CaveAttack_Next_03_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_CaveAttack_Next_03_02");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_CaveAttack_Next_03_03");
+    AI_RESETFACEANI(SELF);
+    INFO_CLEARCHOICES(66192);
+}
+
+func void DIA_RODERICH_QM401_CAVEATTACK_INFO() {
+    AI_FUNCTION(SELF, 62835);
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_CaveAttack_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_CaveAttack_15_02");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_CaveAttack_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_CaveAttack_03_04");
+    INFO_CLEARCHOICES(66192);
+    INFO_ADDCHOICE(66192, "Thanks to Berto, I was able to get my hands on Salvi's plans.", 66196);
+}
+
+func void DIA_RODERICH_QM401_CAVEATTACK_JOURNAL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_CaveAttack_Journal_15_01");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_CaveAttack_Journal_03_02");
+    B_GIVEINVITEMS(OTHER, SELF, 37315, 1);
+    B_STANDUP();
+    B_USEFAKESCROLL();
+    if ((QM401_SALVIJOURNAL_READ) == (TRUE)) {
+        INFO_CLEARCHOICES(66192);
+        INFO_ADDCHOICE(66192, "It talks about an attack on a vineyard, I suspect it's about...", 66197);
+    };
+    DIA_RODERICH_QM401_CAVEATTACK_NEXT();
+}
+
+func void DIA_RODERICH_QM401_CAVEATTACK_JOURNAL_VINEYARD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_CaveAttack_Vineyard_15_01");
+    INFO_CLEARCHOICES(66192);
+    INFO_ADDCHOICE(66192, "Rita's.", 66198);
+    INFO_ADDCHOICE(66192, "Valerio's.", 66199);
+}
+
+func void DIA_RODERICH_QM401_CAVEATTACK_JOURNAL_VINEYARD_GASPAR() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_CaveAttack_Gaspar_15_01");
+    DIA_RODERICH_QM401_CAVEATTACK_NEXT();
+}
+
+func void DIA_RODERICH_QM401_CAVEATTACK_JOURNAL_VINEYARD_VALERIO() {
+    B_GIVEPLAYERXP(XP_QM401_VINEYARDANWSER);
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_CaveAttack_Valerio_15_01");
+    DIA_RODERICH_QM401_CAVEATTACK_NEXT();
+}
+
+instance DIA_RODERICH_QM401_WHERESALVI(C_INFO) {
+    NPC = 52807;
+    NR = 2;
+    CONDITION = DIA_RODERICH_QM401_WHERESALVI_CONDITION;
+    INFORMATION = DIA_RODERICH_QM401_WHERESALVI_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "They split up and wait for a signal from their leader.";
+}
+
+func int DIA_RODERICH_QM401_WHERESALVI_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_QM401)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 66192))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_QM401_WHERESALVI_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_WhereSalvi_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_WhereSalvi_03_02");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_WhereSalvi_03_03");
+    INFO_CLEARCHOICES(66200);
+    INFO_ADDCHOICE(66200, "I'm supposed to meet Berto again.", 66203);
+}
+
+func void DIA_RODERICH_QM401_WHERESALVI_AGAIN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_WhereSalvi_Again_15_01");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_WhereSalvi_Again_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_WhereSalvi_Again_03_03");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_WhereSalvi_Again_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_LOGENTRY(TOPIC_QM401, LOG_QM401_RODERICH_NEXTMOVE);
+    INFO_CLEARCHOICES(66200);
+    INFO_ADDCHOICE(66200, "(Go to the night meeting with Berto)", 66205);
+    INFO_ADDCHOICE(66200, "(Take care of other matters)", 66204);
+}
+
+func void DIA_RODERICH_QM401_WHERESALVI_LEAVE() {
+    INFO_CLEARCHOICES(66200);
+}
+
+func void DIA_RODERICH_QM401_WHERESALVI_FASTTRAVEL() {
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 62859);
+}
+
+instance DIA_RODERICH_QM401_BARRACKS(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_QM401_BARRACKS_CONDITION;
+    INFORMATION = DIA_RODERICH_QM401_BARRACKS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Berto also mentioned Salvi's supporters in the barracks.";
+}
+
+func int DIA_RODERICH_QM401_BARRACKS_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_QM401)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 66192))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_QM401_BARRACKS_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_Barracks_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Barracks_03_02");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Barracks_03_03");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_RODERICH_QM401_FINISH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_QM401_FINISH_CONDITION;
+    INFORMATION = DIA_RODERICH_QM401_FINISH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I'm back from the vineyard, battle is won.";
+}
+
+func int DIA_RODERICH_QM401_FINISH_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_QM401)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 67579))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_QM401_FINISH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_Finish_15_01");
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Finish_03_02");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Finish_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_Finish_15_04");
+    if ((QM401_SOMEONEDIED()) == (TRUE)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_Finish_15_05");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_Finish_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Finish_03_07");
+    INFO_CLEARCHOICES(66209);
+    INFO_ADDCHOICE(66209, "Yes, Salvi and all his people are biting the dust.", 66212);
+    QM401_MILITIACOMEBACK();
+}
+
+func void DIA_RODERICH_QM401_FINISH_SALVIDEAD() {
+    QM401_FINISH = TRUE;
+    QM401_FINISH_DAY = WLD_GETDAY();
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_Finish_SalviDead_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Finish_SalviDead_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Finish_SalviDead_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_QM401_Finish_SalviDead_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_QM401_Finish_SalviDead_03_05");
+    AI_RESETFACEANI(SELF);
+    INFO_CLEARCHOICES(66209);
+    AI_LOGENTRY(TOPIC_QM401, LOG_QM401_FINISH);
+    LOG_SETSTATUS(_@(MIS_QM401), TOPIC_QM401, LOG_SUCCESS);
+    RESTOREROUTINE_OKTAV();
+    RESTOREROUTINE_DUSTER();
+    RESTOREROUTINE_SALL();
+    RESTOREROUTINE_WINSTAN();
+    B_GIVEPLAYERXP(XP_QM401_FINISH);
+}
+
+instance DIA_RODERICH_AFTERMINE(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_AFTERMINE_CONDITION;
+    INFORMATION = DIA_RODERICH_AFTERMINE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_AFTERMINE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q402)) == (LOG_RUNNING)) && ((HERO.GUILD) == (GIL_MIL))) && ((Q404_MARVINFINISHEDMINE) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_AFTERMINE_INFO() {
+    if ((Q402_MILITIA_MESSAGE) == (FALSE)) {
+        Q402_MILITIA_MESSAGE = TRUE;
+    };
+    if ((Q402_MARVINISLATE) == (TRUE)) {
+        Q402_MARVINISLATE = 3;
+    };
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    if ((Q402_MARVINISLATE) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_03_01");
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_15_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_03_03");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_03_06");
+    if ((Q402_MARVINISLATE) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_03_07");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_03_08");
+    AI_FUNCTION(SELF, 61752);
+    INFO_CLEARCHOICES(66213);
+    INFO_ADDCHOICE(66213, "I'm very close to finding my brother, I can't.", 66218);
+    INFO_ADDCHOICE(66213, "Yes, sir.", 66217);
+}
+
+func void DIA_RODERICH_START_KQ401() {
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(66213);
+    LOG_CREATETOPIC(TOPIC_KQ401, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_KQ401), TOPIC_KQ401, LOG_RUNNING);
+    AI_FUNCTION(SELF, 63592);
+}
+
+func void DIA_RODERICH_AFTERMINE_YES() {
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_Yes_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_Yes_03_03");
+    DIA_RODERICH_START_KQ401();
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_START_MILITIA_GOOD);
+}
+
+func void DIA_RODERICH_AFTERMINE_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_No_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_No_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_No_15_03");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_No_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_No_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_No_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_No_03_07");
+    INFO_CLEARCHOICES(66213);
+    INFO_ADDCHOICE(66213, "I'll take care of what you promised me your help with.", 66221);
+    INFO_ADDCHOICE(66213, "Okay, I'm going.", 66220);
+}
+
+func void DIA_RODERICH_AFTERMINE_TAKEQUEST() {
+    DIA_RODERICH_START_KQ401();
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_START_MILITIA_BAD);
+}
+
+func void DIA_RODERICH_AFTERMINE_NO_OKAY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_Okay_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_Okay_03_02");
+    DIA_RODERICH_AFTERMINE_TAKEQUEST();
+}
+
+func void DIA_RODERICH_AFTERMINE_NO_HELP() {
+    MARVIN_LOSTGUILD_MIL_COUNT = (MARVIN_LOSTGUILD_MIL_COUNT) + (1);
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_Help_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_Help_15_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_Help_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_Help_15_04");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_Help_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_Help_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_Help_03_09");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AfterMine_Help_15_10");
+    if ((MARVIN_LOSTGUILD_MIL_COUNT) == (2)) {
+        DIA_RODERICH_LEAVEGUILDFOREVER();
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AfterMine_Help_03_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LastQuest_YesSir_03_02");
+    DIA_RODERICH_AFTERMINE_TAKEQUEST();
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+func void MARVIN_LEAVEMILITIAGUILD() {
+    MARVIN_LOSTGUILDMILITA = TRUE;
+    B_REMOVEMILITIAARMOR_FULL();
+}
+
+func void RODERICH_KICKMARVINGIL() {
+    FADESCREENTOBLACKF(1, 66224, 1000);
+    if ((LOG_GETSTATUS(MIS_Q402)) == (LOG_RUNNING)) {
+        WLD_INSERTNPC(52981, "PARTM3_PATH_143");
+        B_STARTOTHERROUTINE(MIL_6382_ALCAS, "MILITIA");
+    };
+}
+
+func void RODERICH_KICKMARVINGIL_FADESCREEN() {
+    TELEPORTNPCTOWP(1819, "PARTM3_PATH_144");
+    MARVIN_LEAVEMILITIAGUILD();
+    HERO.AIVAR[4] = FALSE;
+    FADESCREENFROMBLACK(3);
+}
+
+instance DIA_RODERICH_FOUNDJORN(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_FOUNDJORN_CONDITION;
+    INFORMATION = DIA_RODERICH_FOUNDJORN_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I found my brother. He's dead.";
+}
+
+func int DIA_RODERICH_FOUNDJORN_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_GQ001)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_Q406)) == (LOG_RUNNING))) && ((HERO.GUILD) == (GIL_MIL))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_FOUNDJORN_INFO() {
+    AI_STARTFACEANI(OTHER, S_SAD, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FoundJorn_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FoundJorn_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FoundJorn_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FoundJorn_15_04");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FoundJorn_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FoundJorn_03_06");
+    AI_RESETFACEANI(OTHER);
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FoundJorn_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FoundJorn_03_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FoundJorn_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FoundJorn_03_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FoundJorn_03_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_FoundJorn_03_12");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_FoundJorn_15_13");
+    AI_LOGENTRY(TOPIC_Q406, LOG_Q406_RODERICH);
+}
+
+instance DIA_RODERICH_KQ402_ORDERS(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_KQ402_ORDERS_CONDITION;
+    INFORMATION = DIA_RODERICH_KQ402_ORDERS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I bring new orders from the Royal Envoy.";
+}
+
+func int DIA_RODERICH_KQ402_ORDERS_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_KQ402)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_KQ402_ORDERS_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Orders_15_01");
+    B_STANDUP();
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Orders_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Orders_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Orders_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Orders_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Orders_15_06");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Orders_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Orders_03_08");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Orders_03_09");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Orders_15_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Orders_03_11");
+    SELF.AIVAR[15] = TRUE;
+    AI_STOPPROCESSINFOS(SELF);
+    KQ402_RODERICH_RTNCHECK = 1;
+    NPC_EXCHANGEROUTINE(MIL_4000_RODERICH, "KQ402_BARRACK");
+    AI_LOGENTRY(TOPIC_KQ402, LOG_KQ402_RODERICH_BARRACK);
+    KQ402_PREPAREBARRACKS();
+}
+
+instance DIA_RODERICH_KQ402_WHATAJOKE(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_KQ402_WHATAJOKE_CONDITION;
+    INFORMATION = DIA_RODERICH_KQ402_WHATAJOKE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_KQ402_WHATAJOKE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_KQ402)) == (LOG_RUNNING)) && ((NPC_GETDISTTOWP(SELF, "PARTM3_RODERICH_18")) <= (1000))) && ((KQ402_ARWIDCUTSCENE) == (3))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int RODERICH_KQ402_WHATAJOKE_DONTKNOW;
+func void DIA_RODERICH_KQ402_WHATAJOKE_CHOICES() {
+    INFO_CLEARCHOICES(66231);
+    if ((LOG_GETSTATUS(MIS_Q405)) == (LOG_SUCCESS)) {
+        INFO_ADDCHOICE(66231, "Go to Beliar! (Leave the guard)", 66241);
+    };
+    if ((RODERICH_KQ402_WHATAJOKE_DONTKNOW) == (FALSE)) {
+        INFO_ADDCHOICE(66231, "I don't know what to think about that.", 66239);
+        INFO_ADDCHOICE(66231, "On me? Always!", 66238);
+    };
+    INFO_ADDCHOICE(66231, "All right, all right. I'll take care of it.", 66240);
+}
+
+func void DIA_RODERICH_KQ402_WHATAJOKE_INFO() {
+    SELF.AIVAR[15] = FALSE;
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_15_02");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_15_05");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_10");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_11");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_12");
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_15_13");
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_14");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_15");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_15_16");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_17");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_03_18");
+    DIA_RODERICH_KQ402_WHATAJOKE_CHOICES();
+    KQ402_PREPARELENNART();
+    KQ402_PREPARECITIZEN();
+}
+
+func void DIA_RODERICH_KQ402_WHATAJOKE_NEXT() {
+    var C_ITEM ITM;
+    KQ402_DECISION = 1;
+    ITM = NPC_GETEQUIPPEDARMOR(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_Next_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_Next_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_Next_15_02");
+    if ((NPC_HASEQUIPPEDARMOR(OTHER)) == (TRUE)) {
+        if ((HLP_ISITEM(ITM, 33903)) == (TRUE)) {
+            AI_STARTFACEANI(SELF, S_DISGUST, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_Next_03_03");
+        };
+    };
+    INFO_CLEARCHOICES(66231);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_KQ402, LOG_KQ402_RODERICH_PLAN);
+}
+
+func void DIA_RODERICH_KQ402_WHATAJOKE_YES() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_Yes_15_01");
+    AI_PLAYANI(OTHER, T_GREETGRD);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_Yes_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_Yes_03_03");
+    DIA_RODERICH_KQ402_WHATAJOKE_NEXT();
+}
+
+func void DIA_RODERICH_KQ402_WHATAJOKE_DONTKNOW() {
+    RODERICH_KQ402_WHATAJOKE_DONTKNOW = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_DontKnow_15_01");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_DontKnow_03_02");
+    DIA_RODERICH_KQ402_WHATAJOKE_CHOICES();
+}
+
+func void DIA_RODERICH_KQ402_WHATAJOKE_NO_ALRIGHT() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_Alright_15_01");
+    DIA_RODERICH_KQ402_WHATAJOKE_NEXT();
+}
+
+func void DIA_RODERICH_KQ402_WHATAJOKE_FUCKOFF() {
+    KQ402_DECISION = 2;
+    AI_STARTFACEANI(OTHER, "S_HOSTILE", 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_15_01");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_15_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_15_04");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_15_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_15_07");
+    AI_STARTFACEANI(SELF, "S_HOSTILE", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_03_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_15_09");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_15_10");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_TURNAWAY(OTHER, SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_03_14");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_WhatAJoke_FuckOff_15_15");
+    AI_LOGENTRY(TOPIC_KQ402, LOG_KQ402_RODERICH_FAILED);
+    INFO_CLEARCHOICES(66231);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 66222);
+}
+
+instance DIA_RODERICH_KQ402_DONE(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_KQ402_DONE_CONDITION;
+    INFORMATION = DIA_RODERICH_KQ402_DONE_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Back to the issue of new armor...";
+}
+
+func int DIA_RODERICH_KQ402_DONE_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_KQ402)) == (LOG_RUNNING)) && ((KQ402_DECISION) == (1))) && ((KQ402_RAPORTABOUTARMORS) != (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_KQ402_DONE_NOTYET() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Done_15_17");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_18");
+    AI_RESETFACEANI(SELF);
+}
+
+func void DIA_RODERICH_KQ402_DONE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Done_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_02");
+    if (((KQ402_RAPORTABOUTARMORS) == (1)) && ((NPC_HASITEMS(OTHER, 37324)) >= (1))) {
+        KQ402_RAPORTABOUTARMORS = 2;
+        AI_STARTFACEANI(OTHER, S_SAD, 1, -(1));
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Done_15_03");
+        AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+        B_STANDUP();
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_04");
+        AI_RESETFACEANI(OTHER);
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Done_15_05");
+        KQ402_UGLYARMOR_SHOW();
+        AI_WAITTILLEND(SELF, OTHER);
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_06");
+        AI_WAITTILLEND(OTHER, SELF);
+        KQ402_UGLYARMOR_HIDE();
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Done_15_07");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_08");
+        AI_STARTFACEANI(SELF, S_THINK, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_09");
+        AI_STARTFACEANI(OTHER, S_SMUG, 1, -(1));
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Done_15_10");
+        AI_STARTFACEANI(SELF, S_DOUBT, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_11");
+        AI_RESETFACEANI(SELF);
+        AI_RESETFACEANI(OTHER);
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_12");
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Done_15_13");
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_14");
+        AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Done_15_15");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Done_03_16");
+        AI_RESETFACEANI(SELF);
+        AI_STOPPROCESSINFOS(SELF);
+        AI_LOGENTRY(TOPIC_KQ402, LOG_KQ402_RODERICH_UGLYARMOR);
+    };
+    DIA_RODERICH_KQ402_DONE_NOTYET();
+}
+
+instance DIA_RODERICH_KQ402_FINISH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_KQ402_FINISH_CONDITION;
+    INFORMATION = DIA_RODERICH_KQ402_FINISH_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_KQ402_FINISH_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_KQ402)) == (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 61599))) && ((KQ402_RAPORTABOUTARMORS) == (5))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_KQ402_FINISH_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Finish_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Finish_15_04");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Finish_15_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Finish_15_07");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_03_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Finish_15_09");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_03_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_03_11");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Finish_15_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_03_13");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_03_14");
+    INFO_CLEARCHOICES(66246);
+    INFO_ADDCHOICE(66246, "There's nothing to talk about.", 66249);
+}
+
+func void DIA_RODERICH_KQ402_FINISH_NOPROBLEM() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ402_Finish_NoProblem_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_NoProblem_03_02");
+    CREATEINVITEMS(SELF, 34203, KQ402_REWARD);
+    B_GIVEINVITEMS(SELF, OTHER, 34203, KQ402_REWARD);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_NoProblem_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_NoProblem_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ402_Finish_NoProblem_03_05");
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_PLAYANI(OTHER, T_GREETGRD);
+    AI_RESETFACEANI(SELF);
+    INFO_CLEARCHOICES(66246);
+    AI_LOGENTRY(TOPIC_KQ402, LOG_KQ402_RODERICH_FINISH);
+    KQ402_FINISHQUEST();
+    B_GIVEPLAYERXP(XP_KQ402_FINISH);
+}
+
+instance DIA_RODERICH_SQ503_START(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_SQ503_START_CONDITION;
+    INFORMATION = DIA_RODERICH_SQ503_START_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_SQ503_START_CONDITION() {
+    if (((KAPITEL) == (5)) && ((MARVIN_MILITIASPECIALIZATION) >= (3))) {
+        if (((SQ503_GUILDFINALTIER) == (TRUE)) && ((SQ503_GUILDFINALTIER_DAY) <= ((WLD_GETDAY()) - (1)))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_SQ503_START_INFO() {
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Start_03_01");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Start_03_02");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Start_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Start_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Start_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Start_03_06");
+    SQ503_STARTQUEST();
+}
+
+instance DIA_RODERICH_SQ503_FINISH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_SQ503_FINISH_CONDITION;
+    INFORMATION = DIA_RODERICH_SQ503_FINISH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "The Scoundrel's Haven has officially ceased to exist.";
+}
+
+func int DIA_RODERICH_SQ503_FINISH_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_SQ503)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 67588))) && ((HERO.GUILD) == (GIL_MIL))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_SQ503_FINISH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ503_Finish_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_02");
+    if ((SQ503_HAVENDECISION) == (1)) {
+        AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_03");
+        AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_05");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_06");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_07");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ503_Finish_03_12");
+    AI_RESETFACEANI(SELF);
+    SQ503_FINISHQUEST();
+}
+
+instance DIA_RODERICH_KQ407_GRAYSONLETTER(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_KQ407_GRAYSONLETTER_CONDITION;
+    INFORMATION = DIA_RODERICH_KQ407_GRAYSONLETTER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I bring a letter from Grayson. It's a matter of the utmost importance.";
+}
+
+func int DIA_RODERICH_KQ407_GRAYSONLETTER_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_KQ407)) == (LOG_RUNNING)) && ((NPC_HASITEMS(OTHER, 37452)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_KQ407_GRAYSONLETTER_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ407_GraysonLetter_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ407_GraysonLetter_03_02");
+    B_GIVEINVITEMS(OTHER, SELF, 37452, 1);
+    B_STANDUP();
+    B_USEFAKESCROLL();
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ407_GraysonLetter_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ407_GraysonLetter_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ407_GraysonLetter_03_05");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ407_GraysonLetter_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ407_GraysonLetter_03_07");
+    INFO_CLEARCHOICES(66256);
+    INFO_ADDCHOICE(66256, "Anything else you want me to pass on?", 66259);
+}
+
+func void DIA_RODERICH_KQ407_GRAYSONLETTER_ANYTHING() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_KQ407_GraysonLetter_Anything_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ407_GraysonLetter_Anything_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_KQ407_GraysonLetter_Anything_03_03");
+    AI_LOGENTRY(TOPIC_KQ407, LOG_KQ407_RODERICH_READY);
+    if ((NPC_KNOWSINFO(HERO, 66256)) && (NPC_KNOWSINFO(HERO, 71234))) {
+        AI_LOGENTRY(TOPIC_KQ407, LOG_KQ407_GUILDLEADERSREADY);
+        KQ407_TALKEDRODERICHLORENZO = TRUE;
+        INFO_CLEARCHOICES(66256);
+        INFO_ADDCHOICE(66256, "(Go to Grayson)", 66260);
+        INFO_ADDCHOICE(66256, "(Take care of other matters)", 66261);
+    };
+}
+
+func void DIA_RODERICH_KQ407_GRAYSONLETTER_TELEPORT() {
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 61769);
+}
+
+func void DIA_RODERICH_KQ407_GRAYSONLETTER_NORMAL() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_RODERICH_CANYOUTEACH(C_INFO) {
+    NPC = 52807;
+    NR = 3;
+    CONDITION = DIA_RODERICH_CANYOUTEACH_CONDITION;
+    INFORMATION = DIA_RODERICH_CANYOUTEACH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Could you train me?";
+}
+
+func int DIA_RODERICH_CANYOUTEACH_CONDITION() {
+    if (((OTHER.GUILD) == (GIL_MIL)) && ((BECOMEAGUARD_TAVERNPART) >= (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_CANYOUTEACH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_CanYouTeach_15_00");
+    if (((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_MASTERFIGHTER)) || ((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_MASTERCROSSBOWMAN))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_CanYouTeach_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_CanYouTeach_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_CanYouTeach_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_CanYouTeach_03_04");
+    LOG_CREATETOPIC(TOPIC_MILITIATEACHER, LOG_NOTE);
+    AI_LOGENTRY(TOPIC_MILITIATEACHER, LOG_MILITIATEACHER_RODERICH);
+}
+
+var int RODERICH_NOMORE;
+var int RODERICH_CURRENT1HLEVEL;
+var int RODERICH_CURRENT2HLEVEL;
+var int RODERICH_CURRENTSTRLEVEL;
+var string RODERICH_PRINTS;
+const int RODERICH_RLEVEL = 60;
+const int RODERICH_RLEVELSTR = 120;
+instance DIA_RODERICH_TEACH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_TEACH_CONDITION;
+    INFORMATION = DIA_RODERICH_TEACH_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "I want to train.";
+}
+
+func int DIA_RODERICH_TEACH_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 66262)) && ((RODERICH_NOMORE) == (FALSE))) && ((OTHER.GUILD) == (GIL_MIL))) {
+        if (((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_MASTERFIGHTER)) || ((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_MASTERCROSSBOWMAN))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_TEACH_CHOICES() {
+    var int RODERICH_GOLDCOST;
+    RODERICH_CURRENT1HLEVEL = OTHER.AIVAR[84];
+    RODERICH_CURRENT2HLEVEL = OTHER.AIVAR[85];
+    RODERICH_CURRENTSTRLEVEL = OTHER.AIVAR[81];
+    RODERICH_GOLDCOST = 0;
+    INFO_CLEARCHOICES(66272);
+    INFO_ADDCHOICE(66272, DIALOG_BACK, 66277);
+    INFO_ADDCHOICE(66272, B_BUILDLEARNSTRING2(PRINT_LEARN1H1, B_GETLEARNCOSTTALENT(OTHER, NPC_TALENT_1H, 1), RODERICH_GOLDCOST), 66278);
+    INFO_ADDCHOICE(66272, B_BUILDLEARNSTRING2(PRINT_LEARN1H5, B_GETLEARNCOSTTALENT(OTHER, NPC_TALENT_1H, 5), (RODERICH_GOLDCOST) * (5)), 66279);
+    INFO_ADDCHOICE(66272, B_BUILDLEARNSTRING2(PRINT_LEARN2H1, B_GETLEARNCOSTTALENT(OTHER, NPC_TALENT_2H, 1), RODERICH_GOLDCOST), 66280);
+    INFO_ADDCHOICE(66272, B_BUILDLEARNSTRING2(PRINT_LEARN2H5, B_GETLEARNCOSTTALENT(OTHER, NPC_TALENT_2H, 5), (RODERICH_GOLDCOST) * (5)), 66281);
+    INFO_ADDCHOICE(66272, B_BUILDLEARNSTRING2(PRINT_LEARNSTR1, B_GETLEARNCOSTATTRIBUTE(OTHER, ATR_STRENGTH, 1), RODERICH_GOLDCOST), 66282);
+    INFO_ADDCHOICE(66272, B_BUILDLEARNSTRING2(PRINT_LEARNSTR5, B_GETLEARNCOSTATTRIBUTE(OTHER, ATR_STRENGTH, 5), (RODERICH_GOLDCOST) * (5)), 66283);
+    if ((((OTHER.AIVAR[84]) >= (100)) && ((OTHER.AIVAR[85]) >= (100))) && ((OTHER.AIVAR[81]) >= (160))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_NoMore_03_01");
+        RODERICH_NOMORE = TRUE;
+    };
+}
+
+func void DIA_RODERICH_TEACH_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Teach_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Teach_03_01");
+    DIA_RODERICH_TEACH_CHOICES();
+}
+
+func void DIA_RODERICH_TEACH_BACK() {
+    INFO_CLEARCHOICES(66272);
+}
+
+func void DIA_RODERICH_TEACH_1H1() {
+    if ((OTHER.AIVAR[84]) < (60)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Teach_1H1_03_00");
+        RODERICH_PRINTS = CONCATSTRINGS(PRINT_MINSKILL, INTTOSTRING(RODERICH_RLEVEL));
+    };
+    if ((RODERICH_CURRENT1HLEVEL) < (OTHER.AIVAR[84])) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Teach_1H1_03_01");
+    };
+    B_TEACHFIGHTTALENTPERCENT(SELF, OTHER, NPC_TALENT_1H, 1, 90);
+    DIA_RODERICH_TEACH_CHOICES();
+}
+
+func void DIA_RODERICH_TEACH_1H5() {
+    if ((OTHER.AIVAR[84]) < (60)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Teach_1H5_03_02");
+        RODERICH_PRINTS = CONCATSTRINGS(PRINT_MINSKILL, INTTOSTRING(RODERICH_RLEVEL));
+    };
+    if ((RODERICH_CURRENT1HLEVEL) < (OTHER.AIVAR[84])) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Teach_1H5_03_03");
+    };
+    B_TEACHFIGHTTALENTPERCENT(SELF, OTHER, NPC_TALENT_1H, 5, 90);
+    DIA_RODERICH_TEACH_CHOICES();
+}
+
+func void DIA_RODERICH_TEACH_2H1() {
+    if ((OTHER.AIVAR[85]) < (60)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Teach_2H1_03_00");
+        RODERICH_PRINTS = CONCATSTRINGS(PRINT_MINSKILL, INTTOSTRING(RODERICH_RLEVEL));
+    };
+    if ((RODERICH_CURRENT2HLEVEL) < (OTHER.AIVAR[85])) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Teach_2H1_03_01");
+    };
+    B_TEACHFIGHTTALENTPERCENT(SELF, OTHER, NPC_TALENT_2H, 1, 90);
+    DIA_RODERICH_TEACH_CHOICES();
+}
+
+func void DIA_RODERICH_TEACH_2H5() {
+    if ((OTHER.AIVAR[85]) < (60)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Teach_2H5_03_00");
+        RODERICH_PRINTS = CONCATSTRINGS(PRINT_MINSKILL, INTTOSTRING(RODERICH_RLEVEL));
+    };
+    if ((RODERICH_CURRENT2HLEVEL) < (OTHER.AIVAR[85])) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Teach_2H5_03_01");
+    };
+    B_TEACHFIGHTTALENTPERCENT(SELF, OTHER, NPC_TALENT_2H, 5, 90);
+    DIA_RODERICH_TEACH_CHOICES();
+}
+
+func void DIA_RODERICH_TEACHSTR1() {
+    if ((OTHER.AIVAR[81]) < (120)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_TeachSTR1_03_00");
+        RODERICH_PRINTS = CONCATSTRINGS(PRINT_MINATR, INTTOSTRING(RODERICH_RLEVELSTR));
+    };
+    if ((RODERICH_CURRENTSTRLEVEL) < (OTHER.AIVAR[81])) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_TeachSTR1_03_01");
+    };
+    B_TEACHATTRIBUTEPOINTS(SELF, OTHER, ATR_STRENGTH, 1, 160);
+    DIA_RODERICH_TEACH_CHOICES();
+}
+
+func void DIA_RODERICH_TEACHSTR5() {
+    if ((OTHER.AIVAR[81]) < (120)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_TeachSTR5_03_00");
+        RODERICH_PRINTS = CONCATSTRINGS(PRINT_MINATR, INTTOSTRING(RODERICH_RLEVELSTR));
+    };
+    if ((RODERICH_CURRENTSTRLEVEL) < (OTHER.AIVAR[81])) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_TeachSTR5_03_01");
+    };
+    B_TEACHATTRIBUTEPOINTS(SELF, OTHER, ATR_STRENGTH, 5, 160);
+    DIA_RODERICH_TEACH_CHOICES();
+}
+
+instance DIA_RODERICH_PROMOTION_TIER1(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_PROMOTION_TIER1_CONDITION;
+    INFORMATION = DIA_RODERICH_PROMOTION_TIER1_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_PROMOTION_TIER1_CONDITION() {
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        if ((((((LOG_GETSTATUS(MIS_QM201)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_QM303)) == (LOG_SUCCESS))) && ((QM303_FINISH) == (TRUE))) && ((QM303_FINISH_DAY) <= ((WLD_GETDAY()) - (1)))) || (((((LOG_GETSTATUS(MIS_QM202)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_QM304)) == (LOG_SUCCESS))) && ((QM304_FINISH) == (TRUE))) && ((QM304_FINISH_DAY) <= ((WLD_GETDAY()) - (1))))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_PROMOTION_TIER1_INFO() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_Tier1_03_01");
+    if (((((LOG_GETSTATUS(MIS_QM201)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_QM202)) == (LOG_SUCCESS))) && ((LOG_GETSTATUS(MIS_QM303)) == (LOG_SUCCESS))) && ((LOG_GETSTATUS(MIS_QM304)) == (LOG_SUCCESS))) {
+        MARVIN_MILITIASPECIALIZATION_CANJOIN_FIGHTER = TRUE;
+        MARVIN_MILITIASPECIALIZATION_CANJOIN_CROSSBOWMAN = TRUE;
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_Tier1_03_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_Tier1_03_05");
+    };
+    if (((LOG_GETSTATUS(MIS_QM201)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_QM303)) == (LOG_SUCCESS))) {
+        MARVIN_MILITIASPECIALIZATION_CANJOIN_CROSSBOWMAN = TRUE;
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_Tier1_03_03");
+    };
+    if (((LOG_GETSTATUS(MIS_QM202)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_QM304)) == (LOG_SUCCESS))) {
+        MARVIN_MILITIASPECIALIZATION_CANJOIN_FIGHTER = TRUE;
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_Tier1_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_Tier1_03_06");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Promotion_Tier1_15_07");
+}
+
+instance DIA_RODERICH_PROMOTION_TIER1_WEIGAR(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_PROMOTION_TIER1_WEIGAR_CONDITION;
+    INFORMATION = DIA_RODERICH_PROMOTION_TIER1_WEIGAR_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_PROMOTION_TIER1_WEIGAR_CONDITION() {
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        if ((((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_NONE)) && ((MARVIN_MILITIASPECIALIZATION_CANJOIN_CROSSBOWMAN) == (FALSE))) && ((MARVIN_MILITIASPECIALIZATION_CANJOIN_FIGHTER) == (TRUE))) {
+            if (((((LOG_GETSTATUS(MIS_QM201)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_QM303)) == (LOG_SUCCESS))) && ((QM303_FINISH) == (TRUE))) && ((QM303_FINISH_DAY) <= ((WLD_GETDAY()) - (1)))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_PROMOTION_TIER1_THINK() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_Tier1_Weigar_03_02");
+    AI_RESETFACEANI(SELF);
+}
+
+func void DIA_RODERICH_PROMOTION_TIER1_WEIGAR_INFO() {
+    MARVIN_MILITIASPECIALIZATION_CANJOIN_CROSSBOWMAN = TRUE;
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_Tier1_Weigar_03_01");
+    DIA_RODERICH_PROMOTION_TIER1_THINK();
+}
+
+instance DIA_RODERICH_PROMOTION_TIER1_WINSTAN(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_PROMOTION_TIER1_WINSTAN_CONDITION;
+    INFORMATION = DIA_RODERICH_PROMOTION_TIER1_WINSTAN_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_RODERICH_PROMOTION_TIER1_WINSTAN_CONDITION() {
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        if ((((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_NONE)) && ((MARVIN_MILITIASPECIALIZATION_CANJOIN_CROSSBOWMAN) == (TRUE))) && ((MARVIN_MILITIASPECIALIZATION_CANJOIN_FIGHTER) == (FALSE))) {
+            if (((((LOG_GETSTATUS(MIS_QM202)) == (LOG_SUCCESS)) && ((LOG_GETSTATUS(MIS_QM304)) == (LOG_SUCCESS))) && ((QM304_FINISH) == (TRUE))) && ((QM304_FINISH_DAY) <= ((WLD_GETDAY()) - (1)))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_PROMOTION_TIER1_WINSTAN_INFO() {
+    MARVIN_MILITIASPECIALIZATION_CANJOIN_FIGHTER = TRUE;
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_Tier1_Winstan_03_01");
+    DIA_RODERICH_PROMOTION_TIER1_THINK();
+}
+
+instance DIA_RODERICH_SQ301(C_INFO) {
+    NPC = 52807;
+    NR = 2;
+    CONDITION = DIA_RODERICH_SQ301_CONDITION;
+    INFORMATION = DIA_RODERICH_SQ301_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Couldn't the guard use an iron mine?";
+}
+
+func int DIA_RODERICH_SQ301_CONDITION() {
+    if ((((NPC_KNOWSINFO(OTHER, 66003)) && ((OTHER.GUILD) == (GIL_MIL))) && ((SQ301_GUILDLEADERTALK) == (TRUE))) && ((LOG_GETSTATUS(MIS_SQ301)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_SQ301_INFO() {
+    SQ301_SPAWNNEWMONSTERS = 1;
+    SQ301_SPAWNNEWMONSTERS = WLD_GETDAY();
+    SQ301_WHOMINE = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ301_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ301_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_SQ301_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ301_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_SQ301_03_05");
+    B_GIVEPLAYERXP(XP_SQ301_FINISH);
+    B_GIVEINVITEMS(SELF, OTHER, 34203, SQ301_REWARD);
+    AI_LOGENTRY(TOPIC_SQ301, LOG_SQ301_FINISH_MIL);
+    LOG_SETSTATUS(_@(MIS_SQ301), TOPIC_SQ301, LOG_SUCCESS);
+    AI_FUNCTION(SELF, 64045);
+}
+
+instance DIA_RODERICH_PROMOTION_TIERFINAL(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_PROMOTION_TIERFINAL_CONDITION;
+    INFORMATION = DIA_RODERICH_PROMOTION_TIERFINAL_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func void RODERICH_PROMOTIONTIERFINAL_PREPAREMASTER() {
+    SQ503_GUILDFINALTIER = TRUE;
+    SQ503_GUILDFINALTIER_DAY = WLD_GETDAY();
+    if ((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_CROSSBOWMAN)) {
+        MARVIN_MILITIASPECIALIZATION = MILITIA_SPECIALIZATION_MASTERCROSSBOWMAN;
+        B_STARTOTHERROUTINE(MIL_4016_WEGAR, "PROMOTION");
+        NPC_REFRESH(MIL_4016_WEGAR);
+        TELEPORTNPCTOWP(52847, MIL_4016_WEGAR.WP);
+        PROMOTION_WEIGAR_RTNCHECK = 1;
+    };
+    MARVIN_MILITIASPECIALIZATION = MILITIA_SPECIALIZATION_MASTERFIGHTER;
+    B_STARTOTHERROUTINE(MIL_924_WINSTAN, "PROMOTION");
+    NPC_REFRESH(MIL_924_WINSTAN);
+    TELEPORTNPCTOWP(52439, MIL_924_WINSTAN.WP);
+    B_GIVEPLAYERXP(XP_MILITIA_PROMOTION_TIER3);
+    SND_PLAY("LEVELUP");
+}
+
+func int DIA_RODERICH_PROMOTION_TIERFINAL_CONDITION() {
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        if ((((((((((((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_FIGHTER)) && ((LOG_GETSTATUS(MIS_QM305)) == (LOG_SUCCESS))) && ((LOG_GETSTATUS(MIS_QM401)) == (LOG_SUCCESS))) && ((LOG_GETSTATUS(MIS_KQ402)) == (LOG_SUCCESS))) && ((QM401_FINISH) == (TRUE))) && ((QM401_FINISH_DAY) <= ((WLD_GETDAY()) - (1)))) && ((QM305_FINISH) == (TRUE))) && ((QM305_FINISH_DAY) <= ((WLD_GETDAY()) - (1)))) && ((KQ402_FINISH) == (TRUE))) && ((KQ402_FINISH_DAY) <= ((WLD_GETDAY()) - (1)))) || (((((((((((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_CROSSBOWMAN)) && ((LOG_GETSTATUS(MIS_QM301)) == (LOG_SUCCESS))) && ((LOG_GETSTATUS(MIS_QM401)) == (LOG_SUCCESS))) && ((LOG_GETSTATUS(MIS_KQ402)) == (LOG_SUCCESS))) && ((QM401_FINISH) == (TRUE))) && ((QM401_FINISH_DAY) <= ((WLD_GETDAY()) - (1)))) && ((QM301_FINISH) == (TRUE))) && ((QM301_FINISH_DAY) <= ((WLD_GETDAY()) - (1)))) && ((KQ402_FINISH) == (TRUE))) && ((KQ402_FINISH_DAY) <= ((WLD_GETDAY()) - (1))))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_PROMOTION_TIERFINAL_INFO() {
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_TierFinal_03_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_TierFinal_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_TierFinal_03_03");
+    if ((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_CROSSBOWMAN)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_TierFinal_03_04");
+    };
+    if ((MARVIN_MILITIASPECIALIZATION) == (MILITIA_SPECIALIZATION_FIGHTER)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_TierFinal_03_05");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_TierFinal_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Promotion_TierFinal_03_07");
+    AI_RESETFACEANI(SELF);
+    AI_FUNCTION(SELF, 66298);
+}
+
+instance DIA_RODERICH_AMBIENT(C_INFO) {
+    NPC = 52807;
+    NR = 998;
+    CONDITION = DIA_RODERICH_AMBIENT_CONDITION;
+    INFORMATION = DIA_RODERICH_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are things going?";
+}
+
+func int DIA_RODERICH_AMBIENT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_RODERICH_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew3");
+    if ((MARVIN_LOSTGUILDMILITA) == (TRUE)) {
+        AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Ambient_03_09");
+    };
+    if ((OTHER.GUILD) == (GIL_MIL)) {
+        if ((KAPITEL) == (2)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Ambient_03_01");
+        } else if ((KAPITEL) == (3)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Ambient_03_02");
+        } else if ((KAPITEL) == (4)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Ambient_03_03");
+        } else if ((KAPITEL) == (5)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Ambient_03_04");
+        };
+    };
+    if ((OTHER.GUILD) != (GIL_MIL)) {
+        if ((KAPITEL) == (2)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Ambient_03_05");
+        } else if ((KAPITEL) == (3)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Ambient_03_06");
+        } else if ((KAPITEL) == (4)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Ambient_03_07");
+        } else if ((KAPITEL) == (5)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Ambient_03_08");
+        };
+    };
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_RODERICH_Q308_READYTOFINISH(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_Q308_READYTOFINISH_CONDITION;
+    INFORMATION = DIA_RODERICH_Q308_READYTOFINISH_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I managed to investigate the assassination attempt.";
+}
+
+func int DIA_RODERICH_Q308_READYTOFINISH_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 83131))) && ((HERO.GUILD) == (GIL_MIL))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_Q308_READYTOFINISH_INFO() {
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308_ReadyToFinish_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308_ReadyToFinish_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308_ReadyToFinish_03_03");
+    INFO_CLEARCHOICES(66304);
+    INFO_ADDCHOICE(66304, "I'll check something else.", 66309);
+    INFO_ADDCHOICE(66304, "Let's go.", 66308);
+}
+
+var int RODERICH_Q308_READYTOGO;
+func void DIA_RODERICH_Q308_READYTOFINISH_LETSGO() {
+    B_SAY(OTHER, SELF, "$MARVIN_LETSGO");
+    AI_WAITTILLEND(SELF, OTHER);
+    INFO_CLEARCHOICES(66304);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    NPC_EXCHANGEROUTINE(SELF, "Q308_WAITOLDTOWN");
+    AI_FUNCTION(SELF, 63776);
+}
+
+func void DIA_RODERICH_Q308_READYTOFINISH_CHECK() {
+    RODERICH_Q308_READYTOGO = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Q308_ReadyToFinish_Check_15_01");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Q308_ReadyToFinish_Check_03_02");
+    AI_RESETFACEANI(SELF);
+    INFO_CLEARCHOICES(66304);
+}
+
+instance DIA_RODERICH_Q308_READYTOFINISH_GO(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_Q308_READYTOFINISH_GO_CONDITION;
+    INFORMATION = DIA_RODERICH_Q308_READYTOFINISH_GO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Let's go.";
+}
+
+func int DIA_RODERICH_Q308_READYTOFINISH_GO_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 66304))) && ((RODERICH_Q308_READYTOGO) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_Q308_READYTOFINISH_GO_INFO() {
+    DIA_RODERICH_Q308_READYTOFINISH_LETSGO();
+}
+
+instance DIA_RODERICH_LEAVEGUILD(C_INFO) {
+    NPC = 52807;
+    NR = 980;
+    CONDITION = DIA_RODERICH_LEAVEGUILD_CONDITION;
+    INFORMATION = DIA_RODERICH_LEAVEGUILD_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "I'd like to end our cooperation.";
+}
+
+func int DIA_RODERICH_LEAVEGUILD_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 80317)) && ((HERO.GUILD) == (GIL_MIL))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_LEAVEGUILD_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_LeaveGuild_15_01");
+    B_STANDUP();
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LeaveGuild_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LeaveGuild_03_03");
+    AI_STARTFACEANI(SELF, S_SAD, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LeaveGuild_03_04");
+    INFO_CLEARCHOICES(66313);
+    INFO_ADDCHOICE(66313, "I need to think about that.", 66317);
+    INFO_ADDCHOICE(66313, "Yes, I am.", 66316);
+}
+
+func void DIA_RODERICH_LEAVEGUILD_YES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_LeaveGuild_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_LeaveGuild_Yes_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 66223);
+}
+
+func void DIA_RODERICH_LEAVEGUILD_NO() {
+    B_SAY(OTHER, SELF, "$MARVIN_QuestNotSure");
+    AI_RESETFACEANI(SELF);
+    INFO_CLEARCHOICES(66313);
+}
+
+instance DIA_RODERICH_ABOUTGUILD(C_INFO) {
+    NPC = 52807;
+    NR = 1;
+    CONDITION = DIA_RODERICH_ABOUTGUILD_CONDITION;
+    INFORMATION = DIA_RODERICH_ABOUTGUILD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Can you tell me something about the guard?";
+}
+
+func int DIA_RODERICH_ABOUTGUILD_CONDITION() {
+    if ((((NPC_KNOWSINFO(OTHER, 66003)) && ((HERO.GUILD) != (GIL_MIL))) && ((HERO.GUILD) != (GIL_SLD))) && ((KAPITEL) == (2))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_ABOUTGUILD_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_AboutGuild_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AboutGuild_03_02");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AboutGuild_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AboutGuild_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AboutGuild_03_05");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_AboutGuild_03_06");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_RODERICH_LEADER(C_INFO) {
+    NPC = 52807;
+    NR = 50;
+    CONDITION = DIA_RODERICH_LEADER_CONDITION;
+    INFORMATION = DIA_RODERICH_LEADER_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "So you're in charge of the city, huh?";
+}
+
+func int DIA_RODERICH_LEADER_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 66003)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_LEADER_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Leader_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Leader_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Leader_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Leader_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Leader_03_05");
+}
+
+instance DIA_RODERICH_KING(C_INFO) {
+    NPC = 52807;
+    NR = 50;
+    CONDITION = DIA_RODERICH_KING_CONDITION;
+    INFORMATION = DIA_RODERICH_KING_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What can you tell me about the King?";
+}
+
+func int DIA_RODERICH_KING_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 66321)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_KING_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_TellMeAboutKing");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_King_03_02");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_King_03_03");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_King_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_RODERICH_CAPTAIN(C_INFO) {
+    NPC = 52807;
+    NR = 50;
+    CONDITION = DIA_RODERICH_CAPTAIN_CONDITION;
+    INFORMATION = DIA_RODERICH_CAPTAIN_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How did you become the commander of the guard?";
+}
+
+func int DIA_RODERICH_CAPTAIN_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 66003)) && ((HERO.GUILD) == (GIL_MIL))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_CAPTAIN_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Roderich_Captain_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Captain_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Captain_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Captain_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Captain_03_05");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Roderich_Captain_03_06");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_RODERICH_PICKPOCKET(C_INFO) {
+    NPC = 52807;
+    NR = 900;
+    CONDITION = DIA_RODERICH_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_RODERICH_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120;
+}
+
+func int DIA_RODERICH_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_RODERICH_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(66330);
+    INFO_ADDCHOICE(66330, DIALOG_BACK, 66334);
+    INFO_ADDCHOICE(66330, DIALOG_PICKPOCKET, 66333);
+}
+
+func void DIA_RODERICH_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        CREATEINVITEMS(SELF, 34207, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 34207, 1);
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(66330);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(66330);
+}
+
+func void DIA_RODERICH_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(66330);
+}
+

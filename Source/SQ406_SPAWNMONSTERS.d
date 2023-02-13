@@ -1,0 +1,142 @@
+func void SQ406_SPAWNMONSTERS() {
+    PRINTD("Potwory gotowe");
+    WLD_INSERTNPC(51002, "PART17_WITHOUTTRACE_DEADSWAMPSHARK");
+    WLD_INSERTNPC(50151, "PART17_PATH_32");
+    WLD_INSERTNPC(50351, "PART17_PATH_19");
+    WLD_INSERTNPC(50352, "PART17_PATH_19");
+    WLD_INSERTNPC(50353, "PART17_PATH_19");
+    WLD_INSERTNPC(50354, "PART17_PATH_19");
+}
+
+func void SQ406_DRINK_L() {
+    B_STANDUP();
+    AI_REMOVEWEAPON(SELF);
+    AI_UNREADYSPELL(SELF);
+    NPC_REMOVEINVITEMS(SELF, 37365, 1);
+    AI_STOPLOOKAT(SELF);
+    B_GIVEINVITEMS(OTHER, SELF, 37365, 1);
+    CREATEINVITEMS(SELF, 36093, 1);
+    AI_USEITEMTOSTATE(SELF, 36093, 1);
+    AI_WAIT(SELF, 1077936128);
+    AI_USEITEMTOSTATE(SELF, 36093, -(1));
+}
+
+func void SQ406_DRINK_M() {
+    B_STANDUP();
+    AI_REMOVEWEAPON(SELF);
+    AI_UNREADYSPELL(SELF);
+    NPC_REMOVEINVITEMS(SELF, 37366, 1);
+    AI_STOPLOOKAT(SELF);
+    B_GIVEINVITEMS(OTHER, SELF, 37366, 1);
+    CREATEINVITEMS(SELF, 36094, 1);
+    AI_USEITEMTOSTATE(SELF, 36094, 1);
+    AI_WAIT(SELF, 1077936128);
+    AI_USEITEMTOSTATE(SELF, 36094, -(1));
+}
+
+func void SQ406_DRINK_H() {
+    B_STANDUP();
+    AI_REMOVEWEAPON(SELF);
+    AI_UNREADYSPELL(SELF);
+    NPC_REMOVEINVITEMS(SELF, 37367, 1);
+    AI_STOPLOOKAT(SELF);
+    B_GIVEINVITEMS(OTHER, SELF, 37367, 1);
+    CREATEINVITEMS(SELF, 36095, 1);
+    AI_USEITEMTOSTATE(SELF, 36095, 1);
+    AI_WAIT(SELF, 1077936128);
+    AI_USEITEMTOSTATE(SELF, 36095, -(1));
+    if ((NPC_ISDEAD(SHADOWBEAST_PART17_01)) == (FALSE)) {
+        B_REMOVENPC(50789);
+    };
+}
+
+func void SQ406_GETTER_DRINKPOTION() {
+    SQ406_USEDPOTIONS = (SQ406_USEDPOTIONS) + (1);
+    if ((SQ406_GETTER_POTION) == (1)) {
+        SQ406_DRINK_L();
+    };
+    if ((SQ406_GETTER_POTION) == (2)) {
+        SQ406_DRINK_M();
+    };
+    if ((SQ406_GETTER_POTION) == (3)) {
+        SQ406_DRINK_H();
+    };
+}
+
+func void SQ406_DAN_DRINKPOTION() {
+    SQ406_USEDPOTIONS = (SQ406_USEDPOTIONS) + (1);
+    if ((SQ406_DAN_POTION) == (1)) {
+        SQ406_DRINK_L();
+    };
+    if ((SQ406_DAN_POTION) == (2)) {
+        SQ406_DRINK_M();
+    };
+    if ((SQ406_DAN_POTION) == (3)) {
+        SQ406_DRINK_H();
+    };
+}
+
+func void SQ406_GHOST_DRINKPOTION() {
+    SQ406_USEDPOTIONS = (SQ406_USEDPOTIONS) + (1);
+    if ((SQ406_GHOST_POTION) == (1)) {
+        SQ406_DRINK_L();
+    };
+    if ((SQ406_GHOST_POTION) == (2)) {
+        SQ406_DRINK_M();
+    };
+    if ((SQ406_GHOST_POTION) == (3)) {
+        SQ406_DRINK_H();
+    };
+}
+
+func void SQ406_GIVEPOTIONSFORDAN() {
+    CREATEINVITEMS(SELF, 33678, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 33678, 1);
+    CREATEINVITEMS(SELF, 33680, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 33680, 1);
+}
+
+func void SQ406_KILLDAN() {
+    if (((SQ406_TESTERPOTIONH) == (3)) || ((SQ406_DAN_POTION) == (3))) {
+        SQ406_RAZORDAN = 1;
+        B_REMOVENPC(58800);
+        WLD_INSERTNPC(50904, "PART17_CAVE_CAMPFIRE_01");
+        WLD_INSERTITEM(33571, "PART17_CAVE_CAMPFIRE_01");
+    };
+}
+
+func void SQ406_REFRESHHEADONLOAD() {
+    if ((LOG_GETSTATUS(MIS_SQ406)) == (LOG_SUCCESS)) {
+        if ((SQ406_GETTER_POTION) == (3)) {
+            if (HLP_ISVALIDNPC(PIR_1313_GETTER)) {
+                if (!(NPC_ISDEAD(PIR_1313_GETTER))) {
+                    MDL_SETVISUALBODY(PIR_1313_GETTER, "KM_ARMOR_CHAIN_RAZOR", 1, 0, HUMHEADNOTHING, FACE_L_GETTER, 0, NO_ARMOR);
+                    PRINTD("Event - G這wa");
+                };
+            };
+        } else if ((SQ406_GHOST_POTION) == (3)) {
+            if (HLP_ISVALIDNPC(PIR_6322_GHOST)) {
+                if (!(NPC_ISDEAD(PIR_6322_GHOST))) {
+                    MDL_SETVISUALBODY(PIR_6322_GHOST, "KM_ARMOR_PIRAT_RAZOR", 1, 0, HUMHEADNOTHING, FACE_N_GHOST, 0, NO_ARMOR);
+                    PRINTD("Event - G這wa");
+                };
+            };
+        } else if ((SQ406_DAN_POTION) == (3)) {
+            if (HLP_ISVALIDNPC(PIR_1326_DAN)) {
+                if (!(NPC_ISDEAD(PIR_1326_DAN))) {
+                    MDL_SETVISUALBODY(PIR_1326_DAN, "KM_ARMOR_PIRAT_RAZOR", 1, 0, HUMHEADNOTHING, FACE_N_DAN, 0, NO_ARMOR);
+                    PRINTD("Event - G這wa");
+                };
+            };
+        };
+    };
+    if ((LOG_GETSTATUS(MIS_SQ406)) == (LOG_RUNNING)) {
+        if ((SQ406_NEARCAVE_CHANGERTN) >= (2)) {
+            if ((((SQ406_GETTER_POTION) == (3)) || ((SQ406_GHOST_POTION) == (3))) || ((SQ406_DAN_POTION) == (3))) {
+                SQ406_NEARCAVE_CHANGERTN = 1;
+                PRINTD("StartUp - G這wa");
+            };
+        };
+    };
+}
+

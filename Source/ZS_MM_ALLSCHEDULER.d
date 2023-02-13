@@ -1,0 +1,29 @@
+func void ZS_MM_ALLSCHEDULER() {
+    SELF.AIVAR[29] = PRIO_EAT;
+    if ((WLD_ISTIME(SELF.AIVAR[30], 0, SELF.AIVAR[31], 0)) || ((SELF.AIVAR[30]) == (ONLYROUTINE))) {
+        AI_STARTSTATE(SELF, 91654, 1, "");
+    };
+    if ((WLD_ISTIME(SELF.AIVAR[32], 0, SELF.AIVAR[33], 0)) || ((SELF.AIVAR[32]) == (ONLYROUTINE))) {
+        AI_STARTSTATE(SELF, 91644, 1, "");
+    };
+    if ((WLD_ISTIME(SELF.AIVAR[34], 0, SELF.AIVAR[35], 0)) || ((SELF.AIVAR[34]) == (ONLYROUTINE))) {
+        AI_STARTSTATE(SELF, 91648, 1, "");
+    };
+    if ((WLD_ISTIME(SELF.AIVAR[36], 0, SELF.AIVAR[37], 0)) || ((SELF.AIVAR[36]) == (ONLYROUTINE))) {
+        AI_STARTSTATE(SELF, 91634, 1, "");
+    };
+    if ((WLD_ISTIME(SELF.AIVAR[38], 0, SELF.AIVAR[39], 0)) || ((SELF.AIVAR[38]) == (ONLYROUTINE))) {
+        AI_STARTSTATE(SELF, 91661, 1, "");
+    };
+    if ((WLD_ISTIME(SELF.AIVAR[40], 0, SELF.AIVAR[41], 0)) || ((SELF.AIVAR[40]) == (ONLYROUTINE))) {
+        AI_STARTSTATE(SELF, 91641, 1, "");
+    };
+    if ((WLD_ISTIME(SELF.AIVAR[45], 0, SELF.AIVAR[46], 0)) || ((SELF.AIVAR[45]) == (ONLYROUTINE))) {
+        AI_STARTSTATE(SELF, 91664, 1, "");
+    };
+    if ((WLD_ISTIME(SELF.AIVAR[47], 0, SELF.AIVAR[48], 0)) || ((SELF.AIVAR[47]) == (ONLYROUTINE))) {
+        AI_STARTSTATE(SELF, 91669, 1, "");
+    };
+    AI_STARTSTATE(SELF, 91644, 1, "");
+}
+

@@ -1,0 +1,92 @@
+func void ZS_LEAN() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    if (!(C_BODYSTATECONTAINS(SELF, BS_SIT))) {
+        if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(DJG_13678_GAMAL))) {
+            AI_SETWALKMODE(SELF, NPC_RUN);
+        };
+        if ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(VLK_13731_BARNABA))) {
+            AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+            AI_SETWALKMODE(SELF, NPC_WALK);
+        } else {
+            AI_SETWALKMODE(SELF, NPC_WALK);
+        };
+        if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+            AI_GOTOWP(SELF, SELF.WP);
+        };
+    };
+}
+
+func int ZS_LEAN_LOOP() {
+    if ((NPC_ISONFP(SELF, "LEAN")) && (!(C_BODYSTATECONTAINS(SELF, BS_SIT)))) {
+        AI_ALIGNTOFP(SELF);
+        AI_PLAYANIBS(SELF, "T_STAND_2_LEAN", BS_SIT);
+    };
+    if ((WLD_ISFPAVAILABLE(SELF, "LEAN")) && (!(C_BODYSTATECONTAINS(SELF, BS_SIT)))) {
+        AI_GOTOFP(SELF, "LEAN");
+        AI_STANDUP(SELF);
+        AI_ALIGNTOFP(SELF);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_LEAN_END() {
+    AI_PLAYANIBS(SELF, "T_LEAN_2_STAND", BS_STAND);
+}
+
+func void ZS_LEAN_DUMB() {
+    PERCEPTION_SET_DUMB();
+    B_RESETALL(SELF);
+    if (!(C_BODYSTATECONTAINS(SELF, BS_SIT))) {
+        AI_SETWALKMODE(SELF, NPC_WALK);
+        if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+            AI_GOTOWP(SELF, SELF.WP);
+        };
+    };
+}
+
+func int ZS_LEAN_DUMB_LOOP() {
+    if ((NPC_ISONFP(SELF, "LEAN")) && (!(C_BODYSTATECONTAINS(SELF, BS_SIT)))) {
+        AI_ALIGNTOFP(SELF);
+        AI_PLAYANIBS(SELF, "T_STAND_2_LEAN", BS_SIT);
+    };
+    if ((WLD_ISFPAVAILABLE(SELF, "LEAN")) && (!(C_BODYSTATECONTAINS(SELF, BS_SIT)))) {
+        AI_GOTOFP(SELF, "LEAN");
+        AI_STANDUP(SELF);
+        AI_ALIGNTOFP(SELF);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_LEAN_DUMB_END() {
+    AI_PLAYANIBS(SELF, "T_LEAN_2_STAND", BS_STAND);
+}
+
+func void ZS_LEAN_DUMB_NODIALOGE() {
+    PERCEPTION_SET_DUMBINTROVERT();
+    B_RESETALL(SELF);
+    if (!(C_BODYSTATECONTAINS(SELF, BS_SIT))) {
+        AI_SETWALKMODE(SELF, NPC_WALK);
+        if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+            AI_GOTOWP(SELF, SELF.WP);
+        };
+    };
+}
+
+func int ZS_LEAN_DUMB_NODIALOGE_LOOP() {
+    if ((NPC_ISONFP(SELF, "LEAN")) && (!(C_BODYSTATECONTAINS(SELF, BS_SIT)))) {
+        AI_ALIGNTOFP(SELF);
+        AI_PLAYANIBS(SELF, "T_STAND_2_LEAN", BS_SIT);
+    };
+    if ((WLD_ISFPAVAILABLE(SELF, "LEAN")) && (!(C_BODYSTATECONTAINS(SELF, BS_SIT)))) {
+        AI_GOTOFP(SELF, "LEAN");
+        AI_STANDUP(SELF);
+        AI_ALIGNTOFP(SELF);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_LEAN_DUMB_NODIALOGE_END() {
+    AI_PLAYANIBS(SELF, "T_LEAN_2_STAND", BS_STAND);
+}
+

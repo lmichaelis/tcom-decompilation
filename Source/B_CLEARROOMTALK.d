@@ -1,0 +1,76 @@
+func void B_CLEARROOMTALK() {
+    if (C_WANTTOATTACKROOMINTRUDER(SELF)) {
+        B_SAY(SELF, OTHER, "$GETOUTOFHERE");
+    };
+    B_SAY(SELF, OTHER, "$WHYAREYOUINHERE");
+}
+
+func int B_EXITIFROOMLEFT() {
+    var int PORTALGUILD;
+    PORTALGUILD = WLD_GETPLAYERPORTALGUILD();
+    if ((!(C_NPCISBOTHEREDBYPLAYERROOMGUILD(SELF))) || ((PORTALGUILD) == (GIL_PUBLIC))) {
+        NPC_CLEARAIQUEUE(SELF);
+        AI_STANDUP(SELF);
+        B_STOPLOOKAT(SELF);
+        if (C_WANTTOATTACKROOMINTRUDER(SELF)) {
+            B_SAY(SELF, OTHER, "$YESGOOUTOFHERE");
+        } else {
+            B_SAY(SELF, OTHER, "$WISEMOVE");
+        };
+        AI_CONTINUEROUTINE(SELF);
+        return TRUE;
+    };
+    return FALSE;
+}
+
+func void ZS_CLEARROOM() {
+    PERCEPTION_SET_MINIMAL();
+    NPC_PERCENABLE(SELF, PERC_ASSESSENTERROOM, 61567);
+    NPC_PERCENABLE(SELF, PERC_MOVEMOB, 41654);
+    NPC_PERCENABLE(SELF, PERC_ASSESSTALK, 61566);
+    AI_STANDUP(SELF);
+    B_LOOKATNPC(SELF, OTHER);
+    AI_SETWALKMODE(SELF, NPC_RUN);
+    if (!(NPC_ISINPLAYERSROOM(SELF))) {
+        AI_GOTOWP(SELF, NPC_GETNEARESTWP(OTHER));
+    };
+    SELF.AIVAR[19] = NOTINPOS;
+}
+
+func int ZS_CLEARROOM_LOOP() {
+    if ((SELF.AIVAR[19]) == (NOTINPOS)) {
+        B_TURNTONPC(SELF, OTHER);
+        if (C_WANTTOATTACKROOMINTRUDER(SELF)) {
+            B_SELECTWEAPON(SELF, OTHER);
+            B_SAY(SELF, OTHER, "$GETOUTOFHERE");
+        } else if ((NPC_GETATTITUDE(OTHER, SELF)) != (ATT_FRIENDLY)) {
+            B_SAY(SELF, OTHER, "$WHYAREYOUINHERE");
+        };
+        NPC_SETSTATETIME(SELF, 0);
+        SELF.AIVAR[19] = ISINPOS;
+    };
+    if (B_EXITIFROOMLEFT()) {
+        return LOOP_END;
+    };
+    if (C_WANTTOATTACKROOMINTRUDER(SELF)) {
+        if ((NPC_GETSTATETIME(SELF)) > (5)) {
+            B_ATTACK(SELF, OTHER, AR_CLEARROOM, 0);
+            return LOOP_END;
+        };
+    };
+    if ((NPC_GETSTATETIME(SELF)) >= (2)) {
+        if (!(NPC_CANSEENPCFREELOS(SELF, OTHER))) {
+            AI_GOTOWP(SELF, NPC_GETNEARESTWP(OTHER));
+            B_TURNTONPC(SELF, OTHER);
+        } else if (!(NPC_CANSEENPC(SELF, OTHER))) {
+            B_TURNTONPC(SELF, OTHER);
+        };
+        NPC_SETSTATETIME(SELF, 0);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_CLEARROOM_END() {
+    B_STOPLOOKAT(SELF);
+}
+

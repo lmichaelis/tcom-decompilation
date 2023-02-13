@@ -1,0 +1,30 @@
+instance ITEM_HELPER_INST(C_NPC) {
+    NAME[0] = "Itemhelper";
+    ID = 54;
+    FLAGS = 2;
+    ATTRIBUTE[1] = 2;
+    ATTRIBUTE[0] = 2;
+    MDL_SETVISUAL(ITEM_HELPER_INST, "Meatbug.mds");
+}
+
+instance ITEM_HELPER(OCNPC);
+func void GETITEMHELPER() {
+    var C_NPC SELFBAK;
+    ITEM_HELPER = HLP_GETNPC(9458);
+    if (!(HLP_ISVALIDNPC(ITEM_HELPER))) {
+        SELFBAK = HLP_GETNPC(1815);
+        WLD_INSERTNPC(9458, TOT);
+        ITEM_HELPER = HLP_GETNPC(9458);
+        SELF = HLP_GETNPC(9461);
+    };
+}
+
+func int ITM_GETPTR(var int INSTANCE) {
+    GETITEMHELPER();
+    if (!(NPC_HASITEMS(ITEM_HELPER, INSTANCE))) {
+        CREATEINVITEM(ITEM_HELPER, INSTANCE);
+    };
+    NPC_GETINVITEM(ITEM_HELPER, INSTANCE);
+    return _@(1818);
+}
+

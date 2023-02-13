@@ -1,0 +1,227 @@
+instance DIA_URYCH_EXIT(C_INFO) {
+    NPC = 52113;
+    NR = 999;
+    CONDITION = DIA_URYCH_EXIT_CONDITION;
+    INFORMATION = DIA_URYCH_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_URYCH_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_URYCH_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_URYCH_HELLO(C_INFO) {
+    NPC = 52113;
+    NR = 1;
+    CONDITION = DIA_URYCH_HELLO_CONDITION;
+    INFORMATION = DIA_URYCH_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_URYCH_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_URYCH_HELLO_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_WhoAreYou");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Urych_Hello_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Urych_Hello_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_URYCH_PLACE(C_INFO) {
+    NPC = 52113;
+    NR = 1;
+    CONDITION = DIA_URYCH_PLACE_CONDITION;
+    INFORMATION = DIA_URYCH_PLACE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What is this place?";
+}
+
+func int DIA_URYCH_PLACE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 65959)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_URYCH_PLACE_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_WhatIsThisPlace");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Urych_Place_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Urych_Place_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_URYCH_STOCK(C_INFO) {
+    NPC = 52113;
+    NR = 1;
+    CONDITION = DIA_URYCH_STOCK_CONDITION;
+    INFORMATION = DIA_URYCH_STOCK_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Are you also involved in supply?";
+}
+
+func int DIA_URYCH_STOCK_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 65962)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_URYCH_STOCK_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Urych_Stock_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Urych_Stock_03_02");
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_URYCH_GIVEFOOD(C_INFO) {
+    NPC = 52113;
+    NR = 90;
+    CONDITION = DIA_URYCH_GIVEFOOD_CONDITION;
+    INFORMATION = DIA_URYCH_GIVEFOOD_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Can I get something to eat?";
+}
+
+var int URYCH_STOPFOOD;
+func int DIA_URYCH_GIVEFOOD_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 65962)) && ((URYCH_STOPFOOD) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int URYCH_GIVEFOOD_DAY;
+func void URYCH_GIVEFOOD_RANDOM() {
+    var int URYCH_NEXTFOOD;
+    URYCH_NEXTFOOD = NPC_GETLASTAMBIENT(SELF);
+    NPC_INITAMBIENTS(SELF, 10);
+    if ((URYCH_NEXTFOOD) == (0)) {
+        CREATEINVITEMS(SELF, 36606, 1);
+    };
+    if ((URYCH_NEXTFOOD) == (1)) {
+        CREATEINVITEMS(SELF, 36610, 1);
+    };
+    if ((URYCH_NEXTFOOD) == (2)) {
+        CREATEINVITEMS(SELF, 36614, 1);
+    };
+    if ((URYCH_NEXTFOOD) == (3)) {
+        CREATEINVITEMS(SELF, 36626, 1);
+    };
+    if ((URYCH_NEXTFOOD) == (4)) {
+        CREATEINVITEMS(SELF, 36668, 1);
+    };
+    if ((URYCH_NEXTFOOD) == (5)) {
+        CREATEINVITEMS(SELF, 36660, 1);
+    };
+    if ((URYCH_NEXTFOOD) == (6)) {
+        CREATEINVITEMS(SELF, 36658, 1);
+    };
+    if ((URYCH_NEXTFOOD) == (7)) {
+        CREATEINVITEMS(SELF, 36641, 1);
+    };
+    if ((URYCH_NEXTFOOD) == (8)) {
+        CREATEINVITEMS(SELF, 36604, 1);
+    };
+    if ((URYCH_NEXTFOOD) == (9)) {
+        URYCH_STOPFOOD = TRUE;
+        CREATEINVITEMS(SELF, 36720, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 36720, 1);
+    };
+}
+
+func void DIA_URYCH_GIVEFOOD_INFO() {
+    AI_STARTFACEANI(OTHER, S_SMILE, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Urych_GiveFood_15_01");
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        if ((URYCH_GIVEFOOD_DAY) != (WLD_GETDAY())) {
+            AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Urych_GiveFood_03_02");
+            URYCH_GIVEFOOD_RANDOM();
+            URYCH_GIVEFOOD_DAY = WLD_GETDAY();
+        } else {
+            AI_STARTFACEANI(SELF, "S_ANGRY", 1, -(1));
+            AI_OUTPUT(SELF, OTHER, "DIA_Urych_GiveFood_03_03");
+        };
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Urych_GiveFood_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_URYCH_PICKPOCKET(C_INFO) {
+    NPC = 52113;
+    NR = 900;
+    CONDITION = DIA_URYCH_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_URYCH_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_URYCH_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_URYCH_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(65975);
+    INFO_ADDCHOICE(65975, DIALOG_BACK, 65979);
+    INFO_ADDCHOICE(65975, DIALOG_PICKPOCKET, 65978);
+}
+
+func void DIA_URYCH_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        CREATEINVITEMS(SELF, 36712, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 36712, 1);
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(65975);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(65975);
+}
+
+func void DIA_URYCH_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(65975);
+}
+
+instance DIA_URYCH_BUSY(C_INFO) {
+    NPC = 52113;
+    NR = 1;
+    CONDITION = DIA_URYCH_BUSY_CONDITION;
+    INFORMATION = DIA_URYCH_BUSY_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_URYCH_BUSY_CONDITION() {
+    if (NPC_ISINSTATE(SELF, 61599)) {
+        if ((((NPC_KNOWSINFO(OTHER, 65959)) && (NPC_KNOWSINFO(OTHER, 65962))) && (NPC_KNOWSINFO(OTHER, 65965))) && ((URYCH_STOPFOOD) == (TRUE))) {
+            if (((SELF.AIVAR[6]) == (TRUE)) || ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) == (0))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_URYCH_BUSY_INFO() {
+    DIA_IMBUSY_CALM();
+}
+

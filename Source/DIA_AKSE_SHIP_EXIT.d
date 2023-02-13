@@ -1,0 +1,127 @@
+instance DIA_AKSE_SHIP_EXIT(C_INFO) {
+    NPC = 51629;
+    NR = 999;
+    CONDITION = DIA_AKSE_SHIP_EXIT_CONDITION;
+    INFORMATION = DIA_AKSE_SHIP_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_AKSE_SHIP_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_AKSE_SHIP_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_AKSE_SHIP_Q101_HELLO(C_INFO) {
+    NPC = 51629;
+    NR = 1;
+    CONDITION = DIA_AKSE_SHIP_Q101_HELLO_CONDITION;
+    INFORMATION = DIA_AKSE_SHIP_Q101_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I'm Marvin. What about you?";
+}
+
+func int DIA_AKSE_SHIP_Q101_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_AKSE_SHIP_Q101_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Akse_Ship_Q101_Hello_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Akse_Ship_Q101_Hello_03_02");
+}
+
+instance DIA_AKSE_SHIP_Q101_GROG(C_INFO) {
+    NPC = 51629;
+    NR = 1;
+    CONDITION = DIA_AKSE_SHIP_Q101_GROG_CONDITION;
+    INFORMATION = DIA_AKSE_SHIP_Q101_GROG_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Maybe a sip of grog will make you feel better?";
+}
+
+func int DIA_AKSE_SHIP_Q101_GROG_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 91578)) && ((NPC_HASITEMS(OTHER, 33654)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void Q101_SMUGGLER_DRINKGROG() {
+    B_STANDUP();
+    AI_STOPLOOKAT(SELF);
+    if ((NPC_HASITEMS(OTHER, 33654)) >= (0)) {
+        CREATEINVITEMS(SELF, 33654, 1);
+    };
+    AI_USEITEM(SELF, 33654);
+}
+
+func void DIA_AKSE_SHIP_Q101_GROG_INFO() {
+    B_GIVEPLAYERXP(XP_Q101_SMUGLERGROG);
+    AI_OUTPUT(OTHER, SELF, "DIA_Akse_Ship_Q101_Grog_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 33654, 1);
+    Q101_SMUGGLER_DRINKGROG();
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Akse_Ship_Q101_Grog_03_02");
+    Q101_SMUGGLER_DRINKGROG();
+    AI_OUTPUT(SELF, OTHER, "DIA_Akse_Ship_Q101_Grog_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Akse_Ship_Q101_Grog_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Akse_Ship_Q101_Grog_03_05");
+    NPC_EXCHANGEROUTINE(SELF, "Q101_BREAK");
+}
+
+instance DIA_AKSE_SHIP_Q101_CAPTAIN(C_INFO) {
+    NPC = 51629;
+    NR = 1;
+    CONDITION = DIA_AKSE_SHIP_Q101_CAPTAIN_CONDITION;
+    INFORMATION = DIA_AKSE_SHIP_Q101_CAPTAIN_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Could you tell me something about the captain?";
+}
+
+func int DIA_AKSE_SHIP_Q101_CAPTAIN_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 91581)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_AKSE_SHIP_Q101_CAPTAIN_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 0, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Akse_Ship_Q101_Captain_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Akse_Ship_Q101_Captain_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Akse_Ship_Q101_Captain_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_ASKE_Q101_AMBIENT(C_INFO) {
+    NPC = 51629;
+    NR = 1;
+    CONDITION = DIA_ASKE_Q101_AMBIENT_CONDITION;
+    INFORMATION = DIA_ASKE_Q101_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ASKE_Q101_AMBIENT_CONDITION() {
+    if (NPC_ISINSTATE(SELF, 61599)) {
+        if ((NPC_KNOWSINFO(OTHER, 91578)) && ((NPC_HASITEMS(OTHER, 33654)) == (0))) {
+            return TRUE;
+        };
+        if (NPC_KNOWSINFO(OTHER, 91585)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ASKE_Q101_AMBIENT_INFO() {
+    B_SAY(SELF, OTHER, "$RUDE_GOODBYE");
+    AI_STOPPROCESSINFOS(SELF);
+}
+

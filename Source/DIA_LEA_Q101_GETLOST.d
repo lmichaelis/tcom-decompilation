@@ -1,0 +1,24 @@
+instance DIA_LEA_Q101_GETLOST(C_INFO) {
+    NPC = 51594;
+    NR = 1;
+    CONDITION = DIA_LEA_Q101_GETLOST_CONDITION;
+    INFORMATION = DIA_LEA_Q101_GETLOST_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_LEA_Q101_GETLOST_CONDITION() {
+    if (NPC_ISINSTATE(SELF, 61599)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LEA_Q101_GETLOST_INFO() {
+    DIA_IMBUSY_ANGRY();
+    if ((Q101_ANALEAFIRSTTALK) == (FALSE)) {
+        AI_LOGENTRY(TOPIC_Q101, LOG_Q101_LEAANA_GETLOST);
+        Q101_ANALEAFIRSTTALK = TRUE;
+    };
+}
+

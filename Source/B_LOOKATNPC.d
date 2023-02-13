@@ -1,0 +1,5 @@
+func void B_LOOKATNPC(var C_NPC SLF, var C_NPC OTH) {
+    B_STOPLOOKAT(SLF);
+    AI_LOOKATNPC(SLF, OTH);
+}
+

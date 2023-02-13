@@ -1,0 +1,415 @@
+func void B_GIVEANYPOTION() {
+    if ((NPC_HASITEMS(OTHER, 34352)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 34354)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 34357)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 33678)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 34361)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 34364)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 34367)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 34369)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 37730)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 37730, 1);
+    };
+}
+
+func void B_GIVEANYPOTION_USEIT() {
+    AI_STOPLOOKAT(SELF);
+    if ((NPC_HASITEMS(OTHER, 34352)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 34352, 1);
+        AI_USEITEM(SELF, 34352);
+    };
+    if ((NPC_HASITEMS(OTHER, 34354)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 34354, 1);
+        AI_USEITEM(SELF, 34354);
+    };
+    if ((NPC_HASITEMS(OTHER, 34357)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 34357, 1);
+        AI_USEITEM(SELF, 34357);
+    };
+    if ((NPC_HASITEMS(OTHER, 33678)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 33678, 1);
+        AI_USEITEM(SELF, 33678);
+    };
+    if ((NPC_HASITEMS(OTHER, 34361)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 34361, 1);
+        AI_USEITEM(SELF, 34361);
+    };
+    if ((NPC_HASITEMS(OTHER, 34364)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 34364, 1);
+        AI_USEITEM(SELF, 34364);
+    };
+    if ((NPC_HASITEMS(OTHER, 34367)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 34367, 1);
+        AI_USEITEM(SELF, 34367);
+    };
+    if ((NPC_HASITEMS(OTHER, 34369)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 34369, 1);
+        AI_USEITEM(SELF, 34369);
+    };
+    if ((NPC_HASITEMS(OTHER, 37730)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 37730, 1);
+        AI_USEITEM(SELF, 37730);
+    };
+}
+
+func void B_GIVEANYBEER() {
+    if ((NPC_HASITEMS(OTHER, 33984)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 36363)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 36368)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 36375)) >= (1)) {
+    };
+    if ((NPC_HASITEMS(OTHER, 36364)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36364, 1);
+    };
+}
+
+func void B_GIVEANYBEER_USEIT() {
+    AI_STOPLOOKAT(SELF);
+    if ((NPC_HASITEMS(OTHER, 33984)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 33984, 1);
+        AI_USEITEM(SELF, 33984);
+    };
+    if ((NPC_HASITEMS(OTHER, 36363)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36363, 1);
+        AI_USEITEM(SELF, 36363);
+    };
+    if ((NPC_HASITEMS(OTHER, 36368)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36368, 1);
+        AI_USEITEM(SELF, 36368);
+    };
+    if ((NPC_HASITEMS(OTHER, 36375)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36375, 1);
+        AI_USEITEM(SELF, 36375);
+    };
+    if ((NPC_HASITEMS(OTHER, 36364)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36364, 1);
+        AI_USEITEM(SELF, 36364);
+    };
+}
+
+func void B_USEANYBEER() {
+    AI_STOPLOOKAT(SELF);
+    if ((NPC_HASITEMS(SELF, 33984)) >= (1)) {
+        AI_USEITEM(SELF, 33984);
+    };
+    if ((NPC_HASITEMS(SELF, 36363)) >= (1)) {
+        AI_USEITEM(SELF, 33984);
+    };
+    if ((NPC_HASITEMS(SELF, 36368)) >= (1)) {
+        AI_USEITEM(SELF, 33984);
+    };
+    if ((NPC_HASITEMS(SELF, 36375)) >= (1)) {
+        AI_USEITEM(SELF, 33984);
+    };
+    if ((NPC_HASITEMS(SELF, 36364)) >= (1)) {
+        AI_USEITEM(SELF, 33984);
+    };
+}
+
+func void B_GIVEANYMEAT_EATABLE_USEIT() {
+    AI_STOPLOOKAT(SELF);
+    if ((NPC_HASITEMS(OTHER, 33845)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 33845, 1);
+        AI_USEITEM(SELF, 33845);
+    };
+    if ((NPC_HASITEMS(OTHER, 36405)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36405, 1);
+        AI_USEITEM(SELF, 36405);
+    };
+    if ((NPC_HASITEMS(OTHER, 36417)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36417, 1);
+        AI_USEITEM(SELF, 36417);
+    };
+    if ((NPC_HASITEMS(OTHER, 36429)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36429, 1);
+        AI_USEITEM(SELF, 36429);
+    };
+    if ((NPC_HASITEMS(OTHER, 36421)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36421, 1);
+        AI_USEITEM(SELF, 36421);
+    };
+    if ((NPC_HASITEMS(OTHER, 36441)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36441, 1);
+        AI_USEITEM(SELF, 36441);
+    };
+    if ((NPC_HASITEMS(OTHER, 36413)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36413, 1);
+        AI_USEITEM(SELF, 36413);
+    };
+    if ((NPC_HASITEMS(OTHER, 36409)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36409, 1);
+        AI_USEITEM(SELF, 36409);
+    };
+    if ((NPC_HASITEMS(OTHER, 36437)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36437, 1);
+        AI_USEITEM(SELF, 36437);
+    };
+    if ((NPC_HASITEMS(OTHER, 36425)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36425, 1);
+        AI_USEITEM(SELF, 36425);
+    };
+    if ((NPC_HASITEMS(OTHER, 36433)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36433, 1);
+        AI_USEITEM(SELF, 36433);
+    };
+}
+
+func void B_GIVEANYWINE_USEIT() {
+    AI_STOPLOOKAT(SELF);
+    if ((NPC_HASITEMS(OTHER, 33988)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 33988, 1);
+        AI_USEITEM(SELF, 33988);
+    };
+    if ((NPC_HASITEMS(OTHER, 36372)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36372, 1);
+        AI_USEITEM(SELF, 36372);
+    };
+    if ((NPC_HASITEMS(OTHER, 36370)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36370, 1);
+        AI_USEITEM(SELF, 36370);
+    };
+    if ((NPC_HASITEMS(OTHER, 36387)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36387, 1);
+        AI_USEITEM(SELF, 36387);
+    };
+    if ((NPC_HASITEMS(OTHER, 36373)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36373, 1);
+        AI_USEITEM(SELF, 36373);
+    };
+    if ((NPC_HASITEMS(OTHER, 36391)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36391, 1);
+        AI_USEITEM(SELF, 36391);
+    };
+    if ((NPC_HASITEMS(OTHER, 36393)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36393, 1);
+        AI_USEITEM(SELF, 36393);
+    };
+    if ((NPC_HASITEMS(OTHER, 36445)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36445, 1);
+        AI_USEITEM(SELF, 36445);
+    };
+}
+
+func void B_GIVEANYMEAL_USEIT() {
+    AI_STOPLOOKAT(SELF);
+    if ((NPC_HASITEMS(OTHER, 36604)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36604, 1);
+        AI_USEITEM(SELF, 36604);
+    };
+    if ((NPC_HASITEMS(OTHER, 36606)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36606, 1);
+        AI_USEITEM(SELF, 36606);
+    };
+    if ((NPC_HASITEMS(OTHER, 36608)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36608, 1);
+        AI_USEITEM(SELF, 36608);
+    };
+    if ((NPC_HASITEMS(OTHER, 36610)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36610, 1);
+        AI_USEITEM(SELF, 36610);
+    };
+    if ((NPC_HASITEMS(OTHER, 36612)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36612, 1);
+        AI_USEITEM(SELF, 36612);
+    };
+    if ((NPC_HASITEMS(OTHER, 36614)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36614, 1);
+        AI_USEITEM(SELF, 36614);
+    };
+    if ((NPC_HASITEMS(OTHER, 36616)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36616, 1);
+        AI_USEITEM(SELF, 36616);
+    };
+    if ((NPC_HASITEMS(OTHER, 36618)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36618, 1);
+        AI_USEITEM(SELF, 36618);
+    };
+    if ((NPC_HASITEMS(OTHER, 36622)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36622, 1);
+        AI_USEITEM(SELF, 36622);
+    };
+    if ((NPC_HASITEMS(OTHER, 36624)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36624, 1);
+        AI_USEITEM(SELF, 36624);
+    };
+    if ((NPC_HASITEMS(OTHER, 36626)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36626, 1);
+        AI_USEITEM(SELF, 36626);
+    };
+    if ((NPC_HASITEMS(OTHER, 36631)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36631, 1);
+        AI_USEITEM(SELF, 36631);
+    };
+    if ((NPC_HASITEMS(OTHER, 36633)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36633, 1);
+        AI_USEITEM(SELF, 36633);
+    };
+    if ((NPC_HASITEMS(OTHER, 36635)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36635, 1);
+        AI_USEITEM(SELF, 36635);
+    };
+    if ((NPC_HASITEMS(OTHER, 36637)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36637, 1);
+        AI_USEITEM(SELF, 36637);
+    };
+    if ((NPC_HASITEMS(OTHER, 36639)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36639, 1);
+        AI_USEITEM(SELF, 36639);
+    };
+    if ((NPC_HASITEMS(OTHER, 36641)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36641, 1);
+        AI_USEITEM(SELF, 36641);
+    };
+    if ((NPC_HASITEMS(OTHER, 36643)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36643, 1);
+        AI_USEITEM(SELF, 36643);
+    };
+    if ((NPC_HASITEMS(OTHER, 36645)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36645, 1);
+        AI_USEITEM(SELF, 36645);
+    };
+    if ((NPC_HASITEMS(OTHER, 36647)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36647, 1);
+        AI_USEITEM(SELF, 36647);
+    };
+    if ((NPC_HASITEMS(OTHER, 36652)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36652, 1);
+        AI_USEITEM(SELF, 36652);
+    };
+    if ((NPC_HASITEMS(OTHER, 36654)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36654, 1);
+        AI_USEITEM(SELF, 36654);
+    };
+    if ((NPC_HASITEMS(OTHER, 36656)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36656, 1);
+        AI_USEITEM(SELF, 36656);
+    };
+    if ((NPC_HASITEMS(OTHER, 36658)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36658, 1);
+        AI_USEITEM(SELF, 36658);
+    };
+    if ((NPC_HASITEMS(OTHER, 36660)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36660, 1);
+        AI_USEITEM(SELF, 36660);
+    };
+    if ((NPC_HASITEMS(OTHER, 36662)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36662, 1);
+        AI_USEITEM(SELF, 36662);
+    };
+    if ((NPC_HASITEMS(OTHER, 36664)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36664, 1);
+        AI_USEITEM(SELF, 36664);
+    };
+    if ((NPC_HASITEMS(OTHER, 36666)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36666, 1);
+        AI_USEITEM(SELF, 36666);
+    };
+    if ((NPC_HASITEMS(OTHER, 36668)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36668, 1);
+        AI_USEITEM(SELF, 36668);
+    };
+    if ((NPC_HASITEMS(OTHER, 36670)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36670, 1);
+        AI_USEITEM(SELF, 36670);
+    };
+    if ((NPC_HASITEMS(OTHER, 36672)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36672, 1);
+        AI_USEITEM(SELF, 36672);
+    };
+    if ((NPC_HASITEMS(OTHER, 36674)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36674, 1);
+        AI_USEITEM(SELF, 36674);
+    };
+    if ((NPC_HASITEMS(OTHER, 36676)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36676, 1);
+        AI_USEITEM(SELF, 36676);
+    };
+    if ((NPC_HASITEMS(OTHER, 36678)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36678, 1);
+        AI_USEITEM(SELF, 36678);
+    };
+    if ((NPC_HASITEMS(OTHER, 36680)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36680, 1);
+        AI_USEITEM(SELF, 36680);
+    };
+    if ((NPC_HASITEMS(OTHER, 36682)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36682, 1);
+        AI_USEITEM(SELF, 36682);
+    };
+    if ((NPC_HASITEMS(OTHER, 36684)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36684, 1);
+        AI_USEITEM(SELF, 36684);
+    };
+    if ((NPC_HASITEMS(OTHER, 36686)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36686, 1);
+        AI_USEITEM(SELF, 36686);
+    };
+    if ((NPC_HASITEMS(OTHER, 36688)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36688, 1);
+        AI_USEITEM(SELF, 36688);
+    };
+    if ((NPC_HASITEMS(OTHER, 36690)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36690, 1);
+        AI_USEITEM(SELF, 36690);
+    };
+    if ((NPC_HASITEMS(OTHER, 36692)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36692, 1);
+        AI_USEITEM(SELF, 36692);
+    };
+    if ((NPC_HASITEMS(OTHER, 36694)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36694, 1);
+        AI_USEITEM(SELF, 36694);
+    };
+    if ((NPC_HASITEMS(OTHER, 36696)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36696, 1);
+        AI_USEITEM(SELF, 36696);
+    };
+    if ((NPC_HASITEMS(OTHER, 36702)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36702, 1);
+        AI_USEITEM(SELF, 36702);
+    };
+    if ((NPC_HASITEMS(OTHER, 36704)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36704, 1);
+        AI_USEITEM(SELF, 36704);
+    };
+    if ((NPC_HASITEMS(OTHER, 36706)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36706, 1);
+        AI_USEITEM(SELF, 36706);
+    };
+    if ((NPC_HASITEMS(OTHER, 36708)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36708, 1);
+        AI_USEITEM(SELF, 36708);
+    };
+    if ((NPC_HASITEMS(OTHER, 36710)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36710, 1);
+        AI_USEITEM(SELF, 36710);
+    };
+    if ((NPC_HASITEMS(OTHER, 36712)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36712, 1);
+        AI_USEITEM(SELF, 36712);
+    };
+    if ((NPC_HASITEMS(OTHER, 36714)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36714, 1);
+        AI_USEITEM(SELF, 36714);
+    };
+    if ((NPC_HASITEMS(OTHER, 36716)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36716, 1);
+        AI_USEITEM(SELF, 36716);
+    };
+    if ((NPC_HASITEMS(OTHER, 36718)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36718, 1);
+        AI_USEITEM(SELF, 36718);
+    };
+}
+

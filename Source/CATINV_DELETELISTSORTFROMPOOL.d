@@ -1,0 +1,149 @@
+func void CATINV_DELETELISTSORTFROMPOOL(var int LIST, var int PURGE) {
+    var ZCLISTSORT L;
+    var int ONE;
+    var int CALL;
+    if (CALL_BEGIN(CALL)) {
+        CALL_PTRPARAM(_@(ONE));
+        CALL__THISCALL(_@(LIST), ZCLISTSORT_OCITEM____SCALAR_DELETING_DESTRUCTOR);
+        CALL = CALL_END();
+    };
+    if (PURGE) {
+        LIST_DESTROYS(LIST);
+    };
+    L = _^(LIST);
+    L.NEXT = 0;
+}
+
+func int CATINV_RESET(var int CONTAINER) {
+    var OCITEMCONTAINER ITMCON;
+    var int CALL2;
+    var ZCLISTSORT L;
+    var OCITEMCONTAINER NPCCON;
+    var int CALL;
+    var OCNPCINVENTORY NPCINV;
+    var int CONTAINER_VTBL;
+    CONTAINER_VTBL = MEM_READINT(CONTAINER);
+    if ((CONTAINER_VTBL) == (OCNPCINVENTORY___VFTABLE)) {
+        NPCINV = _^(CONTAINER);
+        if ((NPCINV._OCITEMCONTAINER_CONTENTS) != (_@(NPCINV.INVENTORY_COMPARE))) {
+            CATINV_DELETELISTSORTFROMPOOL(NPCINV._OCITEMCONTAINER_CONTENTS, 1);
+            NPCINV._OCITEMCONTAINER_CONTENTS = _@(NPCINV.INVENTORY_COMPARE);
+        };
+    };
+    if ((CONTAINER_VTBL) == (OCSTEALCONTAINER___VFTABLE)) {
+        if (CALL_BEGIN(CALL)) {
+            CALL__THISCALL(_@(CONTAINER), OCSTEALCONTAINER__CREATELIST);
+            CALL = CALL_END();
+        };
+    };
+    if ((CONTAINER_VTBL) == (OCNPCCONTAINER___VFTABLE)) {
+        NPCCON = _^(CONTAINER);
+        L = _^(NPCCON.CONTENTS);
+        if (L.NEXT) {
+            CATINV_DELETELISTSORTFROMPOOL(L.NEXT, 1);
+            L.NEXT = 0;
+        };
+        if (CALL_BEGIN(CALL2)) {
+            CALL__THISCALL(_@(CONTAINER), OCNPCCONTAINER__CREATELIST);
+            CALL2 = CALL_END();
+        };
+    };
+    if ((CONTAINER_VTBL) == (OCITEMCONTAINER___VFTABLE)) {
+        if (_CATINV_BACKUPLIST) {
+            ITMCON = _^(CONTAINER);
+            CATINV_DELETELISTSORTFROMPOOL(ITMCON.CONTENTS, 1);
+            ITMCON.CONTENTS = _CATINV_BACKUPLIST;
+            _CATINV_BACKUPLIST = 0;
+        };
+    };
+    return CONTAINER_VTBL;
+}
+
+func void CATINV_RESETOFFSET(var int CONTAINER) {
+    var OCITEMCONTAINER CON;
+    CON = _^(CONTAINER);
+    CON.SELECTEDITEM -= CON.OFFSET;
+    CON.OFFSET = 0;
+}
+
+func void CATINV_SETMAXOFFSET(var int CONTAINER, var int SELLASTITEM) {
+    var int NUMITEMS;
+    var int CONTENTS;
+    var int NUMROWS;
+    var int CALL;
+    var OCITEMCONTAINER CON;
+    CON = _^(CONTAINER);
+    CONTENTS = CON.CONTENTS;
+    if (CALL_BEGIN(CALL)) {
+        CALL_PUTRETVALTO(_@(NUMITEMS));
+        CALL__THISCALL(_@(CONTENTS), ZCLISTSORT_OCITEM___GETNUMINLIST);
+        CALL = CALL_END();
+    };
+    NUMROWS = (((NUMITEMS) - (1)) / (CON.MAXSLOTSCOL)) + (1);
+    CON.OFFSET = ((NUMROWS) - (CON.MAXSLOTSROW)) * (CON.MAXSLOTSCOL);
+    if ((CON.OFFSET) < (0)) {
+        CON.OFFSET = 0;
+    };
+    if (SELLASTITEM) {
+        CON.SELECTEDITEM = (NUMITEMS) - (1);
+    };
+    CON.SELECTEDITEM += CON.OFFSET;
+}
+
+func void CATINV_ADDITEM(var int LISTPTR) {
+    var C_ITEM ITM;
+    var ZCLISTSORT L;
+    L = _^(LISTPTR);
+    ITM = _^(L.DATA);
+    if ((ITM.MAINFLAG) & (MEM_READSTATARR(INV_CAT_GROUPS[0], CATINV_GETCATID(CATINV_ACTIVECATEGORY)))) {
+        LIST_ADDS(_CATINV_CURRENTLIST, L.DATA);
+    };
+}
+
+func int CATINV_SETCATEGORY(var int POS) {
+    var int INVNEWCATEGORY;
+    INVNEWCATEGORY = POS;
+    if ((INVNEWCATEGORY) < (CATINV_G1MODE)) {
+        INVNEWCATEGORY = CATINV_G1MODE;
+    };
+    if ((INVNEWCATEGORY) >= (INV_CAT_MAX)) {
+        INVNEWCATEGORY = (INV_CAT_MAX) - (1);
+    };
+    if ((INVNEWCATEGORY) == (CATINV_ACTIVECATEGORY)) {
+        return FALSE;
+    };
+    CATINV_ACTIVECATEGORY = INVNEWCATEGORY;
+    CATINV_UPDATEALL();
+    return TRUE;
+}
+
+func int CATINV_SETCATEGORYFIRST() {
+    return CATINV_SETCATEGORY(CATINV_G1MODE);
+}
+
+func int CATINV_SETCATEGORYLAST() {
+    return CATINV_SETCATEGORY((INV_CAT_MAX) - (1));
+}
+
+func void CATINV_OPEN() {
+    var OCNPC HER;
+    var OCITEMCONTAINER CONTAINER;
+    CONTAINER = _^(ECX);
+    if ((CONTAINER.VTBL) != (OCNPCINVENTORY___VFTABLE)) {
+        if (!(CATINV_G1MODE)) {
+            CATINV_SETCATEGORYFIRST();
+        };
+        CATINV_SETSELECTIONFIRST(ECX);
+        HER = HLP_GETNPC(1819);
+        CATINV_SETSELECTIONFIRST(_@(HER.INVENTORY2_VTBL));
+    };
+    CATINV_UPDATE(ECX);
+}
+
+func void CATINV_CLOSE() {
+    var int I;
+    if (HLP_ISVALIDNPC(HERO)) {
+        I = CATINV_RESET(ESI);
+    };
+}
+

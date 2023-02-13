@@ -1,0 +1,13 @@
+func void EVENTSMANAGER_SQ419() {
+    var int SQ419_GOTCLAYWOLFHEAD_LOGENTRY;
+    if ((LOG_GETSTATUS(MIS_SQ419)) != (LOG_RUNNING)) {
+        return;
+    };
+    if ((SQ419_GOTCLAYWOLFHEAD_LOGENTRY) == (FALSE)) {
+        if ((NPC_HASITEMS(HERO, 37416)) >= (1)) {
+            SQ419_GOTCLAYWOLFHEAD_LOGENTRY = TRUE;
+            B_LOGENTRY(TOPIC_SQ419, LOG_SQ419_GOTCLAYWOLFHEAD);
+        };
+    };
+}
+

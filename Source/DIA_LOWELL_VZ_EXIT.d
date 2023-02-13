@@ -1,0 +1,50 @@
+instance DIA_LOWELL_VZ_EXIT(C_INFO) {
+    NPC = 59106;
+    NR = 999;
+    CONDITION = DIA_LOWELL_VZ_EXIT_CONDITION;
+    INFORMATION = DIA_LOWELL_VZ_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_LOWELL_VZ_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_LOWELL_VZ_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_LOWELL_VZ_AMBIENT(C_INFO) {
+    NPC = 59106;
+    NR = 988;
+    CONDITION = DIA_LOWELL_VZ_AMBIENT_CONDITION;
+    INFORMATION = DIA_LOWELL_VZ_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How do you stand being in this cursed place?";
+}
+
+func int DIA_LOWELL_VZ_AMBIENT_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q514)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_LOWELL_VZ_AMBIENT_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_VolfzackMorale1");
+    if ((Q514_FINISHVOLFZACKE) == (1)) {
+        AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Lowell_VZ_Ambient_03_03");
+    };
+    if ((Q514_CATACOMBS_GARGOYLE_FIRSTMEETING) == (2)) {
+        AI_STARTFACEANI(SELF, S_FRIGHTENED, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Lowell_VZ_Ambient_03_02");
+    };
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Lowell_VZ_Ambient_03_01");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+

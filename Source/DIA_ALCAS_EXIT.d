@@ -1,0 +1,193 @@
+instance DIA_ALCAS_EXIT(C_INFO) {
+    NPC = 52981;
+    NR = 999;
+    CONDITION = DIA_ALCAS_EXIT_CONDITION;
+    INFORMATION = DIA_ALCAS_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ALCAS_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ALCAS_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ALCAS_HELLO(C_INFO) {
+    NPC = 52981;
+    NR = 1;
+    CONDITION = DIA_ALCAS_HELLO_CONDITION;
+    INFORMATION = DIA_ALCAS_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ALCAS_HELLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ALCAS_HELLO_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_HELLO_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Alcas_HELLO_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_HELLO_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_HELLO_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_HELLO_03_05");
+    LOG_CREATETOPIC(TOPIC_KQ401, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_KQ401), TOPIC_KQ401, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_KQ401, LOG_KQ401_START_ALCAS);
+    NPC_EXCHANGEROUTINE(SELF, TOT);
+}
+
+instance DIA_ALCAS_WHOAREYOU(C_INFO) {
+    NPC = 52981;
+    NR = 1;
+    CONDITION = DIA_ALCAS_WHOAREYOU_CONDITION;
+    INFORMATION = DIA_ALCAS_WHOAREYOU_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_ALCAS_WHOAREYOU_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 67322)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ALCAS_WHOAREYOU_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhoAreYou");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_WhoAreYou_03_01");
+}
+
+instance DIA_ALCAS_ROYALGUARD(C_INFO) {
+    NPC = 52981;
+    NR = 1;
+    CONDITION = DIA_ALCAS_ROYALGUARD_CONDITION;
+    INFORMATION = DIA_ALCAS_ROYALGUARD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What can you tell me about the Royal Guard?";
+}
+
+func int DIA_ALCAS_ROYALGUARD_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 67325)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ALCAS_ROYALGUARD_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_TellMeAboutKingGuards");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_RoyalGuard_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_RoyalGuard_03_02");
+}
+
+instance DIA_ALCAS_KING(C_INFO) {
+    NPC = 52981;
+    NR = 1;
+    CONDITION = DIA_ALCAS_KING_CONDITION;
+    INFORMATION = DIA_ALCAS_KING_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What can you tell me about the King?";
+}
+
+func int DIA_ALCAS_KING_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 67325)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ALCAS_KING_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_TellMeAboutKing");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_King_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_King_03_02");
+}
+
+instance DIA_ALCAS_EMISARY(C_INFO) {
+    NPC = 52981;
+    NR = 1;
+    CONDITION = DIA_ALCAS_EMISARY_CONDITION;
+    INFORMATION = DIA_ALCAS_EMISARY_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What do you think of the Royal Envoy?";
+}
+
+func int DIA_ALCAS_EMISARY_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 67325)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ALCAS_EMISARY_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_OpinionAboutRoyalEmmisary");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_Emisary_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_Emisary_03_02");
+}
+
+instance DIA_ALCAS_AMBIENT(C_INFO) {
+    NPC = 52981;
+    NR = 998;
+    CONDITION = DIA_ALCAS_AMBIENT_CONDITION;
+    INFORMATION = DIA_ALCAS_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_ALCAS_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 67325)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ALCAS_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_HowAreYou");
+    if ((HERO.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Alcas_Ambient_03_01");
+    };
+    if ((HERO.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Alcas_Ambient_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Alcas_Ambient_03_03");
+}
+
+instance DIA_ALCAS_PICKPOCKET(C_INFO) {
+    NPC = 52981;
+    NR = 900;
+    CONDITION = DIA_ALCAS_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_ALCAS_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_ALCAS_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ALCAS_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(67340);
+    INFO_ADDCHOICE(67340, DIALOG_BACK, 67344);
+    INFO_ADDCHOICE(67340, DIALOG_PICKPOCKET, 67343);
+}
+
+func void DIA_ALCAS_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(67340);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(67340);
+}
+
+func void DIA_ALCAS_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(67340);
+}
+

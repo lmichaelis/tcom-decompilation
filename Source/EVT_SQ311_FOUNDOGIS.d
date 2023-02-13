@@ -1,0 +1,76 @@
+func void EVT_SQ311_FOUNDOGIS() {
+    if ((SQ311_FOUNDOGISBODY) == (FALSE)) {
+        PRINTD("Znalaz³eœ cia³o!");
+        SQ311_FOUNDOGISBODY = TRUE;
+    };
+}
+
+func void EVT_SQ311_STOPFIGHT() {
+    var int SQ311_STOPTHISFIGHTING;
+    if ((SQ311_STOPTHISFIGHTING) == (FALSE)) {
+        PRINTD("Stop Fight");
+        SQ311_STOPTHISFIGHTING = TRUE;
+        if (HLP_ISVALIDNPC(MIL_11132_GUARDMINE)) {
+            TELEPORTNPCTOWP(57104, MIL_11132_GUARDMINE.WP);
+            if ((NPC_ISDEAD(MIL_11132_GUARDMINE)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11132_GUARDMINE, 99999);
+            };
+        };
+        if (HLP_ISVALIDNPC(MIL_11143_STOCKGUARD)) {
+            TELEPORTNPCTOWP(57107, MIL_11143_STOCKGUARD.WP);
+            if ((NPC_ISDEAD(MIL_11143_STOCKGUARD)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11143_STOCKGUARD, 99999);
+            };
+        };
+        if (HLP_ISVALIDNPC(MIL_11134_MILITIA)) {
+            TELEPORTNPCTOWP(57162, MIL_11134_MILITIA.WP);
+            if ((NPC_ISDEAD(MIL_11134_MILITIA)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11134_MILITIA, 99999);
+            };
+        };
+        if (HLP_ISVALIDNPC(MIL_11135_MILITIA)) {
+            TELEPORTNPCTOWP(57165, MIL_11135_MILITIA.WP);
+            if ((NPC_ISDEAD(MIL_11135_MILITIA)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11135_MILITIA, 99999);
+            };
+        };
+        if (HLP_ISVALIDNPC(MIL_11138_MILITIA)) {
+            TELEPORTNPCTOWP(57168, MIL_11138_MILITIA.WP);
+            if ((NPC_ISDEAD(MIL_11138_MILITIA)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11138_MILITIA, 99999);
+            };
+        };
+        if (HLP_ISVALIDNPC(MIL_11140_MILITIA)) {
+            TELEPORTNPCTOWP(57171, MIL_11140_MILITIA.WP);
+            if ((NPC_ISDEAD(MIL_11140_MILITIA)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11140_MILITIA, 99999);
+            };
+        };
+        if (HLP_ISVALIDNPC(MIL_11141_MILITIA)) {
+            TELEPORTNPCTOWP(57174, MIL_11141_MILITIA.WP);
+            if ((NPC_ISDEAD(MIL_11141_MILITIA)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11141_MILITIA, 99999);
+            };
+        };
+        if (HLP_ISVALIDNPC(MIL_11142_MILITIA)) {
+            TELEPORTNPCTOWP(57177, MIL_11142_MILITIA.WP);
+            if ((NPC_ISDEAD(MIL_11142_MILITIA)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11142_MILITIA, 99999);
+            };
+        };
+        if (HLP_ISVALIDNPC(MIL_11144_MILITIA)) {
+            TELEPORTNPCTOWP(57181, MIL_11144_MILITIA.WP);
+            if ((NPC_ISDEAD(MIL_11144_MILITIA)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11144_MILITIA, 99999);
+            };
+        };
+        if (HLP_ISVALIDNPC(MIL_11131_ELWART)) {
+            TELEPORTNPCTOWP(57209, MIL_11131_ELWART.WP);
+            if ((NPC_ISDEAD(MIL_11131_ELWART)) == (FALSE)) {
+                B_MAGICHURTNPC(HERO, MIL_11131_ELWART, 99999);
+            };
+        };
+        SQ311_AFTERFIGHT();
+    };
+}
+

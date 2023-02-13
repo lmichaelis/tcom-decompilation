@@ -1,0 +1,27 @@
+func void ZS_CIRCLE() {
+    PERCEPTION_SET_NORMAL();
+    B_RESETALL(SELF);
+    NPC_SETPERCTIME(SELF, 1050253722);
+    AI_STANDUP(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    AI_GOTOWP(SELF, SELF.WP);
+    AI_ALIGNTOWP(SELF);
+}
+
+func int ZS_CIRCLE_LOOP() {
+    var int RANDY;
+    if ((SELF.GUILD) == (GIL_DMT)) {
+        RANDY = HLP_RANDOM(3000);
+        if ((NPC_GETSTATETIME(SELF)) > (RANDY)) {
+            WLD_PLAYEFFECT("FX_EarthQuake", SELF, SELF, 0, 0, 0, FALSE);
+            NPC_SETSTATETIME(SELF, 0);
+            WLD_PLAYEFFECT("spellFX_INCOVATION_RED", SELF, SELF, 0, 0, 0, FALSE);
+            AI_PLAYANI(SELF, "T_PRACTICEMAGIC5");
+        };
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_CIRCLE_END() {
+}
+

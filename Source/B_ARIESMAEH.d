@@ -1,0 +1,85 @@
+func void B_ARIESMAEH() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Aries_03_00");
+}
+
+instance DIA_ARIES_EXIT(C_INFO) {
+    NPC = 50806;
+    NR = 999;
+    CONDITION = DIA_ARIES_EXIT_CONDITION;
+    INFORMATION = DIA_ARIES_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ARIES_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ARIES_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ARIES_HALLO(C_INFO) {
+    NPC = 50806;
+    NR = 1;
+    CONDITION = DIA_ARIES_HALLO_CONDITION;
+    INFORMATION = DIA_ARIES_HALLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Hi...";
+}
+
+func int DIA_ARIES_HALLO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ARIES_HALLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Aries_Hallo_15_00");
+    B_ARIESMAEH();
+}
+
+instance DIA_ARIES_KOMMMIT(C_INFO) {
+    NPC = 50806;
+    NR = 1;
+    CONDITION = DIA_ARIES_KOMMMIT_CONDITION;
+    INFORMATION = DIA_ARIES_KOMMMIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Come with me.";
+}
+
+func int DIA_ARIES_KOMMMIT_CONDITION() {
+    if ((((SELF.AIVAR[15]) == (FALSE)) && (NPC_KNOWSINFO(OTHER, 89994))) && ((SELF.AIVAR[19]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARIES_KOMMMIT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Aries_KommMit_15_00");
+    B_ARIESMAEH();
+    SELF.AIVAR[15] = TRUE;
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ARIES_WARTEHIER(C_INFO) {
+    NPC = 50806;
+    NR = 1;
+    CONDITION = DIA_ARIES_WARTEHIER_CONDITION;
+    INFORMATION = DIA_ARIES_WARTEHIER_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Wait here!";
+}
+
+func int DIA_ARIES_WARTEHIER_CONDITION() {
+    if ((((SELF.AIVAR[15]) == (TRUE)) && (NPC_KNOWSINFO(OTHER, 89994))) && ((SELF.AIVAR[19]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARIES_WARTEHIER_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Aries_WarteHier_15_00");
+    B_ARIESMAEH();
+    SELF.AIVAR[15] = FALSE;
+    AI_STOPPROCESSINFOS(SELF);
+}
+

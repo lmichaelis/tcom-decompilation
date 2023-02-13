@@ -1,0 +1,694 @@
+instance DIA_ARNOLD_EXIT(C_INFO) {
+    NPC = 54532;
+    NR = 999;
+    CONDITION = DIA_ARNOLD_EXIT_CONDITION;
+    INFORMATION = DIA_ARNOLD_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_ARNOLD_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_ARNOLD_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+var int ARNOLDFIGHT;
+instance DIA_ARNOLD_HELLOTROUBLESOME3(C_INFO) {
+    NPC = 54532;
+    NR = 1;
+    CONDITION = DIA_ARNOLD_HELLOTROUBLESOME3_CONDITION;
+    INFORMATION = DIA_ARNOLD_HELLOTROUBLESOME3_INFO;
+    DESCRIPTION = "Hey, you there.";
+    PERMANENT = TRUE;
+}
+
+func int DIA_ARNOLD_HELLOTROUBLESOME3_CONDITION() {
+    if ((((NPC_KNOWSINFO(OTHER, 74260)) == (FALSE)) && ((ARNOLDFIGHT) == (FALSE))) && ((NPC_GETDISTTOWP(OTHER, "HARBOUR_TAVERN_14")) <= (3000))) {
+        if ((KAPITEL) < (3)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARNOLD_HELLOTROUBLESOME3_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_HelloTroublesome3_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_HelloTroublesome3_14_01");
+    INFO_CLEARCHOICES(74217);
+    INFO_ADDCHOICE(74217, "Don't bother yourselves.", 74220);
+    if ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING)) {
+        INFO_ADDCHOICE(74217, "What's it like to have a molerat mother and a scavenger father?", 74222);
+        INFO_ADDCHOICE(74217, "Could you guys be a little quieter?", 74223);
+    };
+}
+
+func void DIA_ARNOLD_HELLOTROUBLESOME3_DONTDISTURB() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_HelloTroublesome3_DontDisturb_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_HelloTroublesome3_DontDisturb_14_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_ARNOLD_ATTACKMARVIN() {
+    ARNOLDFIGHT = TRUE;
+    FAQ003_FIGHTWITHARNOLDSTATUS = 1;
+    AI_TURNTONPC(VLK_3019_ARNOLD, HERO);
+    B_IMMEDIATEATTACKPLAYER(VLK_3019_ARNOLD, AR_NONE);
+    VLK_3019_ARNOLD.AIVAR[96] = -(1);
+    VLK_3019_ARNOLD.FLAGS = NPC_FLAG_IMPORTANT;
+    VLK_3019_ARNOLD.AIVAR[45] = AF_RUNNING;
+    AI_TURNTONPC(VLK_3020_TOM, HERO);
+    B_IMMEDIATEATTACKPLAYER(VLK_3020_TOM, AR_NONE);
+    VLK_3020_TOM.AIVAR[96] = -(1);
+    VLK_3020_TOM.FLAGS = NPC_FLAG_IMPORTANT;
+    VLK_3020_TOM.AIVAR[45] = AF_RUNNING;
+    AI_TURNTONPC(VLK_3021_MIKKEL, HERO);
+    B_IMMEDIATEATTACKPLAYER(VLK_3021_MIKKEL, AR_NONE);
+    VLK_3021_MIKKEL.AIVAR[96] = -(1);
+    VLK_3021_MIKKEL.FLAGS = NPC_FLAG_IMPORTANT;
+    VLK_3021_MIKKEL.AIVAR[45] = AF_RUNNING;
+}
+
+func void DIA_ARNOLD_HELLOTROUBLESOME3_PROVOKE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_HelloTroublesome3_Provoke_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_HelloTroublesome3_Provoke_14_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_HelloTroublesome3_Provoke_15_02");
+    AI_FUNCTION(SELF, 62759);
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_HelloTroublesome3_Provoke_14_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_HelloTroublesome3_Provoke_14_04");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 74221);
+}
+
+func void DIA_ARNOLD_HELLOTROUBLESOME3_POLITE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_HelloTroublesome3_Polite_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_HelloTroublesome3_Polite_14_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_HelloTroublesome3_Polite_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_HelloTroublesome3_Polite_14_03");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 62765);
+}
+
+instance DIA_ARNOLD_BLACKTROLL(C_INFO) {
+    NPC = 54532;
+    NR = 1;
+    CONDITION = DIA_ARNOLD_BLACKTROLL_CONDITION;
+    INFORMATION = DIA_ARNOLD_BLACKTROLL_INFO;
+    DESCRIPTION = DIALOG_TREATBLACKTROLL;
+}
+
+var int MARVINDRUNK;
+var int TROUBLESOME3OPINION;
+var int ROUND;
+var int BLACKTROLLDRINK;
+var int WINE;
+var int BEER;
+func int DIA_ARNOLD_BLACKTROLL_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING)) {
+        if (((NPC_HASITEMS(OTHER, 37152)) >= (1)) && ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING))) {
+            if ((KAPITEL) < (3)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARNOLD_CHCEKMARVINDRUNK() {
+    if ((MARVINDRUNK) >= (4)) {
+        MDL_APPLYOVERLAYMDS(HERO, HUMANSDRUNKENMDS);
+    };
+}
+
+func void DIA_ARNOLD_BLACKTROLL_INFO() {
+    if ((NPC_KNOWSINFO(OTHER, 74260)) == (TRUE)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_15_00");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_15_01");
+    B_GIVEINVITEMS(OTHER, SELF, 37152, 1);
+    B_STANDUP();
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    AI_GOTONPC(SELF, OTHER);
+    AI_FUNCTION(SELF, 62759);
+    if ((NPC_KNOWSINFO(OTHER, 74260)) == (TRUE)) {
+        B_TURNTONPC(SELF, VLK_3020_TOM);
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_14_02");
+        B_TURNTONPC(SELF, HERO);
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_14_03");
+    };
+    B_TURNTONPC(SELF, VLK_3020_TOM);
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_14_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_15_05");
+    B_TURNTONPC(SELF, HERO);
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_14_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_14_07");
+    INFO_CLEARCHOICES(74224);
+    INFO_ADDCHOICE(74224, "I'll pass.", 74234);
+    INFO_ADDCHOICE(74224, "Why not?", 74236);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_No_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_No_14_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_No_14_02");
+    AI_FUNCTION(SELF, 62760);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+var int ARNOLD_FAQ003_DRINKTIME;
+func void DIA_ARNOLD_BLACKTROLL_YES() {
+    DIA_ARNOLD_CHCEKMARVINDRUNK();
+    ARNOLD_FAQ003_DRINKTIME = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Yes_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Yes_14_01");
+    INFO_CLEARCHOICES(74224);
+    INFO_ADDCHOICE(74224, "(Drink wine)", 74238);
+    INFO_ADDCHOICE(74224, "(Drink beer)", 74239);
+    INFO_ADDCHOICE(74224, "(Drink Black Troll)", 74240);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_DRINK() {
+    DIA_ARNOLD_CHCEKMARVINDRUNK();
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Drink_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Drink_14_01");
+    INFO_CLEARCHOICES(74224);
+    INFO_ADDCHOICE(74224, "(Drink wine)", 74238);
+    INFO_ADDCHOICE(74224, "(Drink beer)", 74239);
+    INFO_ADDCHOICE(74224, "(Drink Black Troll)", 74240);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_DRINK_WINE() {
+    MARVINDRUNK = (MARVINDRUNK) + (2);
+    DIA_ARNOLD_CHCEKMARVINDRUNK();
+    AI_FUNCTION(SELF, 62761);
+    B_MARVIN_USEFAKEWINE();
+    WINE = TRUE;
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Drink_Wine_14_00");
+    INFO_CLEARCHOICES(74224);
+    INFO_ADDCHOICE(74224, "Just right for me!", 74241);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_DRINK_BEER() {
+    MARVINDRUNK = (MARVINDRUNK) + (1);
+    DIA_ARNOLD_CHCEKMARVINDRUNK();
+    AI_FUNCTION(SELF, 62761);
+    B_MARVIN_USEFAKEBEER();
+    BEER = TRUE;
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Drink_Beer_14_00");
+    INFO_CLEARCHOICES(74224);
+    INFO_ADDCHOICE(74224, "You guys don't go easy on the Troll!", 74241);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_DRINK_BLACKTROLL() {
+    MARVINDRUNK = (MARVINDRUNK) + (3);
+    DIA_ARNOLD_CHCEKMARVINDRUNK();
+    AI_FUNCTION(SELF, 62761);
+    B_MARVIN_USEFAKEBLACKTROLL();
+    BLACKTROLLDRINK = TRUE;
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Drink_BlackTroll_14_00");
+    INFO_CLEARCHOICES(74224);
+    INFO_ADDCHOICE(74224, "Oh hell, it stings!", 74241);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_TALK() {
+    if ((BEER) == (TRUE)) {
+        if ((MARVINDRUNK) <= (3)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Drink_Beer_15_00");
+        } else if ((MARVINDRUNK) >= (4)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Drink_Beer_15_01");
+        };
+        BEER = FALSE;
+    };
+    if ((WINE) == (TRUE)) {
+        if ((MARVINDRUNK) <= (3)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Drink_Wine_15_00");
+        } else if ((MARVINDRUNK) >= (4)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Drink_Wine_15_01");
+        };
+        WINE = FALSE;
+    };
+    if ((BLACKTROLLDRINK) == (TRUE)) {
+        if ((MARVINDRUNK) <= (3)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Drink_BlackTroll_15_00");
+        } else if ((MARVINDRUNK) >= (4)) {
+            AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Drink_BlackTroll_15_01");
+        };
+        BLACKTROLLDRINK = FALSE;
+    };
+    if ((ROUND) == (0)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Round0_NotDrunk_14_00");
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Round0_NotDrunk_14_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Round0_NotDrunk_14_02");
+        INFO_CLEARCHOICES(74224);
+        INFO_ADDCHOICE(74224, "And who needs the King?", 74242);
+        INFO_ADDCHOICE(74224, "For the King!", 74243);
+    };
+    if ((ROUND) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Round1_Drunk_14_00");
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Round1_NotDrunk_14_01");
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Round1_NotDrunk_14_02");
+        INFO_CLEARCHOICES(74224);
+        INFO_ADDCHOICE(74224, "These here are nice.", 74244);
+        INFO_ADDCHOICE(74224, "The Old Town, of course.", 74245);
+    };
+    if ((ROUND) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Round2_NotDrunk_14_00");
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Round2_NotDrunk_14_02");
+        INFO_CLEARCHOICES(74224);
+        INFO_ADDCHOICE(74224, "Well... the gods won't pay my taxes for me.", 74247);
+        INFO_ADDCHOICE(74224, "Gods are to be respected.", 74246);
+    };
+}
+
+func void DIA_ARNOLD_BLACKTROLL_NOKING() {
+    if ((MARVINDRUNK) >= (4)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_NoKing_Drunk_15_00");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_NoKing_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_NoKing_14_01");
+    INFO_CLEARCHOICES(74224);
+    ROUND = (ROUND) + (1);
+    TROUBLESOME3OPINION = (TROUBLESOME3OPINION) + (1);
+    INFO_ADDCHOICE(74224, "One more?", 74237);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_KING() {
+    if ((MARVINDRUNK) >= (4)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_King_Drunk_15_00");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_King_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_King_14_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_King_14_02");
+    INFO_CLEARCHOICES(74224);
+    ROUND = (ROUND) + (1);
+    TROUBLESOME3OPINION = (TROUBLESOME3OPINION) - (1);
+    INFO_ADDCHOICE(74224, "One more?", 74237);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_HERE() {
+    if ((MARVINDRUNK) >= (4)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Here_Drunk_15_00");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_Here_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_Here_14_01");
+    INFO_CLEARCHOICES(74224);
+    ROUND = (ROUND) + (1);
+    TROUBLESOME3OPINION = (TROUBLESOME3OPINION) + (1);
+    INFO_ADDCHOICE(74224, "One more?", 74237);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_OLDTOWN() {
+    if ((MARVINDRUNK) >= (4)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_OldTown_Drunk_15_00");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_OldTown_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_OldTown_14_01");
+    INFO_CLEARCHOICES(74224);
+    ROUND = (ROUND) + (1);
+    INFO_ADDCHOICE(74224, "One more?", 74237);
+}
+
+func void DIA_ARNOLD_BLACKTROLL_GODSYES() {
+    if ((MARVINDRUNK) >= (4)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_GodsYes_Drunk_15_00");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_GodsYes_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_GodsYes_14_01");
+    INFO_CLEARCHOICES(74224);
+    ROUND = (ROUND) + (1);
+    TROUBLESOME3OPINION = (TROUBLESOME3OPINION) + (1);
+    AI_STOPPROCESSINFOS(SELF);
+    if ((TROUBLESOME3OPINION) >= (2)) {
+        AI_FUNCTION(SELF, 62764);
+    };
+}
+
+func void DIA_ARNOLD_BLACKTROLL_GODSNO() {
+    if ((MARVINDRUNK) >= (4)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_GodsNo_Drunk_15_00");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_BlackTroll_GodsNo_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_GodsNo_14_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_BlackTroll_GodsNo_14_02");
+    INFO_CLEARCHOICES(74224);
+    ROUND = (ROUND) + (1);
+    TROUBLESOME3OPINION = (TROUBLESOME3OPINION) + (1);
+    AI_STOPPROCESSINFOS(SELF);
+    if ((TROUBLESOME3OPINION) >= (2)) {
+        AI_FUNCTION(SELF, 62764);
+    };
+}
+
+instance DIA_ARNOLD_MARVINDRUNK(C_INFO) {
+    NPC = 54532;
+    NR = 1;
+    CONDITION = DIA_ARNOLD_MARVINDRUNK_CONDITION;
+    INFORMATION = DIA_ARNOLD_MARVINDRUNK_INFO;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ARNOLD_MARVINDRUNK_CONDITION() {
+    if (((ARNOLD_FAQ003_DRINKTIME) == (TRUE)) && ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING))) {
+        if (((MARVINDRUNK) >= (7)) && ((ROUND) >= (3))) {
+            if ((KAPITEL) < (3)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void FAQ003_MARVINBLACKOUT2() {
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (FAQ003_ARNOLD_HEROLOSTMONEY)) {
+        B_GIVEINVITEMS(OTHER, SELF, 34203, (FAQ003_ARNOLD_HEROLOSTMONEY) / (3));
+    };
+    NPC_CLEARAIQUEUE(VLK_3019_ARNOLD);
+    LOG_SETSTATUS(_@(MIS_FAQ003), TOPIC_FAQ003, LOG_FAILED);
+    AI_LOGENTRY(TOPIC_FAQ003, LOG_FAQ003_DRUNKFAILEDARNOLD);
+    AI_UNEQUIPARMOR(HERO);
+    AI_UNEQUIPWEAPONS(HERO);
+    TELEPORTNPCTOWP(1819, "SLUMS_PATH_223");
+    AI_PLAYANI(HERO, "T_WOUNDEDB_REMOVE");
+    B_PASSTIME(1);
+    FADESCREENFROMBLACK(1);
+}
+
+func void FAQ003_MARVINBLACKOUT1() {
+    FADESCREENTOBLACKF(1, 74250, 1000);
+}
+
+func void DIA_ARNOLD_MARVINDRUNK_INFO() {
+    MDL_REMOVEOVERLAYMDS(HERO, HUMANSDRUNKENMDS);
+    MDL_APPLYOVERLAYMDSTIMED(HERO, HUMANSDRUNKENMDS, 30000);
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_MarvinDrunk_14_00");
+    AI_WAITTILLEND(OTHER, SELF);
+    AI_PLAYANI(OTHER, "R_VOMIT_SUNDER");
+    AI_PLAYANI(OTHER, "T_WOUNDEDB_START");
+    AI_FUNCTION(OTHER, 74251);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 62760);
+}
+
+instance DIA_ARNOLD_AFTERDRINKING(C_INFO) {
+    NPC = 54532;
+    NR = 1;
+    CONDITION = DIA_ARNOLD_AFTERDRINKING_CONDITION;
+    INFORMATION = DIA_ARNOLD_AFTERDRINKING_INFO;
+    IMPORTANT = TRUE;
+}
+
+var int ARNOLDDRUNK;
+func int DIA_ARNOLD_AFTERDRINKING_CONDITION() {
+    if (((ARNOLD_FAQ003_DRINKTIME) == (TRUE)) && ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING))) {
+        if ((((MARVINDRUNK) <= (6)) && ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING))) && (NPC_KNOWSINFO(OTHER, 74224))) {
+            if ((KAPITEL) < (3)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARNOLD_AFTERDRINKING_INFO() {
+    MDL_REMOVEOVERLAYMDS(HERO, HUMANSDRUNKENMDS);
+    if ((TROUBLESOME3OPINION) >= (2)) {
+        ARNOLDDRUNK = TRUE;
+        AI_FUNCTION(SELF, 62764);
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_AfterDrinking_Fail_14_00");
+        AI_FUNCTION(SELF, 62762);
+    };
+    if ((TROUBLESOME3OPINION) <= (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_AfterDrinking_Fail_14_01");
+        AI_OUTPUT(OTHER, SELF, "DIA_Arnold_AfterDrinking_Fail_15_02");
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_AfterDrinking_Fail_14_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_AfterDrinking_Fail_14_04");
+        AI_OUTPUT(OTHER, SELF, "DIA_Arnold_AfterDrinking_Fail_15_05");
+        AI_OUTPUT(SELF, OTHER, "DIA_Arnold_AfterDrinking_Fail_14_06");
+        AI_LOGENTRY(TOPIC_FAQ003, LOG_FAQ003_NOMORETALKING);
+        AI_FUNCTION(SELF, 62760);
+    };
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ARNOLD_FIGHTWON(C_INFO) {
+    NPC = 54532;
+    NR = 1;
+    CONDITION = DIA_ARNOLD_FIGHTWON_CONDITION;
+    INFORMATION = DIA_ARNOLD_FIGHTWON_INFO;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ARNOLD_FIGHTWON_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING)) {
+        if ((FAQ003_FIGHTWITHARNOLDSTATUS) == (2)) {
+            if ((KAPITEL) < (3)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARNOLD_FIGHTWON_INFO() {
+    VLK_3019_ARNOLD.AIVAR[45] = AF_NONE;
+    VLK_3019_ARNOLD.AIVAR[64] = TRUE;
+    VLK_3020_TOM.AIVAR[45] = AF_NONE;
+    VLK_3020_TOM.AIVAR[64] = TRUE;
+    VLK_3021_MIKKEL.AIVAR[45] = AF_NONE;
+    VLK_3021_MIKKEL.AIVAR[64] = TRUE;
+    FAQ003_ARNOLDBEATEN = TRUE;
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_FightWon_14_00");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_FightWon_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_FightWon_14_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_FightWon_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_FightWon_14_04");
+    CREATEINVITEMS(SELF, 34203, FAQ003_ARNODGIVEMONEY);
+    B_GIVEINVITEMS(SELF, OTHER, 34203, FAQ003_ARNODGIVEMONEY);
+    AI_FUNCTION(SELF, 62763);
+    AI_FUNCTION(SELF, 62762);
+    AI_LOGENTRY(TOPIC_FAQ003, LOG_FAQ003_KICKEDTHEIRASSES);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ARNOLD_FIGHTLOST(C_INFO) {
+    NPC = 54532;
+    NR = 1;
+    CONDITION = DIA_ARNOLD_FIGHTLOST_CONDITION;
+    INFORMATION = DIA_ARNOLD_FIGHTLOST_INFO;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ARNOLD_FIGHTLOST_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING)) {
+        if ((FAQ003_FIGHTWITHARNOLDSTATUS) == (3)) {
+            if ((KAPITEL) < (3)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARNOLD_FIGHTLOST_INFO() {
+    VLK_3019_ARNOLD.AIVAR[45] = AF_NONE;
+    VLK_3019_ARNOLD.AIVAR[64] = TRUE;
+    VLK_3020_TOM.AIVAR[45] = AF_NONE;
+    VLK_3020_TOM.AIVAR[64] = TRUE;
+    VLK_3021_MIKKEL.AIVAR[45] = AF_NONE;
+    VLK_3021_MIKKEL.AIVAR[64] = TRUE;
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_FightLost_14_00");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ARNOLD_PRAWUS(C_INFO) {
+    NPC = 54532;
+    NR = 1;
+    CONDITION = DIA_ARNOLD_PRAWUS_CONDITION;
+    INFORMATION = DIA_ARNOLD_PRAWUS_INFO;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ARNOLD_PRAWUS_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_RUNNING)) {
+        if (((FAQ003_MARVINHADHELP) == (TRUE)) && (NPC_ISINSTATE(SELF, 61599))) {
+            if ((KAPITEL) < (3)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARNOLD_PRAWUS_INFO() {
+    FAQ003_ARNOLDBEATEN = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Prawus_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Prawus_14_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Prawus_15_02");
+    AI_FUNCTION(SELF, 62763);
+    AI_FUNCTION(SELF, 62762);
+    AI_LOGENTRY(TOPIC_FAQ003, LOG_FAQ003_KICKEDTHEIRASSESAP);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_ARNOLD_AMBIENT(C_INFO) {
+    NPC = 54532;
+    NR = 1;
+    CONDITION = DIA_ARNOLD_AMBIENT_CONDITION;
+    INFORMATION = DIA_ARNOLD_AMBIENT_INFO;
+    DESCRIPTION = "What are you doing here?";
+}
+
+func int DIA_ARNOLD_AMBIENT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_FAQ003)) != (LOG_RUNNING)) && ((LOG_GETSTATUS(MIS_FAQ003)) != (LOG_SUCCESS))) {
+        if ((KAPITEL) < (3)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARNOLD_AMBIENT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_14_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_14_03");
+    INFO_CLEARCHOICES(74266);
+    INFO_ADDCHOICE(74266, DIALOG_THATSALL, 74273);
+    INFO_ADDCHOICE(74266, "Why don't you get yourself some work?", 74269);
+}
+
+func void DIA_ARNOLD_AMBIENT_JOB() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_14_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_14_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_14_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_14_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_14_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_14_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_14_09");
+    INFO_CLEARCHOICES(74266);
+    INFO_ADDCHOICE(74266, "You're kind of right.", 74270);
+    INFO_ADDCHOICE(74266, "You'll change your mind when the orcs knock on your door.", 74271);
+    INFO_ADDCHOICE(74266, "Aren't you afraid you might end up behind bars?", 74272);
+}
+
+func void DIA_ARNOLD_AMBIENT_JOB_TRUE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_True_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_True_14_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_ARNOLD_AMBIENT_JOB_ORCS() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_Orcs_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_Orcs_14_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_Orcs_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_Orcs_14_03");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_ARNOLD_AMBIENT_BYE_JAIL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_Jail_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_Jail_14_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_Jail_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_Jail_14_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_Jail_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_Jail_14_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_Jail_14_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_Jail_14_07");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_ARNOLD_AMBIENT_BYE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Arnold_Ambient_Job_Bye_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_Ambient_Job_Bye_14_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void ARNOLD_REVENGETIME() {
+    B_IMMEDIATEATTACKPLAYER(VLK_3019_ARNOLD, AR_NONE);
+    VLK_3019_ARNOLD.FLAGS = 0;
+    NPC_REFRESH(VLK_3020_TOM);
+    B_IMMEDIATEATTACKPLAYER(VLK_3020_TOM, AR_NONE);
+    VLK_3020_TOM.FLAGS = 0;
+    NPC_REFRESH(VLK_3021_MIKKEL);
+    B_IMMEDIATEATTACKPLAYER(VLK_3021_MIKKEL, AR_NONE);
+    VLK_3021_MIKKEL.FLAGS = 0;
+}
+
+instance DIA_ARNOLD_REVENGETIME(C_INFO) {
+    NPC = 54532;
+    NR = 1;
+    CONDITION = DIA_ARNOLD_REVENGETIME_CONDITION;
+    INFORMATION = DIA_ARNOLD_REVENGETIME_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_ARNOLD_REVENGETIME_CONDITION() {
+    if ((KAPITEL) >= (3)) {
+        if ((((PROVOCATION_FAQ003_TOM) == (FALSE)) || ((PROVOCATION_FAQ003_ARNOLD) == (FALSE))) || ((PROVOCATION_FAQ003_MIKKEL) == (FALSE))) {
+            if ((LOG_GETSTATUS(MIS_FAQ003)) == (LOG_SUCCESS)) {
+                if ((RND_PROVOCATION_FAQ003_CH2) == (1)) {
+                    return TRUE;
+                };
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARNOLD_REVENGETIME_INFO() {
+    RND_TODAYSPAWNED = (RND_TODAYSPAWNED) + (1);
+    RND_TOTALSPAWNED = (RND_TOTALSPAWNED) + (1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_RevengeTime_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Arnold_RevengeTime_03_02");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(HERO, 74274);
+}
+
+instance DIA_ARNOLD_PICKPOCKET(C_INFO) {
+    NPC = 54532;
+    NR = 900;
+    CONDITION = DIA_ARNOLD_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_ARNOLD_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_ARNOLD_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_ARNOLD_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(74278);
+    INFO_ADDCHOICE(74278, DIALOG_BACK, 74282);
+    INFO_ADDCHOICE(74278, DIALOG_PICKPOCKET, 74281);
+}
+
+func void DIA_ARNOLD_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        CREATEINVITEMS(SELF, 36375, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 36375, 1);
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(74278);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(74278);
+}
+
+func void DIA_ARNOLD_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(74278);
+}
+

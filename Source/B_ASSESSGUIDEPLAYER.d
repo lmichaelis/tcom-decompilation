@@ -1,0 +1,98 @@
+func void B_ASSESSGUIDEPLAYER() {
+    if ((NPC_GETDISTTONPC(SELF, HERO)) > (800)) {
+        if ((NPC_GETDISTTOWP(SELF, SELF.WP)) < (NPC_GETDISTTOWP(HERO, SELF.WP))) {
+            NPC_CLEARAIQUEUE(SELF);
+            AI_STANDUP(SELF);
+            B_TURNTONPC(SELF, HERO);
+        };
+        if ((((NPC_GETDISTTONPC(SELF, HERO)) > (1200)) && ((SELF.AIVAR[61]) == (TRUE))) && ((NPC_GETATTITUDE(SELF, HERO)) == (ATT_HOSTILE))) {
+            SELF.AIVAR[61] = FALSE;
+        };
+    };
+    B_ASSESSPLAYER();
+}
+
+func void B_ASSESSGUIDEFIGHTSOUND() {
+    if ((NPC_ISPLAYER(OTHER)) || (NPC_ISPLAYER(VICTIM))) {
+        B_ASSESSFIGHTSOUND();
+    };
+}
+
+func void ZS_GUIDE_PLAYER() {
+    PERCEPTION_SET_MINIMAL();
+    B_RESETALL(SELF);
+    SELF.SENSES = ((SENSE_SEE) | (SENSE_HEAR)) | (SENSE_SMELL);
+    SELF.SENSES_RANGE = 2000;
+    NPC_SETPERCTIME(SELF, 1065353216);
+    NPC_PERCENABLE(SELF, PERC_ASSESSPLAYER, 46074);
+    NPC_PERCENABLE(SELF, PERC_ASSESSENEMY, 41633);
+    NPC_PERCENABLE(SELF, PERC_ASSESSTALK, 41645);
+    NPC_PERCENABLE(SELF, PERC_MOVEMOB, 41654);
+    NPC_PERCENABLE(SELF, PERC_ASSESSFIGHTSOUND, 46075);
+}
+
+func int ZS_GUIDE_PLAYER_LOOP() {
+    if (((NPC_GETDISTTONPC(SELF, HERO)) > (800)) && ((NPC_GETDISTTOWP(SELF, SELF.WP)) < (NPC_GETDISTTOWP(HERO, SELF.WP)))) {
+        B_ASSESSGUIDEPLAYER();
+    };
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (300)) {
+        if (!(C_BODYSTATECONTAINS(SELF, BS_SWIM))) {
+            if ((SELF.AIVAR[75]) == (WALKMODE_WALK)) {
+                if (((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(DJG_10015_BAES))) && ((LOG_GETSTATUS(MIS_Q403)) == (LOG_RUNNING))) {
+                    AI_SETWALKMODE(SELF, NPC_RUN);
+                } else {
+                    AI_SETWALKMODE(SELF, NPC_WALK);
+                };
+            } else {
+                AI_SETWALKMODE(SELF, NPC_RUN);
+            };
+        };
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    B_TURNTONPC(SELF, HERO);
+    return LOOP_CONTINUE;
+}
+
+func int ZS_GUIDE_PLAYER_END() {
+    return 0 /* !broken stack! */;
+}
+
+func void ZS_GUIDE_PLAYER_NOTALK() {
+    PERCEPTION_SET_MINIMAL();
+    B_RESETALL(SELF);
+    SELF.SENSES = ((SENSE_SEE) | (SENSE_HEAR)) | (SENSE_SMELL);
+    SELF.SENSES_RANGE = 2000;
+    NPC_SETPERCTIME(SELF, 1065353216);
+    NPC_PERCENABLE(SELF, PERC_ASSESSPLAYER, 46074);
+    NPC_PERCENABLE(SELF, PERC_ASSESSENEMY, 41633);
+    NPC_PERCENABLE(SELF, PERC_MOVEMOB, 41654);
+    NPC_PERCENABLE(SELF, PERC_ASSESSFIGHTSOUND, 46075);
+    B_RESETALL(SELF);
+}
+
+func int ZS_GUIDE_PLAYER_NOTALK_LOOP() {
+    if (((NPC_GETDISTTONPC(SELF, HERO)) > (800)) && ((NPC_GETDISTTOWP(SELF, SELF.WP)) < (NPC_GETDISTTOWP(HERO, SELF.WP)))) {
+        B_ASSESSGUIDEPLAYER();
+    };
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (300)) {
+        if (!(C_BODYSTATECONTAINS(SELF, BS_SWIM))) {
+            if ((SELF.AIVAR[75]) == (WALKMODE_WALK)) {
+                if (((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(DJG_10015_BAES))) && ((LOG_GETSTATUS(MIS_Q403)) == (LOG_RUNNING))) {
+                    AI_SETWALKMODE(SELF, NPC_RUN);
+                } else {
+                    AI_SETWALKMODE(SELF, NPC_WALK);
+                };
+            } else {
+                AI_SETWALKMODE(SELF, NPC_RUN);
+            };
+        };
+        AI_GOTOWP(SELF, SELF.WP);
+    };
+    B_TURNTONPC(SELF, HERO);
+    return LOOP_CONTINUE;
+}
+
+func int ZS_GUIDE_PLAYER_NOTALK_END() {
+    return 0 /* !broken stack! */;
+}
+

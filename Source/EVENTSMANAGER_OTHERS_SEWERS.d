@@ -1,0 +1,12 @@
+func void EVENTSMANAGER_OTHERS_SEWERS() {
+    var int ARG_07_CHECK;
+    if (((LASTWARNINGTURNBACK_CHECK) == (TRUE)) && ((ARG_07_CHECK) == (FALSE))) {
+        if ((NPC_HASITEMS(HERO, 40020)) >= (1)) {
+            ARG_07_CHECK = TRUE;
+            WLD_SENDTRIGGER("ARG_SECRET06");
+            CHANGEVOBCOLLISION("ARG_REMOVENIGHTMARE_SCRIPT", TRUE, TRUE, TRUE, FALSE);
+            WLD_INSERTNPC(58981, "SEWERS_ARG");
+        };
+    };
+}
+

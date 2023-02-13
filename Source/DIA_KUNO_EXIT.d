@@ -1,0 +1,498 @@
+instance DIA_KUNO_EXIT(C_INFO) {
+    NPC = 52508;
+    NR = 999;
+    CONDITION = DIA_KUNO_EXIT_CONDITION;
+    INFORMATION = DIA_KUNO_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_KUNO_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_KUNO_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_KUNO_GAMBIT(C_INFO) {
+    NPC = 52508;
+    NR = 1;
+    CONDITION = DIA_KUNO_GAMBIT_CONDITION;
+    INFORMATION = DIA_KUNO_GAMBIT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_KUNO_GAMBIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_KUNO_GAMBIT_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_03_01");
+    INFO_CLEARCHOICES(75141);
+    INFO_ADDCHOICE(75141, "What is it?", 75144);
+}
+
+func void DIA_KUNO_GAMBIT_WHATSGOINGON() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_03_04");
+    INFO_CLEARCHOICES(75141);
+    INFO_ADDCHOICE(75141, "What the hell are you talking about?", 75146);
+    INFO_ADDCHOICE(75141, "What are you talking about?", 75147);
+}
+
+func void DIA_KUNO_GAMBIT_NEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_What_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_What_03_03");
+    INFO_CLEARCHOICES(75141);
+    INFO_ADDCHOICE(75141, "I'll be off then, I won't break you down any further.", 75148);
+}
+
+func void DIA_KUNO_GAMBIT_WHATANGRY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_WhatAngry_15_01");
+    DIA_KUNO_GAMBIT_NEXT();
+}
+
+func void DIA_KUNO_GAMBIT_WHAT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_What_15_01");
+    DIA_KUNO_GAMBIT_NEXT();
+}
+
+func void DIA_KUNO_GAMBIT_BYE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_What_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_What_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_What_03_07");
+    INFO_CLEARCHOICES(75141);
+}
+
+instance DIA_KUNO_CQ001_START(C_INFO) {
+    NPC = 52508;
+    NR = 1;
+    CONDITION = DIA_KUNO_CQ001_START_CONDITION;
+    INFORMATION = DIA_KUNO_CQ001_START_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "So what do you want me to do for you?";
+}
+
+func int DIA_KUNO_CQ001_START_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 75141)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KUNO_CQ001_START_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_WhatToDo_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_WhatToDo_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_WhatToDo_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_WhatToDo_03_04");
+    INFO_CLEARCHOICES(75149);
+    INFO_ADDCHOICE(75149, DIALOG_BESILENT, 75152);
+    INFO_ADDCHOICE(75149, "All that trouble over some stupid game?", 75153);
+}
+
+func void DIA_KUNO_CQ001_START_SILENCE() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_WhatToDo_03_07");
+    INFO_CLEARCHOICES(75149);
+    INFO_ADDCHOICE(75149, "What did you talk about?", 75154);
+    INFO_ADDCHOICE(75149, "We need to discuss payment.", 75155);
+}
+
+func void DIA_KUNO_CQ001_START_STUPID() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_WhatToDo_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_WhatToDo_03_06");
+    DIA_KUNO_CQ001_START_SILENCE();
+}
+
+func void DIA_KUNO_CQ001_START_TALKABOUT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Topic_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Topic_03_02");
+}
+
+func void DIA_KUNO_CQ001_START_REWARD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Reward_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Reward_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Reward_03_03");
+    if ((LOG_GETSTATUS(MIS_Q202)) == (LOG_RUNNING)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Reward_15_04");
+        AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Reward_03_05");
+        CQ001_KUNOREWARD = 1;
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Reward_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Reward_03_07");
+    CQ001_KUNOREWARD = 2;
+    INFO_ADDCHOICE(75149, "Where should I look for this manual?", 75156);
+}
+
+func void DIA_KUNO_CQ001_START_WHERE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Where_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Where_03_02");
+    B_STANDUP();
+    INFO_CLEARCHOICES(75141);
+    AI_STOPPROCESSINFOS(SELF);
+    LOG_CREATETOPIC(TOPIC_CQ001, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_CQ001), TOPIC_CQ001, LOG_RUNNING);
+    if ((CQ001_KUNOREWARD) == (1)) {
+        AI_LOGENTRY(TOPIC_CQ001, LOG_CQ001_START);
+    };
+    if ((CQ001_KUNOREWARD) == (2)) {
+        AI_LOGENTRY(TOPIC_CQ001, LOG_CQ001_START2);
+    };
+    NPC_EXCHANGEROUTINE(SELF, "EAT");
+}
+
+instance DIA_KUNO_POLITICIAN(C_INFO) {
+    NPC = 52508;
+    NR = 80;
+    CONDITION = DIA_KUNO_POLITICIAN_CONDITION;
+    INFORMATION = DIA_KUNO_POLITICIAN_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "A politician? Acting in the service of the King?";
+}
+
+func int DIA_KUNO_POLITICIAN_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 75141)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KUNO_POLITICIAN_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_What_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_What_03_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_What_03_11");
+}
+
+instance DIA_KUNO_WHATSTUFF(C_INFO) {
+    NPC = 52508;
+    NR = 80;
+    CONDITION = DIA_KUNO_WHATSTUFF_CONDITION;
+    INFORMATION = DIA_KUNO_WHATSTUFF_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Sounds intriguing. What is it?";
+}
+
+func int DIA_KUNO_WHATSTUFF_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 75157)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KUNO_WHATSTUFF_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_What_15_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_What_03_13");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_What_03_14");
+}
+
+instance DIA_KUNO_TELLMEABOUT(C_INFO) {
+    NPC = 52508;
+    NR = 80;
+    CONDITION = DIA_KUNO_TELLMEABOUT_CONDITION;
+    INFORMATION = DIA_KUNO_TELLMEABOUT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Tell me...";
+}
+
+var int KUNO_TELLMEABOUT_ULRYK;
+var int KUNO_TELLMEABOUT_RHOBAR;
+func int DIA_KUNO_TELLMEABOUT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 75160)) {
+        if (((KUNO_TELLMEABOUT_ULRYK) == (FALSE)) || ((KUNO_TELLMEABOUT_RHOBAR) == (FALSE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KUNO_TELLMEABOUT_INFO() {
+    INFO_CLEARCHOICES(75163);
+    INFO_ADDCHOICE(75163, DIALOG_BACK, 75168);
+    if ((KUNO_TELLMEABOUT_ULRYK) == (FALSE)) {
+        INFO_ADDCHOICE(75163, "What do you think of Ulryk?", 75169);
+    };
+    if ((KUNO_TELLMEABOUT_RHOBAR) == (FALSE)) {
+        INFO_ADDCHOICE(75163, "What do you think of Rhobar II?", 75173);
+    };
+}
+
+func void DIA_KUNO_TELLMEABOUT_BACK() {
+    INFO_CLEARCHOICES(75163);
+}
+
+func void DIA_KUNO_TELLMEABOUT_ULRYK() {
+    KUNO_TELLMEABOUT_ULRYK = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Ulryk_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Ulryk_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Ulryk_03_03");
+    INFO_CLEARCHOICES(75163);
+    INFO_ADDCHOICE(75163, DIALOG_BESILENT, 75171);
+    INFO_ADDCHOICE(75163, "So far with little success.", 75172);
+}
+
+func void DIA_KUNO_TELLMEABOUT_ULRYK_NEXT() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Ulryk_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Ulryk_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Ulryk_03_10");
+    DIA_KUNO_TELLMEABOUT_INFO();
+}
+
+func void DIA_KUNO_TELLMEABOUT_ULRYK_SILENCE() {
+    DIA_KUNO_TELLMEABOUT_ULRYK_NEXT();
+}
+
+func void DIA_KUNO_TELLMEABOUT_ULRYK_NOTHING() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Ulryk_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Ulryk_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Ulryk_03_06");
+    DIA_KUNO_TELLMEABOUT_ULRYK_NEXT();
+}
+
+func void DIA_KUNO_TELLMEABOUT_RHOBAR() {
+    KUNO_TELLMEABOUT_RHOBAR = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Rhobar_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Rhobar_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Rhobar_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Rhobar_03_04");
+    INFO_CLEARCHOICES(75163);
+    INFO_ADDCHOICE(75163, "Only convicts go to the colony. They'll be of some use.", 75174);
+    INFO_ADDCHOICE(75163, "Aren't you afraid to talk about it so openly?", 75175);
+}
+
+func void DIA_KUNO_TELLMEABOUT_RHOBAR_HEARD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Rhobar_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Rhobar_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Rhobar_03_07");
+}
+
+func void DIA_KUNO_TELLMEABOUT_RHOBAR_AFFRAID() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Gambit_Rhobar_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Gambit_Rhobar_03_09");
+    DIA_KUNO_TELLMEABOUT_INFO();
+}
+
+instance DIA_KUNO_BOOK(C_INFO) {
+    NPC = 52508;
+    NR = 2;
+    CONDITION = DIA_KUNO_BOOK_CONDITION;
+    INFORMATION = DIA_KUNO_BOOK_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "About the book you asked for...";
+}
+
+func int DIA_KUNO_BOOK_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_CQ001)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 75202))) {
+        if ((CQ001_CHESSBOOK) < (4)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KUNO_BOOK_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Book_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Book_03_02");
+    if ((NPC_HASITEMS(OTHER, 37154)) >= (1)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Book_15_03");
+        AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Book_03_04");
+        B_GIVEINVITEMS(OTHER, SELF, 37154, 1);
+        B_USEFAKESCROLL();
+        AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Book_03_05");
+        AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Book_15_06");
+        AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Book_03_07");
+        AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Book_15_08");
+        AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Book_03_09");
+        AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Book_15_10");
+        AI_LOGENTRY(TOPIC_CQ001, LOG_CQ001_KUNOISMAD);
+        AI_STOPPROCESSINFOS(SELF);
+        CQ001_CHESSBOOK = 4;
+        AI_FUNCTION(SELF, 62664);
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_Book_15_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Book_03_12");
+}
+
+instance DIA_KUNO_SQ207_LEXX(C_INFO) {
+    NPC = 52508;
+    NR = 1;
+    CONDITION = DIA_KUNO_SQ207_LEXX_CONDITION;
+    INFORMATION = DIA_KUNO_SQ207_LEXX_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Luna sends her regards.";
+}
+
+func int DIA_KUNO_SQ207_LEXX_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ207)) == (LOG_RUNNING)) && ((SQ207_FAILED) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KUNO_SQ207_LEXX_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_SQ207_Lexx_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_SQ207_Lexx_15_03");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_03_05");
+    INFO_CLEARCHOICES(75179);
+    INFO_ADDCHOICE(75179, "Luna has an appointment tomorrow to sell the chessboard.", 75183);
+    INFO_ADDCHOICE(75179, "No way.", 75182);
+}
+
+func void DIA_KUNO_SQ207_LEXX_NOWAY() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_SQ207_Lexx_NoWay_15_01");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_NoWay_03_02");
+}
+
+func void DIA_KUNO_SQ207_LEXX_SELL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_SQ207_Lexx_Sell_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_Sell_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_Sell_03_03");
+    INFO_CLEARCHOICES(75179);
+    if ((LOG_GETSTATUS(MIS_CQ001)) == (LOG_SUCCESS)) {
+        INFO_ADDCHOICE(75179, "I don't remember our relationship well.", 75185);
+    };
+    INFO_ADDCHOICE(75179, "I don't have time for this.", 75184);
+}
+
+func void DIA_KUNO_SQ207_LEXX_SELL_NO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_SQ207_Lexx_No_15_01");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_No_03_02");
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_SQ207_Lexx_No_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_No_03_04");
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(75179);
+    INFO_ADDCHOICE(75179, "Okay, I'll pay Luna for you.", 75187);
+    INFO_ADDCHOICE(75179, "This is not what my employer asked me to do.", 75186);
+}
+
+func void DIA_KUNO_SQ207_LEXX_SELL_BADTIME() {
+    AI_STARTFACEANI(OTHER, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_SQ207_Lexx_BadTime_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_BadTime_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+func void DIA_KUNO_SQ207_LEXX_SELL_NO_NOPE() {
+    SQ207_KUNORESULT = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_SQ207_Lexx_Nope_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_Nope_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_Nope_03_03");
+    AI_PLAYANI(SELF, "T_PISSOFF");
+    INFO_CLEARCHOICES(75179);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_SQ207, LOG_SQ207_KUNO_RESULT_V1);
+    AI_FUNCTION(SELF, 62664);
+}
+
+func void DIA_KUNO_SQ207_LEXX_SELL_NO_ALRIGHT() {
+    SQ207_KUNORESULT = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Kuno_SQ207_Lexx_Alright_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_SQ207_Lexx_Alright_03_02");
+    INFO_CLEARCHOICES(75179);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_LOGENTRY(TOPIC_SQ207, LOG_SQ207_KUNO_RESULT_V2);
+    AI_FUNCTION(SELF, 62664);
+}
+
+instance DIA_KUNO_OLDTOWNHELLO(C_INFO) {
+    NPC = 52508;
+    NR = 990;
+    CONDITION = DIA_KUNO_OLDTOWNHELLO_CONDITION;
+    INFORMATION = DIA_KUNO_OLDTOWNHELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_KUNO_OLDTOWNHELLO_CONDITION() {
+    if (((NPC_ISINSTATE(SELF, 61599)) && (((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) || ((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS)))) && (!(NPC_KNOWSINFO(OTHER, 75141)))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KUNO_OLDTOWNHELLO_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhoAreYou");
+    AI_OUTPUT(SELF, OTHER, "DIA_Kuno_OldTownHello_03_01");
+}
+
+instance DIA_KUNO_AMBIENT(C_INFO) {
+    NPC = 52508;
+    NR = 990;
+    CONDITION = DIA_KUNO_AMBIENT_CONDITION;
+    INFORMATION = DIA_KUNO_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are you doing?";
+}
+
+func int DIA_KUNO_AMBIENT_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 75188)) || (NPC_KNOWSINFO(OTHER, 75141))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KUNO_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew4");
+    if (((LOG_GETSTATUS(MIS_Q308)) != (LOG_RUNNING)) && ((LOG_GETSTATUS(MIS_Q308)) != (LOG_SUCCESS))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Ambient_03_01");
+    };
+    if ((((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) || ((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS))) && ((KAPITEL) != (5))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Ambient_03_02");
+    };
+    if ((KAPITEL) == (5)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Kuno_Ambient_03_03");
+    };
+}
+
+instance DIA_KUNO_PICKPOCKET(C_INFO) {
+    NPC = 52508;
+    NR = 900;
+    CONDITION = DIA_KUNO_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_KUNO_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120;
+}
+
+func int DIA_KUNO_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_KUNO_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(75194);
+    INFO_ADDCHOICE(75194, DIALOG_BACK, 75198);
+    INFO_ADDCHOICE(75194, DIALOG_PICKPOCKET, 75197);
+}
+
+func void DIA_KUNO_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        CREATEINVITEMS(SELF, 34207, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 34207, 1);
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(75194);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(75194);
+}
+
+func void DIA_KUNO_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(75194);
+}
+

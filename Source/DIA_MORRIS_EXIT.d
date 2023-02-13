@@ -1,0 +1,392 @@
+instance DIA_MORRIS_EXIT(C_INFO) {
+    NPC = 53804;
+    NR = 999;
+    CONDITION = DIA_MORRIS_EXIT_CONDITION;
+    INFORMATION = DIA_MORRIS_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_MORRIS_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_MORRIS_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_MORRIS_Q308_HELLO(C_INFO) {
+    NPC = 53804;
+    NR = 1;
+    CONDITION = DIA_MORRIS_Q308_HELLO_CONDITION;
+    INFORMATION = DIA_MORRIS_Q308_HELLO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Governor Morris?";
+}
+
+func int DIA_MORRIS_Q308_HELLO_CONDITION() {
+    if (((NPC_ISINSTATE(SELF, 61599)) && ((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING))) && ((Q308_VOLKERHOUSECUTSCENE) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_Q308_HELLO_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_Q308_Hello_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_03_02");
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(76123);
+    INFO_ADDCHOICE(76123, "I'm investigating the attempt on Volker.", 76127);
+    INFO_ADDCHOICE(76123, "It is an honor to meet such an important person.", 76126);
+}
+
+func void DIA_MORRIS_Q308_HELLO_MEET() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_Q308_Hello_Meet_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Meet_03_02");
+}
+
+func void DIA_MORRIS_Q308_HELLO_VOLKER() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_Q308_Hello_Volker_15_01");
+    AI_STARTFACEANI(SELF, "S_TIRED", 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Volker_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Volker_03_03");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Volker_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Volker_03_05");
+    AI_PLAYANI(SELF, "T_SEARCH");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Volker_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Volker_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Volker_03_08");
+    if ((OTHER.GUILD) == (GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Volker_03_09");
+    };
+    if ((OTHER.GUILD) == (GIL_SLD)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Morris_Q308_Hello_Volker_03_10");
+    };
+    INFO_CLEARCHOICES(76123);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_FUNCTION(SELF, 63752);
+    NPC_EXCHANGEROUTINE(SELF, "Q308");
+}
+
+instance DIA_MORRIS_SQ416_GOODJOB(C_INFO) {
+    NPC = 53804;
+    NR = 1;
+    CONDITION = DIA_MORRIS_SQ416_GOODJOB_CONDITION;
+    INFORMATION = DIA_MORRIS_SQ416_GOODJOB_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_MORRIS_SQ416_GOODJOB_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ416)) == (LOG_SUCCESS)) && (NPC_ISINSTATE(SELF, 61599))) {
+        if ((SQ416_RAMSEYPARTY) != (2)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_SQ416_GOODJOB_INFO() {
+    var int SQ416_AMBIENT_MORRIS;
+    if ((SQ416_AMBIENT_MORRIS) == (FALSE)) {
+        SQ416_AMBIENT_MORRIS = TRUE;
+        B_GIVEPLAYERXP(XP_SQ416_AMBIENT);
+    };
+    AI_STARTFACEANI(SELF, S_SURPRISE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_SQ416_GoodJob_03_01");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_MORRIS_OLDCITYENTER(C_INFO) {
+    NPC = 53804;
+    NR = 1;
+    CONDITION = DIA_MORRIS_OLDCITYENTER_CONDITION;
+    INFORMATION = DIA_MORRIS_OLDCITYENTER_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_MORRIS_OLDCITYENTER_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_OLDCITYENTER_INFO() {
+    OLDCITYENTERED = TRUE;
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_OldCityEnter_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_OldCityEnter_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_OldCityEnter_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_OldCityEnter_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_OldCityEnter_03_05");
+    NPC_EXCHANGEROUTINE(SELF, "TOWNHALL");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_MORRIS_AMBIENT(C_INFO) {
+    NPC = 53804;
+    NR = 997;
+    CONDITION = DIA_MORRIS_AMBIENT_CONDITION;
+    INFORMATION = DIA_MORRIS_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How are things going?";
+}
+
+func int DIA_MORRIS_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 76132)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatNew3");
+    if ((LOG_GETSTATUS(MIS_Q308)) == (LOG_RUNNING)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Morris_Ambient_03_01");
+    };
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS)) && ((KAPITEL) <= (4))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Morris_Ambient_03_02");
+    };
+    if (((LOG_GETSTATUS(MIS_Q308)) == (LOG_SUCCESS)) && ((KAPITEL) == (5))) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Morris_Ambient_03_03");
+    };
+}
+
+instance DIA_MORRIS_HELLO(C_INFO) {
+    NPC = 53804;
+    NR = 1;
+    CONDITION = DIA_MORRIS_HELLO_CONDITION;
+    INFORMATION = DIA_MORRIS_HELLO_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_MORRIS_HELLO_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 76132)) && (NPC_ISINSTATE(SELF, 61599))) && ((SQ416_RAMSEYPARTY) != (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_HELLO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_HELLO_15_01");
+    AI_STARTFACEANI(SELF, S_WHAT, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_HELLO_03_02");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_MORRIS_ISLAND(C_INFO) {
+    NPC = 53804;
+    NR = 1;
+    CONDITION = DIA_MORRIS_ISLAND_CONDITION;
+    INFORMATION = DIA_MORRIS_ISLAND_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Can you tell me something about the laws on the island?";
+}
+
+func int DIA_MORRIS_ISLAND_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 76132)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_ISLAND_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_Island_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Island_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Island_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Island_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Island_03_05");
+}
+
+instance DIA_MORRIS_HOW(C_INFO) {
+    NPC = 53804;
+    NR = 2;
+    CONDITION = DIA_MORRIS_HOW_CONDITION;
+    INFORMATION = DIA_MORRIS_HOW_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "How did you become governor?";
+}
+
+func int DIA_MORRIS_HOW_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 76132)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_HOW_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_How_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_How_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_How_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_How_03_04");
+    AI_STARTFACEANI(SELF, S_SERIOUS, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_How_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_How_03_06");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_How_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_How_03_08");
+}
+
+instance DIA_MORRIS_NEWS(C_INFO) {
+    NPC = 53804;
+    NR = 1;
+    CONDITION = DIA_MORRIS_NEWS_CONDITION;
+    INFORMATION = DIA_MORRIS_NEWS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What is the latest news from the front?";
+}
+
+func int DIA_MORRIS_NEWS_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 76144)) && (NPC_KNOWSINFO(OTHER, 76141))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_NEWS_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_News_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_News_03_02");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_News_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_News_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_News_03_05");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_MORRIS_QUEST(C_INFO) {
+    NPC = 53804;
+    NR = 3;
+    CONDITION = DIA_MORRIS_QUEST_CONDITION;
+    INFORMATION = DIA_MORRIS_QUEST_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you have any assignments for me?";
+}
+
+func int DIA_MORRIS_QUEST_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 76132)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_QUEST_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_Quest_15_01");
+    AI_RESETFACEANI(OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Quest_03_02");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Quest_03_03");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_MORRIS_ORCS(C_INFO) {
+    NPC = 53804;
+    NR = 1;
+    CONDITION = DIA_MORRIS_ORCS_CONDITION;
+    INFORMATION = DIA_MORRIS_ORCS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "The orcs are already on the island, you need to do something about it.";
+}
+
+func int DIA_MORRIS_ORCS_CONDITION() {
+    if (((BENGARFARM_ORCENCOUNTER) == (2)) || ((LOG_GETSTATUS(MIS_KQ407)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_ORCS_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_Orcs_15_01");
+    AI_STARTFACEANI(SELF, S_TIRED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Orcs_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Orcs_03_03");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Orcs_03_04");
+    INFO_CLEARCHOICES(76153);
+    INFO_ADDCHOICE(76153, "I guess I must have made a mistake...", 76156);
+    INFO_ADDCHOICE(76153, "I can tell the difference between frogmen and orcs!", 76157);
+}
+
+func void DIA_MORRIS_ORCS_MISTAKE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_Orcs_Mistake_15_01");
+    INFO_CLEARCHOICES(76153);
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_MORRIS_ORCS_ICAN() {
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(OTHER, SELF, "DIA_Morris_Orcs_ICan_15_01");
+    AI_STARTFACEANI(SELF, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Orcs_ICan_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Orcs_ICan_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Morris_Orcs_ICan_03_04");
+    INFO_CLEARCHOICES(76153);
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_MORRIS_PICKPOCKET(C_INFO) {
+    NPC = 53804;
+    NR = 900;
+    CONDITION = DIA_MORRIS_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_MORRIS_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120;
+}
+
+func int DIA_MORRIS_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_MORRIS_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(76158);
+    INFO_ADDCHOICE(76158, DIALOG_BACK, 76162);
+    INFO_ADDCHOICE(76158, DIALOG_PICKPOCKET, 76161);
+}
+
+func void DIA_MORRIS_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        CREATEINVITEMS(SELF, 34212, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 34212, 1);
+        CREATEINVITEMS(SELF, 40408, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 40408, 1);
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(76158);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(76158);
+}
+
+func void DIA_MORRIS_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(76158);
+}
+

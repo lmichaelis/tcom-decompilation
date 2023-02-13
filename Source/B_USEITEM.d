@@ -1,0 +1,14 @@
+func void B_USEITEM(var C_NPC SLF, var int ITMINSTANCE) {
+    var C_NPC TARGET;
+    if (C_BODYSTATECONTAINS(SLF, BS_SIT)) {
+        return;
+    };
+    TARGET = NPC_GETLOOKATTARGET(SLF);
+    if (HLP_ISVALIDNPC(TARGET)) {
+        B_STOPLOOKAT(SLF);
+        AI_USEITEM(SLF, ITMINSTANCE);
+        B_LOOKATNPC(SLF, TARGET);
+    };
+    AI_USEITEM(SLF, ITMINSTANCE);
+}
+

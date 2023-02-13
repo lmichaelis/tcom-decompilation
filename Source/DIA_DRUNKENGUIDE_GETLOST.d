@@ -1,0 +1,49 @@
+instance DIA_DRUNKENGUIDE_GETLOST(C_INFO) {
+    NPC = 54018;
+    NR = 1;
+    CONDITION = DIA_DRUNKENGUIDE_GETLOST_CONDITION;
+    INFORMATION = DIA_DRUNKENGUIDE_GETLOST_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_DRUNKENGUIDE_GETLOST_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ223)) != (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 61599))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DRUNKENGUIDE_GETLOST_INFO() {
+    var int RND_DRUNKENG;
+    RND_DRUNKENG = HLP_RANDOM(3);
+    if ((RND_DRUNKENG) == (0)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_DrunkenGuide_GetLost_03_01");
+    };
+    if ((RND_DRUNKENG) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_DrunkenGuide_GetLost_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_DrunkenGuide_GetLost_03_03");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_DRUNKENGUIDE_SQ223_HELLO(C_INFO) {
+    NPC = 54018;
+    NR = 1;
+    CONDITION = DIA_DRUNKENGUIDE_SQ223_HELLO_CONDITION;
+    INFORMATION = DIA_DRUNKENGUIDE_SQ223_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_DRUNKENGUIDE_SQ223_HELLO_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ223)) == (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 61599))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DRUNKENGUIDE_SQ223_HELLO_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_DrunkenGuide_SQ223_Hello_03_01");
+}
+

@@ -1,0 +1,12 @@
+class ZCTIMER {
+	var int FACTORMOTION;
+	var int FRAMETIMEFLOAT;
+	var int TOTALTIMEFLOAT;
+	var int FRAMETIMEFLOATSECS;
+	var int TOTALTIMEFLOATSECS;
+	var int LASTTIMER;
+	var int FRAMETIME;
+	var int TOTALTIME;
+	var int MINFRAMETIME;
+	var int FORCEDMAXFRAMETIME;
+};

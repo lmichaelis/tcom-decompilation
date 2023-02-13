@@ -1,0 +1,10 @@
+func void STOPALLSOUNDS() {
+    var int ZSOUNDPTR;
+    var int ZCSNDSYS_MSS__REMOVEALLACTIVESOUNDS;
+    var int CALL;
+    if (CALL_BEGIN(CALL)) {
+        CALL__THISCALL(_@(ZSOUNDPTR), ZCSNDSYS_MSS__REMOVEALLACTIVESOUNDS);
+        CALL = CALL_END();
+    };
+}
+

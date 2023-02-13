@@ -1,0 +1,323 @@
+var int CAPTAIN_TRIALOGCOUNT;
+instance DIA_CAPTAIN_ARCHOLOS_EXIT(C_INFO) {
+    NPC = 51488;
+    NR = 999;
+    CONDITION = DIA_CAPTAIN_ARCHOLOS_EXIT_CONDITION;
+    INFORMATION = DIA_CAPTAIN_ARCHOLOS_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_CAPTAIN_ARCHOLOS_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_CAPTAIN_ARCHOLOS_Q305(C_INFO) {
+    NPC = 51488;
+    NR = 1;
+    CONDITION = DIA_CAPTAIN_ARCHOLOS_Q305_CONDITION;
+    INFORMATION = DIA_CAPTAIN_ARCHOLOS_Q305_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_CAPTAIN_ARCHOLOS_Q305_CONDITION() {
+    if ((Q305_PREPARESCENE) == (2)) {
+        if (((NPC_GETDISTTOWP(PIR_6330_CAPTAIN_ARCHOLOS, "P17_HAVEN_SMALLTALK_01")) <= (500)) && ((NPC_GETDISTTOWP(PIR_13180_SMUGGLER_ARCHOLOS, "P17_HAVEN_SMALLTALK_02")) <= (500))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_ENDTRIALOG() {
+    TRIA_FINISH();
+    AI_STOPLOOKAT(SELF);
+    AI_STOPLOOKAT(OTHER);
+    INFO_CLEARCHOICES(85173);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_RESETFACEANI(OTHER);
+    AI_LOGENTRY(TOPIC_Q305, LOG_Q305_BECKETT_BEGINNING);
+    WLD_INSERTNPC(58778, "PART17_PATH_241A");
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_INFO() {
+    TRIA_INVITE(PIR_13180_SMUGGLER_ARCHOLOS);
+    TRIA_START();
+    AI_FUNCTION(PIR_6330_CAPTAIN_ARCHOLOS, 60940);
+    AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_03");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_13180_SMUGGLER_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_04");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_6330_CAPTAIN_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_15_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_10");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_13180_SMUGGLER_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_11");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_6330_CAPTAIN_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_12");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_15_13");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_14");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_03_15");
+    AI_REMOVEWEAPON(OTHER);
+    INFO_CLEARCHOICES(85173);
+    INFO_ADDCHOICE(85173, "Let's get down to business.", 85178);
+    INFO_ADDCHOICE(85173, "You have something that belongs to me!", 85180);
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_COUNT() {
+    CAPTAIN_TRIALOGCOUNT = (CAPTAIN_TRIALOGCOUNT) + (1);
+    if ((CAPTAIN_TRIALOGCOUNT) == (2)) {
+        DIA_CAPTAIN_ARCHOLOS_ENDTRIALOG();
+    };
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_BUISNESS() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_Buisness_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_Buisness_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Buisness_03_03");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_13180_SMUGGLER_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Buisness_03_04");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_6330_CAPTAIN_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Buisness_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_Buisness_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Buisness_03_07");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_13180_SMUGGLER_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Buisness_03_08");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_6330_CAPTAIN_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Buisness_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Buisness_03_10");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_Buisness_15_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Buisness_03_12");
+    INFO_ADDCHOICE(85173, "How is that?", 85179);
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_BUISNESS_HOW() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_How_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_How_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_06");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_How_15_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_11");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_How_15_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_13");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_13180_SMUGGLER_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_14");
+    TRIA_WAIT();
+    TRIA_NEXT(PIR_6330_CAPTAIN_ARCHOLOS);
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_15");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_16");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_How_03_17");
+    DIA_CAPTAIN_ARCHOLOS_Q305_COUNT();
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_AMULET() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_Amulet_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Amulet_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_Amulet_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Amulet_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_Amulet_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Amulet_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_Amulet_03_07");
+    DIA_CAPTAIN_ARCHOLOS_Q305_COUNT();
+}
+
+instance DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES(C_INFO) {
+    NPC = 51488;
+    NR = 1;
+    CONDITION = DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_CONDITION;
+    INFORMATION = DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q305)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 83769))) {
+        if (((Q305_KILLPIRATES) == (1)) || ((Q305_KILLPIRATES) == (2))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_ADDCHOICE() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_10");
+    INFO_CLEARCHOICES(85181);
+    INFO_ADDCHOICE(85181, "I'm not stupid. An order is an order.", 85186);
+    INFO_ADDCHOICE(85181, "What do you suggest?", 85187);
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_NONEEDGOLD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_09");
+    DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_ADDCHOICE();
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_03");
+    AI_STARTFACEANI(SELF, S_FRIGHTENED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_04");
+    if ((Q305_KILLPIRATES) == (1)) {
+        AI_STARTFACEANI(OTHER, S_ANGRY, 1, -(1));
+        if ((Q305_SIMONKNOWABOUTORCS) == (TRUE)) {
+            Q305_BECKKETDIALOGUE = 1;
+            AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_05");
+            AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_06");
+            AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_07");
+            AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_08");
+            DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_NONEEDGOLD();
+        } else if ((Q305_ANYBODYJOINHAVEN) == (TRUE)) {
+            Q305_BECKKETDIALOGUE = 2;
+            AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_11");
+            AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_12");
+            AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_13");
+            AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_14");
+            DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_NONEEDGOLD();
+        } else if ((Q305_MARVINTOLDABOUTORC) == (TRUE)) {
+            Q305_BECKKETDIALOGUE = 1;
+            AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_15");
+            AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_16");
+            AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_17");
+            AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_18");
+            AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_19");
+            AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_20");
+            DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_ADDCHOICE();
+        };
+    };
+    if ((Q305_KILLPIRATES) == (2)) {
+        Q305_STARTFIGHTPIRATES = 5;
+        AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_21");
+        AI_RESETFACEANI(SELF);
+        AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_22");
+        AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_23");
+        AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_24");
+        AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_25");
+        AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_26");
+        AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_27");
+        AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_15_28");
+        AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_03_29");
+        CREATEINVITEMS(SELF, 34078, 1);
+        B_GIVEINVITEMS(SELF, OTHER, 34078, 1);
+        NPC_EXCHANGEROUTINE(SELF, TOT);
+        AI_LOGENTRY(TOPIC_Q305, LOG_Q305_BECKETTESCAPED_V2);
+    };
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_NO() {
+    Q305_STARTFIGHTPIRATES = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_No_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_No_03_02");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(85181);
+    AI_STOPPROCESSINFOS(SELF);
+    B_ATTACK(SELF, OTHER, AR_KILL, 1);
+    PIR_6330_CAPTAIN_ARCHOLOS.FLAGS = 0;
+    PIR_6330_CAPTAIN_ARCHOLOS.AIVAR[52] = TRUE;
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_Q305_KILLPIRATES_YES() {
+    Q305_STARTFIGHTPIRATES = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_Yes_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_Yes_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Captain_Archolos_Q305_KillPirates_Yes_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Captain_Archolos_Q305_KillPirates_Yes_03_04");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+    INFO_CLEARCHOICES(85181);
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 60974);
+}
+
+instance DIA_CAPTAINARCHOLOS_AMBIENT(C_INFO) {
+    NPC = 51488;
+    NR = 998;
+    CONDITION = DIA_CAPTAINARCHOLOS_AMBIENT_CONDITION;
+    INFORMATION = DIA_CAPTAINARCHOLOS_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "What are you planning?";
+}
+
+func int DIA_CAPTAINARCHOLOS_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 85173)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CAPTAINARCHOLOS_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_WhatAreYouPlannig");
+    NPC_INITAMBIENTS(SELF, 3);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_CaptainArcholos_Ambient_03_01");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_CaptainArcholos_Ambient_03_02");
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (3)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_CaptainArcholos_Ambient_03_03");
+    };
+}
+
+instance DIA_CAPTAIN_ARCHOLOS_PICKPOCKET(C_INFO) {
+    NPC = 51488;
+    NR = 900;
+    CONDITION = DIA_CAPTAIN_ARCHOLOS_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_CAPTAIN_ARCHOLOS_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_120;
+}
+
+func int DIA_CAPTAIN_ARCHOLOS_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(85191);
+    INFO_ADDCHOICE(85191, DIALOG_BACK, 85195);
+    INFO_ADDCHOICE(85191, DIALOG_PICKPOCKET, 85194);
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (3)) {
+        B_PICKPOCKET_AMBIENT_TIER_3();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(85191);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(85191);
+}
+
+func void DIA_CAPTAIN_ARCHOLOS_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(85191);
+}
+

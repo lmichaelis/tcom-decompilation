@@ -1,0 +1,50 @@
+instance DIA_TOLLEK_VZ_EXIT(C_INFO) {
+    NPC = 59241;
+    NR = 999;
+    CONDITION = DIA_TOLLEK_VZ_EXIT_CONDITION;
+    INFORMATION = DIA_TOLLEK_VZ_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_TOLLEK_VZ_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_TOLLEK_VZ_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_TOLLEK_VZ_AMBIENT(C_INFO) {
+    NPC = 59241;
+    NR = 1;
+    CONDITION = DIA_TOLLEK_VZ_AMBIENT_CONDITION;
+    INFORMATION = DIA_TOLLEK_VZ_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How's the morale?";
+}
+
+func int DIA_TOLLEK_VZ_AMBIENT_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q514)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_TOLLEK_VZ_AMBIENT_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_VolfzackMorale3");
+    if ((Q514_FINISHVOLFZACKE) == (1)) {
+        AI_STARTFACEANI(SELF, S_NOPE, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Tollek_VZ_Ambient_03_03");
+    };
+    if ((Q514_CATACOMBS_GARGOYLE_FIRSTMEETING) == (2)) {
+        AI_STARTFACEANI(SELF, S_FRIGHTENED, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Tollek_VZ_Ambient_03_02");
+    };
+    AI_STARTFACEANI(SELF, S_FRIGHTENED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Tollek_VZ_Ambient_03_01");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+

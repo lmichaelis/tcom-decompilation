@@ -1,0 +1,217 @@
+instance DIA_DORRAN_EXIT(C_INFO) {
+    NPC = 55079;
+    NR = 999;
+    CONDITION = DIA_DORRAN_EXIT_CONDITION;
+    INFORMATION = DIA_DORRAN_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_DORRAN_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_DORRAN_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_DORRAN_WHO(C_INFO) {
+    NPC = 55079;
+    NR = 1;
+    CONDITION = DIA_DORRAN_WHO_CONDITION;
+    INFORMATION = DIA_DORRAN_WHO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_DORRAN_WHO_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_DORRAN_WHO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Dorran_Who_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Who_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Who_03_03");
+}
+
+instance DIA_DORRAN_MAD(C_INFO) {
+    NPC = 55079;
+    NR = 10;
+    CONDITION = DIA_DORRAN_MAD_CONDITION;
+    INFORMATION = DIA_DORRAN_MAD_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Why are you so tense?";
+}
+
+func int DIA_DORRAN_MAD_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 74934)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DORRAN_MAD_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Dorran_Mad_15_01");
+    if (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_MIL)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Mad_03_02");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Mad_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Dorran_Mad_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Mad_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Mad_03_06");
+    INFO_CLEARCHOICES(74937);
+    INFO_ADDCHOICE(74937, "So, did they find anything?", 74940);
+}
+
+func void DIA_DORRAN_MAD_SOMETHING() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Dorran_Mad_Something_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Mad_Something_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Mad_Something_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Mad_Something_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Mad_Something_03_05");
+    INFO_CLEARCHOICES(74937);
+}
+
+instance DIA_DORRAN_WHATTRADE(C_INFO) {
+    NPC = 55079;
+    NR = 10;
+    CONDITION = DIA_DORRAN_WHATTRADE_CONDITION;
+    INFORMATION = DIA_DORRAN_WHATTRADE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What are you trading here?";
+}
+
+func int DIA_DORRAN_WHATTRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 74934)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DORRAN_WHATTRADE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Dorran_WhatTrade_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_WhatTrade_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_WhatTrade_03_03");
+    LOG_CREATETOPIC(TOPIC_CITYTRADER, LOG_NOTE);
+    AI_LOGENTRY(TOPIC_CITYTRADER, LOG_TRADER_CITY_DORRAN);
+}
+
+instance DIA_DORRAN_TRADE(C_INFO) {
+    NPC = 55079;
+    NR = 950;
+    CONDITION = DIA_DORRAN_TRADE_CONDITION;
+    INFORMATION = DIA_DORRAN_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Show me your wares.";
+}
+
+func int DIA_DORRAN_TRADE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 74941)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DORRAN_TRADE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Dorran_Trade_15_01");
+    B_GIVETRADEINV(SELF);
+}
+
+instance DIA_DORRAN_AMBIENT(C_INFO) {
+    NPC = 55079;
+    NR = 850;
+    CONDITION = DIA_DORRAN_AMBIENT_CONDITION;
+    INFORMATION = DIA_DORRAN_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "What's new?";
+}
+
+func int DIA_DORRAN_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 74934)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DORRAN_AMBIENT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Dorran_Ambient_15_01");
+    if ((LOG_GETSTATUS(MIS_Q206)) == (LOG_SUCCESS)) {
+        NPC_INITAMBIENTS(SELF, 2);
+    };
+    NPC_INITAMBIENTS(SELF, 1);
+    if ((NPC_GETLASTAMBIENT(SELF)) == (1)) {
+        if (NPC_HASGUILDARMOREQUIPPED(OTHER, GIL_MIL)) {
+            AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Ambient_03_04");
+            AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Ambient_03_05");
+        } else {
+            AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Ambient_03_02");
+            AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Ambient_03_03");
+        };
+    };
+    if ((NPC_GETLASTAMBIENT(SELF)) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Ambient_03_06");
+    };
+}
+
+instance DIA_DORRAN_BOLT(C_INFO) {
+    NPC = 55079;
+    NR = 1;
+    CONDITION = DIA_DORRAN_BOLT_CONDITION;
+    INFORMATION = DIA_DORRAN_BOLT_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you know anything about boltheads?";
+}
+
+func int DIA_DORRAN_BOLT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q309)) == (LOG_RUNNING)) && ((NPC_HASITEMS(OTHER, 37293)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DORRAN_BOLT_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Dorran_Bolt_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Bolt_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Bolt_03_03");
+    AI_LOGENTRY(TOPIC_Q309, LOG_Q309_DORRAN_BOLT);
+    AI_OUTPUT(SELF, OTHER, "DIA_Dorran_Bolt_03_04");
+}
+
+instance DIA_DORRAN_PICKPOCKET(C_INFO) {
+    NPC = 55079;
+    NR = 900;
+    CONDITION = DIA_DORRAN_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_DORRAN_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_40;
+}
+
+func int DIA_DORRAN_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_DORRAN_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(74953);
+    INFO_ADDCHOICE(74953, DIALOG_BACK, 74957);
+    INFO_ADDCHOICE(74953, DIALOG_PICKPOCKET, 74956);
+}
+
+func void DIA_DORRAN_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) {
+        B_PICKPOCKET_AMBIENT_TIER_1();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(74953);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(74953);
+}
+
+func void DIA_DORRAN_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(74953);
+}
+

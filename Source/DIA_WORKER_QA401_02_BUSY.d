@@ -1,0 +1,20 @@
+instance DIA_WORKER_QA401_02_BUSY(C_INFO) {
+    NPC = 53934;
+    NR = 1;
+    CONDITION = DIA_WORKER_QA401_02_BUSY_CONDITION;
+    INFORMATION = DIA_WORKER_QA401_02_BUSY_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_WORKER_QA401_02_BUSY_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_QA401)) == (LOG_RUNNING)) && (NPC_ISINSTATE(SELF, 61599))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_WORKER_QA401_02_BUSY_INFO() {
+    DIA_IMBUSY_ANGRY();
+}
+

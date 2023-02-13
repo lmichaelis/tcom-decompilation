@@ -1,0 +1,644 @@
+instance DIA_GONZALO_EXIT(C_INFO) {
+    NPC = 58026;
+    NR = 999;
+    CONDITION = DIA_GONZALO_EXIT_CONDITION;
+    INFORMATION = DIA_GONZALO_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_GONZALO_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_GONZALO_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_GONZALO_HELLO(C_INFO) {
+    NPC = 58026;
+    NR = 2;
+    CONDITION = DIA_GONZALO_HELLO_CONDITION;
+    INFORMATION = DIA_GONZALO_HELLO_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Do you know where I can find Antonio?";
+}
+
+func int DIA_GONZALO_HELLO_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if (((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) && ((Q207_MARVINKNOWABOUTANTONIO) == (FALSE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_HELLO_INFO() {
+    B_SAY(OTHER, SELF, "$Q207_SearchAntonio");
+    B_SAY(SELF, OTHER, "$DONTKNOW_PERSON_ANGRY");
+}
+
+instance DIA_GONZALO_Q207_FOUNDYOU(C_INFO) {
+    NPC = 58026;
+    NR = 1;
+    CONDITION = DIA_GONZALO_Q207_FOUNDYOU_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_FOUNDYOU_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "You're Antonio.";
+}
+
+func int DIA_GONZALO_Q207_FOUNDYOU_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if (((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) && ((Q207_MARVINKNOWABOUTANTONIO) == (TRUE))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q207_FOUNDYOU_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_FoundYou_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_FoundYou_15_03");
+    B_STANDUP();
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_FoundYou_15_05");
+    AI_STARTFACEANI(SELF, S_ANGRY, 0, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_03_08");
+    INFO_CLEARCHOICES(86193);
+    INFO_ADDCHOICE(86193, "The Haven?", 86196);
+}
+
+func void DIA_GONZALO_Q207_FOUNDYOU_HAVEN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_FoundYou_Haven_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_Haven_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_Haven_03_03");
+    INFO_CLEARCHOICES(86193);
+    INFO_ADDCHOICE(86193, "How can I get to this Haven?", 86197);
+    INFO_ADDCHOICE(86193, "Tell me more about this gang.", 86198);
+}
+
+func void DIA_GONZALO_Q207_FOUNDYOU_HOW() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_FoundYou_How_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_How_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_FoundYou_How_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_How_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_FoundYou_How_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_How_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_How_03_07");
+}
+
+func void DIA_GONZALO_Q207_FOUNDYOU_MORE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_FoundYou_More_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_More_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_More_03_03");
+    INFO_ADDCHOICE(86193, "Didn't you see a guy named Jorn over there?", 86199);
+}
+
+func void DIA_GONZALO_Q207_FOUNDYOU_BROTHER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_FoundYou_Brother_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_Brother_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_Brother_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_FoundYou_Brother_03_04");
+    AI_LOGENTRY(TOPIC_Q207, LOG_Q207_GONZALO_NOJORN);
+}
+
+instance DIA_GONZALO_Q207_SHOWME(C_INFO) {
+    NPC = 58026;
+    NR = 1;
+    CONDITION = DIA_GONZALO_Q207_SHOWME_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_SHOWME_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Take me to this gang.";
+}
+
+func int DIA_GONZALO_Q207_SHOWME_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if (((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 86193))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q207_SHOWME_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_ShowMe_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_ShowMe_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_ShowMe_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_ShowMe_03_04");
+    INFO_CLEARCHOICES(86200);
+    INFO_ADDCHOICE(86200, "(Intimidate)", 86206);
+    INFO_ADDCHOICE(86200, "I'll help you with this job if you take me to the Haven.", 86207);
+}
+
+func void GONZALO_ARENAFIGHT() {
+    Q207_GONZALORESULT = 1;
+    SELF.AIVAR[45] = AF_RUNNING;
+    AI_STOPPROCESSINFOS(SELF);
+    B_ATTACK(SELF, OTHER, AR_NONE, 1);
+}
+
+func void DIA_GONZALO_Q207_FOUNDYOU_ATTACK() {
+    var int Q207_GONZALOATTACKLOGENTRY;
+    AI_STARTFACEANI(SELF, S_ANGRY, 0, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_ShowMe_Scare_03_02");
+    INFO_CLEARCHOICES(86200);
+    if ((Q207_GONZALOATTACKLOGENTRY) == (FALSE)) {
+        Q207_GONZALOATTACKLOGENTRY = TRUE;
+        AI_LOGENTRY(TOPIC_Q207, LOG_Q207_GONZALO_NOHELP);
+    };
+    GONZALO_ARENAFIGHT();
+}
+
+func void DIA_GONZALO_Q207_SHOWME_SCARE() {
+    AI_STARTFACEANI(HERO, S_ANGRY, 0, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_ShowMe_Scare_15_01");
+    DIA_GONZALO_Q207_FOUNDYOU_ATTACK();
+}
+
+func void DIA_GONZALO_Q207_SHOWME_WHAT() {
+    Q207_GONZALORESULT = 2;
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_ShowMe_What_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 0, 1);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_ShowMe_What_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_ShowMe_What_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_ShowMe_What_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_ShowMe_What_03_05");
+    INFO_CLEARCHOICES(86200);
+    AI_LOGENTRY(TOPIC_Q207, LOG_Q207_GONZALO_HELP);
+}
+
+instance DIA_GONZALO_Q207_QUESTIONS(C_INFO) {
+    NPC = 58026;
+    NR = 85;
+    CONDITION = DIA_GONZALO_Q207_QUESTIONS_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_QUESTIONS_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "(Ask about Gonzalo's job)";
+}
+
+var int GONZALO_Q207_QUESTIONS_CHEST;
+var int GONZALO_Q207_QUESTIONS_MANY;
+func int DIA_GONZALO_Q207_QUESTIONS_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if ((((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 86200))) && ((Q207_GONZALORESULT) == (2))) {
+            if (((GONZALO_Q207_QUESTIONS_MANY) == (FALSE)) || ((GONZALO_Q207_QUESTIONS_CHEST) == (FALSE))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q207_QUESTIONS_BACK() {
+    INFO_CLEARCHOICES(86208);
+}
+
+func void DIA_GONZALO_Q207_QUESTIONS_INFO() {
+    INFO_CLEARCHOICES(86208);
+    INFO_ADDCHOICE(86208, DIALOG_BACK, 86212);
+    if ((GONZALO_Q207_QUESTIONS_CHEST) == (FALSE)) {
+        INFO_ADDCHOICE(86208, "Where exactly do I take these crates?", 86214);
+    };
+    if ((GONZALO_Q207_QUESTIONS_MANY) == (FALSE)) {
+        INFO_ADDCHOICE(86208, "How many grapes do I have to pick?", 86215);
+    };
+}
+
+func void DIA_GONZALO_Q207_QUESTIONS_CHEST() {
+    GONZALO_Q207_QUESTIONS_CHEST = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_Questions_Chest_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Questions_Chest_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Questions_Chest_03_03");
+}
+
+func void DIA_GONZALO_Q207_QUESTIONS_MANY() {
+    GONZALO_Q207_QUESTIONS_MANY = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_Questions_Many_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Questions_Many_03_02");
+}
+
+instance DIA_GONZALO_Q207_HAVENQUESTION(C_INFO) {
+    NPC = 58026;
+    NR = 90;
+    CONDITION = DIA_GONZALO_Q207_HAVENQUESTION_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_HAVENQUESTION_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Actually, why did you stop working for them?";
+}
+
+func int DIA_GONZALO_Q207_HAVENQUESTION_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if ((((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) && (NPC_KNOWSINFO(OTHER, 86200))) && ((Q207_GONZALORESULT) == (2))) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q207_HAVENQUESTION_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_Haven_Why_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Haven_Why_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Haven_Why_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Haven_Why_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Haven_Why_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Haven_Why_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Haven_Why_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Haven_Why_03_08");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Haven_Why_03_09");
+}
+
+instance DIA_GONZALO_Q207_AFTERFIGHT(C_INFO) {
+    NPC = 58026;
+    NR = 3;
+    CONDITION = DIA_GONZALO_Q207_AFTERFIGHT_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_AFTERFIGHT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GONZALO_Q207_AFTERFIGHT_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) && ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS))) {
+        if ((Q207_GONZALORESULT) == (1)) {
+            if (((SELF.AIVAR[64]) == (FALSE)) && ((SELF.AIVAR[0]) != (FIGHT_NONE))) {
+                if ((SELF.AIVAR[45]) != (AF_NONE)) {
+                    if (NPC_ISINSTATE(SELF, 61599)) {
+                        return TRUE;
+                    };
+                };
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int GONZALO_Q207_SHOWWAY;
+func void DIA_GONZALO_Q207_SHOWTHEWAY() {
+    GONZALO_Q207_SHOWWAY = TRUE;
+    AI_RESETFACEANI(SELF);
+}
+
+func void DIA_GONZALO_Q207_AFTERFIGHT_INFO() {
+    if ((SELF.AIVAR[0]) == (FIGHT_LOST)) {
+        Q207_GONZALORESULT = 3;
+        SELF.AIVAR[45] = AF_NONE;
+        SELF.AIVAR[64] = TRUE;
+        AI_STARTFACEANI(HERO, S_ANGRY, 0, 1);
+        AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_AfterFight_15_01");
+        AI_WAITTILLEND(SELF, OTHER);
+        AI_PLAYANI(SELF, T_STAND_2_SCAREDDIALOGUE);
+        AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_AfterFight_03_02");
+        AI_PLAYANI(SELF, "T_REMOVE_SCAREDDIALOGUE");
+        DIA_GONZALO_Q207_SHOWTHEWAY();
+    };
+    DIA_GONZALO_Q207_FOUNDYOU_ATTACK();
+}
+
+instance DIA_GONZALO_Q207_HELPEDGONZALO(C_INFO) {
+    NPC = 58026;
+    NR = 1;
+    CONDITION = DIA_GONZALO_Q207_HELPEDGONZALO_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_HELPEDGONZALO_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I carried the wine and picked the grapes.";
+}
+
+func int DIA_GONZALO_Q207_HELPEDGONZALO_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if ((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) {
+            if ((Q207_GONZALORESULT) == (4)) {
+                if ((MOB_HASITEMS("WITHOUTRACE_VINEYARD_CHEST_01", 36361)) >= (10)) {
+                    if (((MOB_HASITEMS("WITHOUTRACE_VINEYARD_CHEST_02", 37147)) >= (2)) || ((MOB_HASITEMS("SQ206_WOODCHEST", 37147)) >= (2))) {
+                        return TRUE;
+                    };
+                };
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q207_HELPEDGONZALO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_HelpedGonzalo_15_01");
+    AI_STARTFACEANI(SELF, S_SMILE, 0, 1);
+    B_GIVEPLAYERXP(XP_Q207_HELPEDGONZALO);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_HelpedGonzalo_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_HelpedGonzalo_15_03");
+    DIA_GONZALO_Q207_SHOWTHEWAY();
+}
+
+instance DIA_GONZALO_Q207_PROBLEM(C_INFO) {
+    NPC = 58026;
+    NR = 1;
+    CONDITION = DIA_GONZALO_Q207_PROBLEM_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_PROBLEM_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "So, will you take me to them now?";
+}
+
+func int DIA_GONZALO_Q207_PROBLEM_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if ((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) {
+            if ((GONZALO_Q207_SHOWWAY) == (TRUE)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q207_PROBLEM_INFO() {
+    Q207_PAYFORGONZALO = TRUE;
+    AI_STARTFACEANI(OTHER, S_ANGRY, 0, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_Problem_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Problem_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Problem_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Problem_03_04");
+    if ((Q207_GONZALORESULT) == (3)) {
+        AI_LOGENTRY(TOPIC_Q207, LOG_Q207_GONZALO_RESULT_V1);
+    };
+    AI_LOGENTRY(TOPIC_Q207, LOG_Q207_GONZALO_RESULT_V2);
+}
+
+instance DIA_GONZALO_Q207_PAY(C_INFO) {
+    NPC = 58026;
+    NR = 1;
+    CONDITION = DIA_GONZALO_Q207_PAY_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_PAY_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Take that gold and let's go. (200 GP)";
+}
+
+func int DIA_GONZALO_Q207_PAY_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if ((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) {
+            if ((Q207_PAYFORGONZALO) == (TRUE)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q207_PAY_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_Pay_15_01");
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (Q207_GONZALONEEDMONEY)) {
+        Q207_PAYFORGONZALO = 2;
+        NPC_REMOVEINVITEMS(SELF, 34203, Q207_GONZALONEEDMONEY);
+        B_STANDUP();
+        B_GIVEINVITEMS(OTHER, SELF, 34203, Q207_GONZALONEEDMONEY);
+        B_USEFAKEBAG();
+        AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_Pay_03_02");
+    };
+    B_SAY(SELF, OTHER, "$NOGOLD");
+}
+
+instance DIA_GONZALO_Q207_GOWITHGONZALO(C_INFO) {
+    NPC = 58026;
+    NR = 5;
+    CONDITION = DIA_GONZALO_Q207_GOWITHGONZALO_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_GOWITHGONZALO_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "Do you think we can leave now?";
+}
+
+func int DIA_GONZALO_Q207_GOWITHGONZALO_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if ((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) {
+            if (((Q207_PAYFORGONZALO) == (2)) && ((Q207_GONZALOGUIDE) == (0))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q207_GOWITHGONZALO_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q207_GoWithGonzalo_15_01");
+    if (WLD_ISTIME(4, 0, 16, 0)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_GoWithGonzalo_03_02");
+    };
+    SELF.AIVAR[15] = TRUE;
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_GoWithGonzalo_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_GoWithGonzalo_03_04");
+    AI_LOGENTRY(TOPIC_Q207, LOG_Q207_GONZALO_LETSGO);
+    NPC_EXCHANGEROUTINE(SELF, "GUIDE");
+    Q207_GONZALOGUIDE = 1;
+    AI_STOPPROCESSINFOS(SELF);
+    Q207_REMOVEMONSTERS();
+    Q207_SPAWNGOBBO();
+}
+
+instance DIA_GONZALO_Q207_GONZALOCUTSCENE(C_INFO) {
+    NPC = 58026;
+    NR = 2;
+    CONDITION = DIA_GONZALO_Q207_GONZALOCUTSCENE_CONDITION;
+    INFORMATION = DIA_GONZALO_Q207_GONZALOCUTSCENE_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GONZALO_Q207_GONZALOCUTSCENE_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q205)) == (LOG_SUCCESS)) {
+        if ((LOG_GETSTATUS(MIS_Q207)) == (LOG_RUNNING)) {
+            if (((NPC_GETDISTTOWP(SELF, "PART15_PATH_218")) <= (500)) && ((Q207_GONZALOGUIDE) == (1))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q207_GONZALOCUTSCENE_INFO() {
+    SELF.AIVAR[15] = FALSE;
+    AI_FUNCTION(SELF, 62283);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_GonzaloCutscene_03_01");
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_GonzaloCutscene_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_GonzaloCutscene_03_03");
+    AI_FUNCTION(SELF, 62284);
+    AI_TURNAWAY(SELF, OTHER);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q207_GonzaloCutscene_03_04");
+    AI_STOPPROCESSINFOS(SELF);
+    AI_FUNCTION(SELF, 86239);
+    NPC_EXCHANGEROUTINE(SELF, CUTSCENERTN);
+}
+
+func void Q207_GONZALOCUTSCENE_FADE() {
+    FADESCREENTOBLACKF(2, 86240, 1000);
+}
+
+func void Q207_GONZALOCUTSCENE() {
+    if (TORCH_HEROHOLDINGTORCH()) {
+        TORCH_UNEQUIP();
+    };
+    WLD_SETTIME(4, 20);
+    BAU_6287_GONZALO.FLAGS = 2;
+    TELEPORTNPCTOWP(58036, BDT_6288_MYRMIDON.WP);
+    TELEPORTNPCTOWP(57947, BDT_6289_VILLAN.WP);
+    TELEPORTNPCTOWP(57956, BDT_6290_BANDIT.WP);
+    TELEPORTNPCTOWP(58026, BAU_6287_GONZALO.WP);
+    TELEPORTNPCTOWP(1819, "PART15_WITHOUTTRACE_GONZALOCUTSCENE_HERO");
+    MDL_APPLYOVERLAYMDS(HERO, HUMANSMARVINSNEAKMDS);
+    Q207_GONZALOGUIDE = 3;
+    BAU_6287_GONZALO.ATTRIBUTE[1] = 5;
+    BAU_6287_GONZALO.ATTRIBUTE[0] = 5;
+    HERO.AIVAR[4] = FALSE;
+    FADESCREENFROMBLACK(3);
+}
+
+instance DIA_GONZALO_Q304_LEAVEME(C_INFO) {
+    NPC = 58026;
+    NR = 1;
+    CONDITION = DIA_GONZALO_Q304_LEAVEME_CONDITION;
+    INFORMATION = DIA_GONZALO_Q304_LEAVEME_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_GONZALO_Q304_LEAVEME_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q304)) == (LOG_RUNNING)) {
+        if ((Q304_ANTONIORUNAWAY) >= (1)) {
+            if ((((NPC_GETDISTTOWP(SELF, "PART15_PATH_11")) <= (500)) && ((Q304_ANTONIORUNAWAY) == (2))) || (NPC_ISINSTATE(SELF, 61599))) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_NOTHING_QUIET() {
+    BAU_6287_GONZALO.NAME[0] = NPCNAME_GONZALO;
+    BAU_6287_GONZALO.AIVAR[79] = 1;
+    AI_WAITTILLEND(SELF, OTHER);
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Quiet_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Quiet_03_02");
+    INFO_CLEARCHOICES(86241);
+    INFO_ADDCHOICE(86241, "Gonzalo, Antonio, what is this all about?", 86247);
+    INFO_ADDCHOICE(86241, "I'm here on direct orders from Cortez.", 86248);
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_INFO() {
+    AI_STARTFACEANI(SELF, S_FRIGHTENED, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_03_04");
+    INFO_CLEARCHOICES(86241);
+    INFO_ADDCHOICE(86241, "I saw you in a cave in the swamp.", 86245);
+    INFO_ADDCHOICE(86241, "Relax, I dont wanna hurt you.", 86246);
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_CAVE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Cave_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Cave_15_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Cave_15_03");
+    DIA_GONZALO_Q304_LEAVEME_NOTHING_QUIET();
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_NOTHING() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Nothing_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Nothing_15_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Nothing_15_03");
+    DIA_GONZALO_Q304_LEAVEME_NOTHING_QUIET();
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_NOTHING_QUIET_WHAT() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_What_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_What_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_What_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_What_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_What_03_05");
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_NOTHING_QUIET_CORTEZ() {
+    B_GIVEINVITEMS(OTHER, SELF, 37253, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Cortez_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Cortez_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Cortez_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Cortez_15_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Cortez_15_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Cortez_15_06");
+    B_USEFAKESCROLL();
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Cortez_03_07");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Cortez_15_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Cortez_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Cortez_03_10");
+    INFO_CLEARCHOICES(86241);
+    INFO_ADDCHOICE(86241, "You better not screw up.", 86250);
+    INFO_ADDCHOICE(86241, "We'll meet where we always meet.", 86251);
+    INFO_ADDCHOICE(86241, "(Warn)", 86252);
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_END() {
+    AI_LOGENTRY(TOPIC_Q304, LOG_Q304_ANTONIOISGONZALO);
+    INFO_CLEARCHOICES(86241);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, START);
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_NOTHING_QUIET_CORTEZ_PREPARE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Prepare_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Prepare_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Prepare_03_03");
+    DIA_GONZALO_Q304_LEAVEME_END();
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_NOTHING_QUIET_CORTEZ_BYE() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Bye_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Bye_03_02");
+    DIA_GONZALO_Q304_LEAVEME_END();
+}
+
+func void DIA_GONZALO_Q304_LEAVEME_NOTHING_QUIET_CORTEZ_WARNING() {
+    Q304_GONZALOSAFED = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Warning_15_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Gonzalo_Q304_LeaveMe_Warning_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Warning_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Gonzalo_Q304_LeaveMe_Warning_03_04");
+    AI_LOGENTRY(TOPIC_Q304, LOG_Q304_ANTONIOISGONZALOV2);
+    INFO_CLEARCHOICES(86241);
+    AI_STOPPROCESSINFOS(SELF);
+    NPC_EXCHANGEROUTINE(SELF, START);
+}
+
+instance DIA_GONZALO_PICKPOCKET(C_INFO) {
+    NPC = 58026;
+    NR = 900;
+    CONDITION = DIA_GONZALO_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_GONZALO_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80;
+}
+
+func int DIA_GONZALO_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_GONZALO_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(86253);
+    INFO_ADDCHOICE(86253, DIALOG_BACK, 86257);
+    INFO_ADDCHOICE(86253, DIALOG_PICKPOCKET, 86256);
+}
+
+func void DIA_GONZALO_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(86253);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(86253);
+}
+
+func void DIA_GONZALO_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(86253);
+}
+

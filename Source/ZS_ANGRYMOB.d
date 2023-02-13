@@ -1,0 +1,63 @@
+func void ZS_ANGRYMOB() {
+    PERCEPTION_SET_NONE();
+    B_RESETALL(SELF);
+    AI_SETWALKMODE(SELF, NPC_WALK);
+    if ((NPC_GETDISTTOWP(SELF, SELF.WP)) > (TA_DIST_SELFWP_MAX)) {
+        AI_GOTOWP(SELF, SELF.WP);
+        AI_ALIGNTOWP(SELF);
+    };
+}
+
+func int ZS_ANGRYMOB_LOOP() {
+    var int SEARCHSTYLE;
+    B_TURNTONPC(SELF, MIL_6505_MILITIA);
+    MDL_STARTFACEANI(SELF, S_ANGRY, 1065353216, -1082130432);
+    SEARCHSTYLE = HLP_RANDOM(10);
+    if ((SEARCHSTYLE) == (0)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_01);
+        AI_WAIT(SELF, 1065353216);
+    };
+    if ((SEARCHSTYLE) == (1)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_02);
+        AI_WAIT(SELF, 1074580685);
+    };
+    if ((SEARCHSTYLE) == (2)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_03);
+        AI_WAIT(SELF, 1067869798);
+    };
+    if ((SEARCHSTYLE) == (3)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_01);
+        AI_WAIT(SELF, 1060320051);
+    };
+    if ((SEARCHSTYLE) == (4)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_02);
+        AI_WAIT(SELF, 1069547520);
+    };
+    if ((SEARCHSTYLE) == (5)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_03);
+        AI_WAIT(SELF, 1073741824);
+    };
+    if ((SEARCHSTYLE) == (6)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_01);
+        AI_WAIT(SELF, 1050253722);
+    };
+    if ((SEARCHSTYLE) == (7)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_02);
+        AI_WAIT(SELF, 1063675494);
+    };
+    if ((SEARCHSTYLE) == (8)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_03);
+        AI_WAIT(SELF, 1074161254);
+    };
+    if ((SEARCHSTYLE) == (9)) {
+        AI_PLAYANI(SELF, T_ANGRYMOB_01);
+        AI_WAIT(SELF, 1056964608);
+    };
+    return LOOP_CONTINUE;
+}
+
+func void ZS_ANGRYMOB_END() {
+    AI_STANDUP(SELF);
+    MDL_STARTFACEANI(SELF, S_NEUTRAL, 1065353216, -1082130432);
+}
+

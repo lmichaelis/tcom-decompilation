@@ -1,0 +1,141 @@
+instance DIA_SAILORCROOK_EXIT(C_INFO) {
+    NPC = 54722;
+    NR = 999;
+    CONDITION = DIA_SAILORCROOK_EXIT_CONDITION;
+    INFORMATION = DIA_SAILORCROOK_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_SAILORCROOK_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_SAILORCROOK_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_SAILORCROOK_SQ218_HELLO(C_INFO) {
+    NPC = 54722;
+    NR = 1;
+    CONDITION = DIA_SAILORCROOK_SQ218_HELLO_CONDITION;
+    INFORMATION = DIA_SAILORCROOK_SQ218_HELLO_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_SAILORCROOK_SQ218_HELLO_CONDITION() {
+    if (((SQ313_KICKDOOR_CHECK) == (TRUE)) && ((LOG_GETSTATUS(MIS_SQ313)) == (LOG_RUNNING))) {
+        return FALSE;
+    };
+    return TRUE;
+}
+
+func void DIA_SAILORCROOK_SQ218_HELLO_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_Hello_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_Hello_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_Hello_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_Hello_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_Hello_03_07");
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (SQ218_GOLDFORHOUSE_V1)) {
+        SQ218_GOLD = 3;
+    };
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (SQ218_GOLDFORHOUSE_V2)) {
+        SQ218_GOLD = 2;
+    };
+    SQ218_GOLD = 1;
+    INFO_CLEARCHOICES(71647);
+    INFO_ADDCHOICE(71647, "I sense a trickery here.", 71652);
+    INFO_ADDCHOICE(71647, "Should I buy an apartment without seeing it?", 71650);
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (SQ218_GOLDFORHOUSE_V1)) {
+        INFO_ADDCHOICE(71647, "Give me that paper.", 71651);
+    };
+    INFO_ADDCHOICE(71647, "I'm interested but I don't have that much gold.", 71653);
+}
+
+func void DIA_SAILORCROOK_SQ218_NOTSEENHOME() {
+    AI_OUTPUT(OTHER, SELF, "DIA_SailorCrook_SQ218_NotSeenHome_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_NotSeenHome_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_NotSeenHome_03_03");
+}
+
+func void DIA_SAILORCROOK_SQ218_MYHOME() {
+    AI_OUTPUT(OTHER, SELF, "DIA_SailorCrook_SQ218_MyHome_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_MyHome_03_02");
+    if ((SQ218_GOLD) == (3)) {
+    };
+    if ((SQ218_GOLD) == (2)) {
+        B_GIVEINVITEMS(OTHER, SELF, 34203, SQ218_GOLDFORHOUSE_V2);
+    };
+    CREATEINVITEMS(SELF, 37140, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 37140, 1);
+    CREATEINVITEMS(SELF, 37141, 1);
+    B_GIVEINVITEMS(SELF, OTHER, 37141, 1);
+    AI_OUTPUT(OTHER, SELF, "DIA_SailorCrook_SQ218_MyHome_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_MyHome_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_MyHome_03_05");
+    LOG_CREATETOPIC(TOPIC_SQ218, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_SQ218), TOPIC_SQ218, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_SQ218, LOG_SQ218_MYHOMESTART);
+    NPC_EXCHANGEROUTINE(SELF, "AWAY");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_SAILORCROOK_SQ218_SMELLYSMELL() {
+    AI_OUTPUT(OTHER, SELF, "DIA_SailorCrook_SQ218_SmellySmell_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_SmellySmell_03_07");
+    SQ218_GOLD = 0;
+    NPC_EXCHANGEROUTINE(SELF, TOT);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_SAILORCROOK_SQ218_NOTENOUGHGOLD() {
+    AI_OUTPUT(OTHER, SELF, "DIA_SailorCrook_SQ218_NotEnoughGold_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_NotEnoughGold_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_NotEnoughGold_03_03");
+    SQ218_GOLD = 2;
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (SQ218_GOLDFORHOUSE_V2)) {
+        INFO_ADDCHOICE(71647, "Give me that paper.", 71651);
+    };
+    INFO_ADDCHOICE(71647, "Unfortunately, it's still too expensive.", 71654);
+}
+
+func void DIA_SAILORCROOK_SQ218_NOTENOUGHGOLDAGAIN() {
+    SQ218_GOLD = 1;
+    AI_OUTPUT(OTHER, SELF, "DIA_SailorCrook_SQ218_NotEnoughGoldAgain_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_NotEnoughGoldAgain_03_05");
+    AI_OUTPUT(OTHER, SELF, "DIA_SailorCrook_SQ218_NotEnoughGoldAgain_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_NotEnoughGoldAgain_03_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_NotEnoughGoldAgain_03_08");
+    AI_OUTPUT(OTHER, SELF, "DIA_SailorCrook_SQ218_NotEnoughGoldAgain_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_NotEnoughGoldAgain_03_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_SQ218_NotEnoughGoldAgain_03_11");
+    INFO_ADDCHOICE(71647, "Give me that paper.", 71651);
+}
+
+instance DIA_SAILORCROOK_AMBIENT(C_INFO) {
+    NPC = 54722;
+    NR = 2;
+    CONDITION = DIA_SAILORCROOK_AMBIENT_CONDITION;
+    INFORMATION = DIA_SAILORCROOK_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_SAILORCROOK_AMBIENT_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 71647)) {
+        if (NPC_ISINSTATE(SELF, 61599)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_SAILORCROOK_AMBIENT_INFO() {
+    if ((SQ218_GOLD) == (0)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_Ambient_03_01");
+    };
+    AI_OUTPUT(SELF, OTHER, "DIA_SailorCrook_Ambient_03_02");
+    AI_STOPPROCESSINFOS(SELF);
+}
+

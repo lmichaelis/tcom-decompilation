@@ -1,0 +1,853 @@
+func void SQ315_SPAWN_MOREFLIES() {
+    WLD_INSERTNPC(50335, "PART11_MOB_25");
+    WLD_INSERTNPC(50335, "PART11_MOB_30");
+    CREATEINVITEMS(NONE_11037_MARKUS, 35304, 2);
+    CREATEINVITEMS(NONE_6262_CARDEN, 35304, 2);
+    CREATEINVITEMS(DJG_10026_LUCY, 35304, 2);
+}
+
+instance DIA_OSCAR_EXIT(C_INFO) {
+    NPC = 58726;
+    NR = 999;
+    CONDITION = DIA_OSCAR_EXIT_CONDITION;
+    INFORMATION = DIA_OSCAR_EXIT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = DIALOG_ENDE;
+}
+
+func int DIA_OSCAR_EXIT_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_OSCAR_EXIT_INFO() {
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_OSCAR_AHOY(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_AHOY_CONDITION;
+    INFORMATION = DIA_OSCAR_AHOY_INFO;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_OSCAR_AHOY_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_OSCAR_AHOY_INFO() {
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Ahoy_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Ahoy_13_02");
+    NPC_EXCHANGEROUTINE(SELF, START);
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_OSCAR_CORPSE(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_CORPSE_CONDITION;
+    INFORMATION = DIA_OSCAR_CORPSE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Why is there a dead body in your tavern?";
+}
+
+func int DIA_OSCAR_CORPSE_CONDITION() {
+    if (((Q301_SPOTCORPSELOGENTRY) == (TRUE)) && ((LOG_GETSTATUS(MIS_Q303)) == (0))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_CORPSE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Corpse_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Corpse_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Corpse_03_03");
+}
+
+instance DIA_OSCAR_STAN(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_STAN_CONDITION;
+    INFORMATION = DIA_OSCAR_STAN_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Cortez sent me to take care of Stan.";
+}
+
+func int DIA_OSCAR_STAN_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_Q303)) == (LOG_RUNNING)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_STAN_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Stan_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Stan_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Stan_03_03");
+    AI_LOGENTRY(TOPIC_Q303, LOG_Q303_RODRIGOKINDASUS);
+}
+
+instance DIA_OSCAR_STANQUESTIONS(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_STANQUESTIONS_CONDITION;
+    INFORMATION = DIA_OSCAR_STANQUESTIONS_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "About the Stan case...";
+}
+
+func int DIA_OSCAR_STANQUESTIONS_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 84240)) && ((LOG_GETSTATUS(MIS_Q303)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+var int DIA_OSCAR_STANQUESTIONS_WHATHAPPENED_NOPERM;
+var int DIA_OSCAR_STANQUESTIONS_WOLFBERRIES_NOPERM;
+var int DIA_OSCAR_STANQUESTIONS_WOLFBERRIESNOCHANCE_NOPERM;
+func void DIA_OSCAR_STANQUESTIONS_ADDCHOICES() {
+    INFO_CLEARCHOICES(84243);
+    INFO_ADDCHOICE(84243, DIALOG_BACK, 84262);
+    if ((DIA_OSCAR_STANQUESTIONS_WHATHAPPENED_NOPERM) == (FALSE)) {
+        INFO_ADDCHOICE(84243, "What happened here?", 84257);
+    };
+    if ((DIA_OSCAR_STANQUESTIONS_ANYOTHER_NOPERM) == (FALSE)) {
+        INFO_ADDCHOICE(84243, "Isn't there anyone else Stan has got under his skin?", 84250);
+    };
+    if ((NPC_KNOWSINFO(OTHER, 83482)) && ((DIA_OSCAR_STANQUESTIONS_WOLFBERRIES_NOPERM) == (FALSE))) {
+        INFO_ADDCHOICE(84243, "Do you know anything about wolfberries?", 84254);
+    };
+    if (((DIA_OSCAR_STANQUESTIONS_WOLFBERRIES_NOPERM) == (TRUE)) && ((DIA_OSCAR_STANQUESTIONS_WOLFBERRIESNOCHANCE_NOPERM) == (FALSE))) {
+        INFO_ADDCHOICE(84243, "Isn't there any way someone could add those berries to the dish?", 84251);
+    };
+}
+
+func void DIA_OSCAR_STANQUESTIONS_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_03_02");
+    DIA_OSCAR_STANQUESTIONS_ADDCHOICES();
+}
+
+func void DIA_OSCAR_STANQUESTIONS_ANYOTHER() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_AnyOther_15_01");
+    DIA_OSCAR_STANQUESTIONS_ANYOTHER_NOPERM = TRUE;
+    AI_PLAYANI(SELF, T_SEARCH);
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_AnyOther_03_06");
+    AI_LOGENTRY(TOPIC_Q303, LOG_Q303_ROSITAABOUTSTAN);
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WOLFBERRIESNOCHANCE() {
+    DIA_OSCAR_STANQUESTIONS_WOLFBERRIESNOCHANCE_NOPERM = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_WolfBerriesNoChance_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WolfBerriesNoChance_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WolfBerriesNoChance_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WolfBerriesNoChance_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WolfBerriesNoChance_03_04");
+    AI_LOGENTRY(TOPIC_Q303, LOG_Q303_OSCARABOUTPOISON);
+    INFO_CLEARCHOICES(84243);
+    INFO_ADDCHOICE(84243, "I don't like your story, I'll keep an eye on you.", 84252);
+    INFO_ADDCHOICE(84243, "Well, thanks for the information Oscar.", 84253);
+    DIA_OSCAR_STANQUESTIONS_ADDCHOICES();
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WOLFBERRIESNOCHANCE_IMWATCHING() {
+    INFO_CLEARCHOICES(84243);
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_WolfBerriesNoChance_ImWatching_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerriesNoChance_ImWatching_03_01");
+    DIA_OSCAR_STANQUESTIONS_ADDCHOICES();
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WOLFBERRIESNOCHANCE_THANKS() {
+    INFO_CLEARCHOICES(84243);
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_WolfBerriesNoChance_Thanks_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerriesNoChance_Thanks_03_01");
+    DIA_OSCAR_STANQUESTIONS_ADDCHOICES();
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WOLFBERRIES() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_WolfBerries_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WolfBerries_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WolfBerries_03_02");
+    INFO_CLEARCHOICES(84243);
+    INFO_ADDCHOICE(84243, "So you killed Stan!", 84255);
+    INFO_ADDCHOICE(84243, "Bastards?", 84256);
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WOLFBERRIES_YOUKILLEDSTAN() {
+    INFO_CLEARCHOICES(84243);
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_WolfBerries_YouKilledStan_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_YouKilledStan_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_WolfBerries_YouKilledStan_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_YouKilledStan_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_YouKilledStan_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_Scamp_03_07");
+    AI_LOGENTRY(TOPIC_Q303, LOG_Q303_OSCARNOTSUS);
+    DIA_OSCAR_STANQUESTIONS_WOLFBERRIES_NOPERM = TRUE;
+    DIA_OSCAR_STANQUESTIONS_ADDCHOICES();
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WOLFBERRIES_SCAMP() {
+    INFO_CLEARCHOICES(84243);
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_WolfBerries_Scamp_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_Scamp_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_Scamp_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_Scamp_03_03");
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_WolfBerries_Scamp_15_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_Scamp_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_Scamp_03_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_WolfBerries_Scamp_03_07");
+    AI_LOGENTRY(TOPIC_Q303, LOG_Q303_NOTOSCAR);
+    DIA_OSCAR_STANQUESTIONS_WOLFBERRIES_NOPERM = TRUE;
+    DIA_OSCAR_STANQUESTIONS_ADDCHOICES();
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WHATHAPPENED() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_WhatHappened_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WhatHappened_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_WhatHappened_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WhatHappened_03_03");
+    INFO_CLEARCHOICES(84243);
+    INFO_ADDCHOICE(84243, "Any idea who might have poisoned him?", 84258);
+    INFO_ADDCHOICE(84243, "Who do you think might have wanted Stan dead?", 84259);
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WHO1() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_Who1_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_Who1_03_01");
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WHO2() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_Who2_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_Who2_03_01");
+    INFO_CLEARCHOICES(84243);
+    INFO_ADDCHOICE(84243, "Why do you think it's Rodrigo?", 84260);
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WHYRODRIGO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_WhyRodrigo_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WhyRodrigo_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WhyRodrigo_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WhyRodrigo_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WhyRodrigo_03_04");
+    INFO_ADDCHOICE(84243, "Is that the only reason?", 84261);
+}
+
+func void DIA_OSCAR_STANQUESTIONS_WHYRODRIGO2() {
+    DIA_OSCAR_STANQUESTIONS_WHATHAPPENED_NOPERM = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanQuestions_WhyRodrigo2_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanQuestions_WhyRodrigo2_03_01");
+    AI_LOGENTRY(TOPIC_Q303, LOG_Q303_RODRIGOKINDASUS);
+    if (!(NPC_KNOWSINFO(OTHER, 48927))) {
+        AI_LOGENTRY(TOPIC_Q303, LOG_Q303_CHECKBODY);
+    };
+    INFO_CLEARCHOICES(84243);
+    DIA_OSCAR_STANQUESTIONS_ADDCHOICES();
+}
+
+func void DIA_OSCAR_STANQUESTIONS_BACK() {
+    INFO_CLEARCHOICES(84243);
+}
+
+instance DIA_OSCAR_STANLUCKYDAY(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_STANLUCKYDAY_CONDITION;
+    INFORMATION = DIA_OSCAR_STANLUCKYDAY_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_OSCAR_STANLUCKYDAY_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 84122)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_STANLUCKYDAY_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanLuckyDay_03_01");
+    INFO_CLEARCHOICES(84263);
+    INFO_ADDCHOICE(84263, "Are you sure it's about me?", 84266);
+    INFO_ADDCHOICE(84263, "Cortez?", 84267);
+    AI_LOGENTRY(TOPIC_Q303, LOG_Q303_NOTOSCAR);
+}
+
+func void DIA_OSCAR_STANLUCKYDAY_ME() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanLuckyDay_Me_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanLuckyDay_Me_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanLuckyDay_Me_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanLuckyDay_Me_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanLuckyDay_Me_03_04");
+    INFO_CLEARCHOICES(84263);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_OSCAR_STANLUCKYDAY_CORTEZ() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_StanLuckyDay_Cortez_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanLuckyDay_Cortez_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_StanLuckyDay_Cortez_03_02");
+    INFO_CLEARCHOICES(84263);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_OSCAR_LOOKINGFOR(C_INFO) {
+    NPC = 58726;
+    NR = 2;
+    CONDITION = DIA_OSCAR_LOOKINGFOR_CONDITION;
+    INFORMATION = DIA_OSCAR_LOOKINGFOR_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I'm looking for a certain guy, sizable.";
+}
+
+func int DIA_OSCAR_LOOKINGFOR_CONDITION() {
+    if ((((LOG_GETSTATUS(MIS_Q306)) != (LOG_SUCCESS)) && ((Q306_PLAYERSIGNEDIN) == (FALSE))) && (NPC_KNOWSINFO(OTHER, 83704))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_LOOKINGFOR_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_LookingFor_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_LookingFor_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_04");
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_LookingFor_15_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_06");
+    if (NPC_KNOWSINFO(OTHER, 83704)) {
+        AI_OUTPUT(OTHER, SELF, "DIA_Oscar_LookingFor_15_07");
+        AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_08");
+    };
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_LookingFor_15_09");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_10");
+    AI_LOGENTRY(TOPIC_Q301, LOG_Q301_OSCAR_BEN);
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_13");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_14");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_LookingFor_03_15");
+    if ((LOG_GETSTATUS(MIS_Q302)) != (LOG_RUNNING)) {
+        LOG_CREATETOPIC(TOPIC_Q302, LOG_MISSION);
+        LOG_SETSTATUS(_@(MIS_Q302), TOPIC_Q302, LOG_RUNNING);
+    };
+    AI_LOGENTRY(TOPIC_Q302, LOG_Q302_OSCAR_START);
+}
+
+var int OSCAR_ALLINFO;
+instance DIA_OSCAR_WHOAREYOU(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_WHOAREYOU_CONDITION;
+    INFORMATION = DIA_OSCAR_WHOAREYOU_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Who are you?";
+}
+
+func int DIA_OSCAR_WHOAREYOU_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_OSCAR_WHOAREYOU_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Whoareyou_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_13_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_13_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_13_04");
+}
+
+instance DIA_OSCAR_WHOAREYOU_HERITAGE(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_WHOAREYOU_HERITAGE_CONDITION;
+    INFORMATION = DIA_OSCAR_WHOAREYOU_HERITAGE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Where are you from?";
+}
+
+func int DIA_OSCAR_WHOAREYOU_HERITAGE_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 84272)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_WHOAREYOU_HERITAGE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Whoareyou_heritage_15_00");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_heritage_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_heritage_13_02");
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Whoareyou_heritage_15_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_heritage_13_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_heritage_13_05");
+}
+
+instance DIA_OSCAR_WHOAREYOU_DOING(C_INFO) {
+    NPC = 58726;
+    NR = 2;
+    CONDITION = DIA_OSCAR_WHOAREYOU_DOING_CONDITION;
+    INFORMATION = DIA_OSCAR_WHOAREYOU_DOING_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What do you do?";
+}
+
+func int DIA_OSCAR_WHOAREYOU_DOING_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 84272)) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_WHOAREYOU_DOING_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Whoareyou_doing_15_06");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_doing_13_07");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Whoareyou_doing_13_08");
+}
+
+instance DIA_OSCAR_PLACE(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_PLACE_CONDITION;
+    INFORMATION = DIA_OSCAR_PLACE_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What is this place?";
+}
+
+func int DIA_OSCAR_PLACE_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 84278)) && (NPC_KNOWSINFO(OTHER, 84275))) && (NPC_KNOWSINFO(OTHER, 84272))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_PLACE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Place_15_10");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_11");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_12");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_13");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_14");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_15");
+    INFO_CLEARCHOICES(84281);
+    INFO_ADDCHOICE(84281, "Did you convert the ship into a tavern yourself?", 84284);
+    INFO_ADDCHOICE(84281, "I meant the Haven.", 84285);
+    INFO_ADDCHOICE(84281, DIALOG_BACK, 84286);
+}
+
+func void DIA_OSCAR_PLACE_SHIPTOTAVERN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Place_15_16");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_17");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_18");
+}
+
+func void DIA_OSCAR_PLACE_ABOUTHAVEN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Place_15_19");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_20");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_22");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_23");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_24");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_25");
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Place_15_26");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Place_13_27");
+}
+
+func void DIA_OSCAR_PLACE_RETURN() {
+    INFO_CLEARCHOICES(84281);
+}
+
+instance DIA_OSCAR_BENNOTALK(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_BENNOTALK_CONDITION;
+    INFORMATION = DIA_OSCAR_BENNOTALK_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_OSCAR_BENNOTALK_CONDITION() {
+    if ((NPC_KNOWSINFO(OTHER, 83379)) && ((LOG_GETSTATUS(MIS_Q307)) == (LOG_RUNNING))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_BENNOTALK_INFO() {
+    CREATEINVITEMS(SELF, 34272, 4);
+    CREATEINVITEMS(SELF, 33869, 8);
+    CREATEINVITEMS(SELF, 33856, 4);
+    MOB_CREATEITEMS("Q307_CHEST_01", 33869, 4);
+    MOB_CREATEITEMS("Q307_CHEST_02", 33856, 2);
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_BenNoTalk_03_01");
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_BenNoTalk_15_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_BenNoTalk_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_BenNoTalk_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_BenNoTalk_03_05");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_BenNoTalk_03_06");
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_BenNoTalk_03_07");
+    INFO_CLEARCHOICES(84287);
+    INFO_ADDCHOICE(84287, "Thanks for the advice, I guess I have no choice.", 84290);
+    INFO_ADDCHOICE(84287, "How long will this feast last?", 84291);
+}
+
+func void DIA_OSCAR_BENNOTALK_THANKS() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_BenNoTalk_Thanks_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_BenNoTalk_Thanks_03_02");
+    AI_FUNCTION(SELF, 84292);
+}
+
+func void DIA_OSCAR_BENNOTALK_LONG() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_BenNoTalk_Long_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_BenNoTalk_Long_03_02");
+    AI_FUNCTION(SELF, 84292);
+}
+
+func void OSCAR_BENNOTALK_END() {
+    INFO_CLEARCHOICES(84287);
+    AI_STOPPROCESSINFOS(PIR_1309_OSCAR);
+    AI_RESETFACEANI(PIR_1309_OSCAR);
+    AI_LOGENTRY(TOPIC_Q307, LOG_Q307_OSCAR);
+    if ((NPC_GETTALENTSKILL(HERO, NPC_TALENT_ALCHEMY)) >= (2)) {
+        ALCHEMY_Q307_BENPOTION = TRUE;
+        AI_LOGENTRY(TOPIC_Q307, LOG_Q307_OSCAR_ALCHEMY);
+        if ((C_GOTINGRENDIENTS_Q307_POISONBEN(HERO)) == (FALSE)) {
+            AI_LOGENTRY(TOPIC_Q307, LOG_Q307_OSCAR_NOSTUFF);
+        };
+    };
+    WLD_INSERTITEM(33869, "FP_Q307_SPAWN_TEETH_01");
+    WLD_INSERTITEM(33869, "FP_Q307_SPAWN_TEETH_02");
+    WLD_INSERTITEM(33869, "FP_Q307_SPAWN_TEETH_03");
+    WLD_INSERTITEM(33869, "FP_Q307_SPAWN_TEETH_04");
+    WLD_INSERTITEM(33869, "FP_Q307_SPAWN_TEETH_05");
+    WLD_INSERTITEM(33869, "FP_Q307_SPAWN_TEETH_06");
+    WLD_INSERTITEM(33856, "FP_Q307_SPAWN_BLOODFLY_01");
+    WLD_INSERTITEM(33856, "FP_Q307_SPAWN_BLOODFLY_02");
+    WLD_INSERTITEM(33856, "FP_Q307_SPAWN_BLOODFLY_03");
+    WLD_INSERTITEM(33856, "FP_Q307_SPAWN_BLOODFLY_04");
+}
+
+instance DIA_OSCAR_SQ315_START(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_SQ315_START_CONDITION;
+    INFORMATION = DIA_OSCAR_SQ315_START_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_OSCAR_SQ315_START_CONDITION() {
+    if (((Q301_AFTERQ306) == (TRUE)) && ((KAPITEL) < (4))) {
+        return FALSE;
+    };
+    if (((LOG_GETSTATUS(MIS_Q304)) == (LOG_SUCCESS)) || ((LOG_GETSTATUS(MIS_Q303)) == (LOG_SUCCESS))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_SQ315_START_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ315_Start_03_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ315_Start_03_02");
+    INFO_CLEARCHOICES(84293);
+    INFO_ADDCHOICE(84293, "I have no intention of getting involved in anything related to bloodflies.", 84297);
+    INFO_ADDCHOICE(84293, "I know something about that...", 84299);
+}
+
+var int OSCAR_SQ315_TAKEQUEST;
+func void DIA_OSCAR_SQ315_HATEBLOODFLIES() {
+    OSCAR_SQ315_TAKEQUEST = TRUE;
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_SQ315_HateBloodflies_15_01");
+    AI_PLAYANI(SELF, "T_FORGETIT");
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_OSCAR_SQ315_STARTQUEST() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ315_Begin_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ315_Begin_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ315_Begin_03_04");
+    LOG_CREATETOPIC(TOPIC_SQ315, LOG_MISSION);
+    LOG_SETSTATUS(_@(MIS_SQ315), TOPIC_SQ315, LOG_RUNNING);
+    AI_LOGENTRY(TOPIC_SQ315, LOG_SQ315_START);
+    AI_FUNCTION(OTHER, 84230);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+func void DIA_OSCAR_SQ315_BEGIN() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_SQ315_Begin_15_01");
+    DIA_OSCAR_SQ315_STARTQUEST();
+}
+
+instance DIA_OSCAR_SQ315_TAKEQUEST(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_SQ315_TAKEQUEST_CONDITION;
+    INFORMATION = DIA_OSCAR_SQ315_TAKEQUEST_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I changed my mind. I'll help you.";
+}
+
+func int DIA_OSCAR_SQ315_TAKEQUEST_CONDITION() {
+    if (((OSCAR_SQ315_TAKEQUEST) == (TRUE)) && ((LOG_GETSTATUS(MIS_SQ315)) == (0))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_SQ315_TAKEQUEST_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_QuestChangeMyMind");
+    DIA_OSCAR_SQ315_STARTQUEST();
+}
+
+instance DIA_OSCAR_SQ315_END(C_INFO) {
+    NPC = 58726;
+    NR = 3;
+    CONDITION = DIA_OSCAR_SQ315_END_CONDITION;
+    INFORMATION = DIA_OSCAR_SQ315_END_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "I got what you asked for.";
+}
+
+func int DIA_OSCAR_SQ315_END_CONDITION() {
+    if (((LOG_GETSTATUS(MIS_SQ315)) == (LOG_RUNNING)) && ((NPC_HASITEMS(OTHER, 35304)) >= (1))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_SQ315_END_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_SQ315_End_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ315_End_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ315_End_03_03");
+    B_GIVEINVITEMS(OTHER, SELF, 35304, 1);
+    CREATEINVITEMS(SELF, 34203, SQ315_REWARD);
+    B_GIVEINVITEMS(SELF, OTHER, 34203, SQ315_REWARD);
+    CREATEINVITEMS(SELF, 33654, 3);
+    B_GIVEINVITEMS(SELF, OTHER, 33654, 3);
+    CREATEINVITEMS(SELF, 33869, 6);
+    B_GIVEINVITEMS(SELF, OTHER, 33869, 6);
+    AI_LOGENTRY(TOPIC_SQ315, LOG_SQ315_END);
+    LOG_SETSTATUS(_@(MIS_SQ315), TOPIC_SQ315, LOG_SUCCESS);
+    B_GIVEPLAYERXP(XP_SQ315_FINISH);
+    AI_STOPPROCESSINFOS(SELF);
+}
+
+instance DIA_OSCAR_SQ316(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_SQ316_CONDITION;
+    INFORMATION = DIA_OSCAR_SQ316_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "Do you know anything about that girl in the cave?";
+}
+
+func int DIA_OSCAR_SQ316_CONDITION() {
+    if ((LOG_GETSTATUS(MIS_SQ316)) == (LOG_RUNNING)) {
+        if (NPC_KNOWSINFO(OTHER, 83624)) {
+            if ((SQ507_STARTINGPOINT) == (0)) {
+                return TRUE;
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_SQ316_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_SQ316_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ316_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ316_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ316_03_04");
+}
+
+instance DIA_OSCAR_SQ316_NOONENOTICED(C_INFO) {
+    NPC = 58726;
+    NR = 2;
+    CONDITION = DIA_OSCAR_SQ316_NOONENOTICED_CONDITION;
+    INFORMATION = DIA_OSCAR_SQ316_NOONENOTICED_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "No one took any interest in this case?";
+}
+
+func int DIA_OSCAR_SQ316_NOONENOTICED_CONDITION() {
+    if (NPC_KNOWSINFO(OTHER, 84306)) {
+        if ((SQ507_STARTINGPOINT) == (0)) {
+            return TRUE;
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_SQ316_NOONENOTICED_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_SQ316_NoOneNoticed_15_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ316_NoOneNoticed_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ316_NoOneNoticed_03_03");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ316_NoOneNoticed_03_04");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_SQ316_NoOneNoticed_03_05");
+    AI_LOGENTRY(TOPIC_SQ316, LOG_SQ316_OSCARINFO);
+}
+
+instance DIA_OSCAR_AMBIENT(C_INFO) {
+    NPC = 58726;
+    NR = 997;
+    CONDITION = DIA_OSCAR_AMBIENT_CONDITION;
+    INFORMATION = DIA_OSCAR_AMBIENT_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = "How's business going?";
+}
+
+func int DIA_OSCAR_AMBIENT_CONDITION() {
+    if (((NPC_KNOWSINFO(OTHER, 84278)) && (NPC_KNOWSINFO(OTHER, 84275))) && (NPC_KNOWSINFO(OTHER, 84272))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_AMBIENT_INFO() {
+    B_SAY(OTHER, SELF, "$MARVIN_AboutBuisness");
+    if ((Q306_TOURNAMENTSTATUS) == (0)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Ambient_13_01");
+    };
+    if ((Q306_TOURNAMENTSTATUS) == (1)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Ambient_13_02");
+    };
+    if ((Q306_TOURNAMENTSTATUS) == (2)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Ambient_13_03");
+    };
+}
+
+instance DIA_OSCAR_TRADE(C_INFO) {
+    NPC = 58726;
+    NR = 998;
+    CONDITION = DIA_OSCAR_TRADE_CONDITION;
+    INFORMATION = DIA_OSCAR_TRADE_INFO;
+    PERMANENT = TRUE;
+    TRADE = TRUE;
+    DESCRIPTION = "Let me see what you got there.";
+}
+
+func int DIA_OSCAR_TRADE_CONDITION() {
+    return TRUE;
+}
+
+func void DIA_OSCAR_TRADE_INFO() {
+    AI_OUTPUT(OTHER, SELF, "DIA_Oscar_Trade_15_00");
+    B_GIVETRADEINV(SELF);
+}
+
+instance DIA_OSCAR_VICENTEGIFT(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_DIA_OSCAR_VICENTEGIFT_CONDITION;
+    INFORMATION = DIA_OSCAR_DIA_OSCAR_VICENTEGIFT_INFO;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_OSCAR_DIA_OSCAR_VICENTEGIFT_CONDITION() {
+    if ((((NPC_KNOWSINFO(OTHER, 84278)) && (NPC_KNOWSINFO(OTHER, 84275))) && (NPC_KNOWSINFO(OTHER, 84272))) && ((VICENTE_OSCARGIFT) == (TRUE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_DIA_OSCAR_VICENTEGIFT_INFO() {
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_DIA_Oscar_VicenteGift_13_01");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_DIA_Oscar_VicenteGift_13_02");
+}
+
+instance DIA_OSCAR_Q306_AFTERTOURNAMENT(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_Q306_AFTERTOURNAMENT_CONDITION;
+    INFORMATION = DIA_OSCAR_Q306_AFTERTOURNAMENT_INFO;
+    PERMANENT = FALSE;
+    IMPORTANT = TRUE;
+}
+
+func int DIA_OSCAR_Q306_AFTERTOURNAMENT_CONDITION() {
+    if (((Q301_AFTERQ306) == (TRUE)) && ((KAPITEL) < (4))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_Q306_AFTERTOURNAMENT_INFO() {
+    if ((Q306_TOURNAMENTSTATUS) == (1)) {
+        AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+        AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Q306_AfterTournament_03_01");
+        CREATEINVITEMS(SELF, 33984, 6);
+    };
+    AI_STARTFACEANI(SELF, S_SMILE, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Q306_AfterTournament_03_02");
+    AI_RESETFACEANI(SELF);
+}
+
+instance DIA_OSCAR_RENEGADES(C_INFO) {
+    NPC = 58726;
+    NR = 1;
+    CONDITION = DIA_OSCAR_RENEGADES_CONDITION;
+    INFORMATION = DIA_OSCAR_RENEGADES_INFO;
+    PERMANENT = FALSE;
+    DESCRIPTION = "What are these guards doing here?";
+}
+
+func int DIA_OSCAR_RENEGADES_CONDITION() {
+    if ((KAPITEL) == (3)) {
+        if (NPC_KNOWSINFO(OTHER, 84234)) {
+            if ((NPC_KNOWSINFO(OTHER, 83657)) || (NPC_KNOWSINFO(OTHER, 83621))) {
+                if (((NPC_ISDEAD(PIR_1301_GREGOR)) == (FALSE)) || ((NPC_ISDEAD(PIR_1302_MORTY)) == (FALSE))) {
+                    return TRUE;
+                };
+            };
+        };
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_RENEGADES_INFO() {
+    AI_STARTFACEANI(OTHER, S_WHAT, 1, -(1));
+    B_SAY(OTHER, SELF, "$MARVIN_AboutMilitia");
+    AI_STARTFACEANI(SELF, S_SMUG, 1, -(1));
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Renegades_03_02");
+    AI_OUTPUT(SELF, OTHER, "DIA_Oscar_Renegades_03_03");
+    AI_RESETFACEANI(SELF);
+    AI_RESETFACEANI(OTHER);
+}
+
+instance DIA_OSCAR_PICKPOCKET(C_INFO) {
+    NPC = 58726;
+    NR = 900;
+    CONDITION = DIA_OSCAR_PICKPOCKET_CONDITION;
+    INFORMATION = DIA_OSCAR_PICKPOCKET_INFO;
+    PERMANENT = TRUE;
+    DESCRIPTION = PICKPOCKET_80;
+}
+
+func int DIA_OSCAR_PICKPOCKET_CONDITION() {
+    if (((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (1)) && ((SELF.AIVAR[6]) == (FALSE))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
+func void DIA_OSCAR_PICKPOCKET_INFO() {
+    INFO_CLEARCHOICES(84327);
+    INFO_ADDCHOICE(84327, DIALOG_BACK, 84331);
+    INFO_ADDCHOICE(84327, DIALOG_PICKPOCKET, 84330);
+}
+
+func void DIA_OSCAR_PICKPOCKET_DOIT() {
+    if ((NPC_GETTALENTSKILL(OTHER, NPC_TALENT_PICKPOCKET)) >= (2)) {
+        CREATEINVITEMS(SELF, 36368, 2);
+        B_GIVEINVITEMS(SELF, OTHER, 36368, 2);
+        B_PICKPOCKET_AMBIENT_TIER_2();
+        SELF.AIVAR[6] = TRUE;
+        INFO_CLEARCHOICES(84327);
+    };
+    AI_PLAYANI(HERO, T_CANNOTTAKE);
+    PRINTSCREEN(PRINT_CANTPICKPOCKETTHISPERSON, -(1), -(1), FONT_SCREEN, 4);
+    INFO_CLEARCHOICES(84327);
+}
+
+func void DIA_OSCAR_PICKPOCKET_BACK() {
+    INFO_CLEARCHOICES(84327);
+}
+
