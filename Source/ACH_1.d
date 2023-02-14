@@ -60,6 +60,13 @@ func void GAMESERVICES_UNLOCKACHIEVEMENT(var string ACHIEVEMENT) {
     CALL__CDECL(_KMLIB_GAMESERVICES_UNLOCKACHIEVEMENT_PTR);
 }
 
+func int GAMESERVICES_GETSTAT(var string STAT) {
+    PRINTD(CS2("GameServices_GetStat: ", STAT));
+    CALL_CSTRINGPTRPARAM(STAT);
+    CALL__CDECL(_KMLIB_GAMESERVICES_GETSTAT_PTR);
+    return CALL_RETVALASINT();
+}
+
 func void GAMESERVICES_INCREMENTSTAT(var string STAT, var int VALUE) {
     PRINTD(CS2("GameServices_IncrementStat: ", STAT));
     CALL_INTPARAM(VALUE);
@@ -67,6 +74,21 @@ func void GAMESERVICES_INCREMENTSTAT(var string STAT, var int VALUE) {
     CALL__CDECL(_KMLIB_GAMESERVICES_INCREMENTSTAT_PTR);
 }
 
+func void GAMESERVICES_INCREMENTSTATANDCHECKACHIEVEMENT(var string STAT, var int VALUE, var string ACHIEVEMENT, var int REQUIREDVALUE) {
+    var int STATVALUE;
+    PRINTD(CS2("GameServices_IncrementStatAndCheckAchievement: stat to increase ", STAT));
+    STATVALUE = GAMESERVICES_GETSTAT(STAT);
+    if ((STATVALUE) == (-(1))) {
+        return;
+    };
+    PRINTD(CS2("GameServices_IncrementStatAndCheckAchievement: current value ", I2S(STATVALUE)));
+    GAMESERVICES_INCREMENTSTAT(STAT, VALUE);
+    if (((STATVALUE) + (VALUE)) >= (REQUIREDVALUE)) {
+        GAMESERVICES_UNLOCKACHIEVEMENT(ACHIEVEMENT);
+    };
+}
+
+var int ACH_1_UNLOCKED;
 var int ACH_2_UNLOCKED;
 var int ACH_3_COUNTER;
 var int ACH_3_UNLOCKED;

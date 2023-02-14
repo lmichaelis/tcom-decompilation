@@ -33,6 +33,14 @@ func void WEAPON_STATCHECK(var C_NPC NPC) {
     };
 }
 
+instance BUFF_NOFALLDMGPOTION(LCBUFF) {
+    NAME = "no fall damage";
+    BUFFTYPE = BUFF_GOOD;
+    DURATIONMS = (120) * (1000);
+    BUFFTEX = "ItPo_Time_NofallDamage.TGA";
+    SHOW = TRUE;
+}
+
 instance BUFF_HPREGENERATE(LCBUFF) {
     NAME = "Regenerate HP";
     BUFFTYPE = BUFF_GOOD;
@@ -57,6 +65,16 @@ func void BUFF_HPREGENERATE_TICK(var int BH) {
     NPC_CHANGEATTRIBUTE(N, ATR_HITPOINTS, 1);
 }
 
+instance BUFF_MANAREGENERATE(LCBUFF) {
+    NAME = "Regenerate Mana";
+    BUFFTYPE = BUFF_GOOD;
+    DURATIONMS = (60) * (1000);
+    TICKMS = 2000;
+    ONTICK = SAVE_GETFUNCID(32450);
+    BUFFTEX = "ItPo_Regeneration_mana.TGA";
+    SHOW = TRUE;
+}
+
 func void BUFF_MANAREGENERATE_TICK(var int BH) {
     var OCNPC N;
     var int PTR;
@@ -71,6 +89,16 @@ func void BUFF_MANAREGENERATE_TICK(var int BH) {
     NPC_CHANGEATTRIBUTE(N, ATR_MANA, 1);
 }
 
+instance BUFF_SPEED(LCBUFF) {
+    NAME = "Speed 4min";
+    BUFFTYPE = BUFF_GOOD;
+    DURATIONMS = (240) * (1000);
+    ONAPPLY = SAVE_GETFUNCID(32455);
+    ONREMOVED = SAVE_GETFUNCID(32459);
+    BUFFTEX = "ItPo_Speed2.TGA";
+    SHOW = TRUE;
+}
+
 func void BUFF_SPEED_APPLY(var int BH) {
     var OCNPC N;
     var int PTR;
@@ -80,6 +108,17 @@ func void BUFF_SPEED_APPLY(var int BH) {
     };
     N = _^(PTR);
     MDL_APPLYOVERLAYMDS(N, HUMANSSPRINTMDS);
+}
+
+func void BUFF_SPEED_REMOVE(var int BH) {
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    MDL_REMOVEOVERLAYMDS(N, HUMANSSPRINTMDS);
 }
 
 instance BUFF_HEALTH150(LCBUFF) {
@@ -104,6 +143,20 @@ func void BUFF_HEALTH150_APPLY(var int BH) {
     N.ATTRIBUTE[1] += 150;
 }
 
+func void BUFF_HEALTH150_REMOVE(var int BH) {
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.ATTRIBUTE[1] -= 150;
+    if ((N.ATTRIBUTE[0]) > (N.ATTRIBUTE[1])) {
+        N.ATTRIBUTE[0] = N.ATTRIBUTE[1];
+    };
+}
+
 instance BUFF_MANA50(LCBUFF) {
     NAME = "Buff Mana50";
     BUFFTYPE = BUFF_GOOD;
@@ -124,6 +177,23 @@ func void BUFF_MANA50_APPLY(var int BH) {
     N = _^(PTR);
     N.ATTRIBUTE[2] += 50;
     N.ATTRIBUTE[3] += 50;
+}
+
+func void BUFF_MANA50_REMOVE(var int BH) {
+    var C_NPC N2;
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.ATTRIBUTE[3] -= 50;
+    if ((N.ATTRIBUTE[2]) > (N.ATTRIBUTE[3])) {
+        N.ATTRIBUTE[2] = N.ATTRIBUTE[3];
+    };
+    N2 = HLP_GETNPC(32480);
+    WEAPON_STATCHECK(N2);
 }
 
 instance BUFF_STR25(LCBUFF) {
@@ -147,6 +217,20 @@ func void BUFF_STR25_APPLY(var int BH) {
     N.ATTRIBUTE[4] += 25;
 }
 
+func void BUFF_STR25_REMOVE(var int BH) {
+    var C_NPC N2;
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.ATTRIBUTE[4] -= 25;
+    N2 = HLP_GETNPC(32490);
+    WEAPON_STATCHECK(N2);
+}
+
 instance BUFF_DEX25(LCBUFF) {
     NAME = "Buff Dex25";
     BUFFTYPE = BUFF_GOOD;
@@ -166,6 +250,20 @@ func void BUFF_DEX25_APPLY(var int BH) {
     };
     N = _^(PTR);
     N.ATTRIBUTE[5] += 25;
+}
+
+func void BUFF_DEX25_REMOVE(var int BH) {
+    var C_NPC N2;
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.ATTRIBUTE[5] -= 25;
+    N2 = HLP_GETNPC(32500);
+    WEAPON_STATCHECK(N2);
 }
 
 instance BUFF_DEF50(LCBUFF) {
@@ -193,6 +291,21 @@ func void BUFF_DEF50_APPLY(var int BH) {
     N.PROTECTION[3] += 50;
 }
 
+func void BUFF_DEF50_REMOVE(var int BH) {
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.PROTECTION[2] -= 50;
+    N.PROTECTION[1] -= 50;
+    N.PROTECTION[6] -= 50;
+    N.PROTECTION[5] -= 50;
+    N.PROTECTION[3] -= 50;
+}
+
 instance BUFF_DEF25(LCBUFF) {
     NAME = "Buff Def25";
     BUFFTYPE = BUFF_GOOD;
@@ -218,6 +331,21 @@ func void BUFF_DEF25_APPLY(var int BH) {
     N.PROTECTION[3] += 25;
 }
 
+func void BUFF_DEF25_REMOVE(var int BH) {
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.PROTECTION[2] -= 25;
+    N.PROTECTION[1] -= 25;
+    N.PROTECTION[6] -= 25;
+    N.PROTECTION[5] -= 25;
+    N.PROTECTION[3] -= 25;
+}
+
 instance BUFF_DIVE10(LCBUFF) {
     NAME = "Buff Dive10";
     BUFFTYPE = BUFF_GOOD;
@@ -240,6 +368,16 @@ func void BUFF_DIVE10_TICK(var int BH) {
     N.DIVECTR = MKF((31) * (1000));
 }
 
+instance BUFF_SLAGERMEAT_STR20(LCBUFF) {
+    NAME = "Buff SlagerMeat Str20";
+    BUFFTYPE = BUFF_GOOD;
+    DURATIONMS = (60) * (1000);
+    TICKMS = 2000;
+    ONTICK = SAVE_GETFUNCID(32526);
+    BUFFTEX = "ItFo_FishCotlet.TGA";
+    SHOW = FALSE;
+}
+
 func void BUFF_SLAGERMEAT_STR20_APPLY(var int BH) {
     var OCNPC N;
     var int PTR;
@@ -253,6 +391,20 @@ func void BUFF_SLAGERMEAT_STR20_APPLY(var int BH) {
     };
     NPC_CHANGEATTRIBUTE(N, ATR_MANA, 1);
     BUFF_REFRESH(BH);
+}
+
+func void BUFF_SLAGERMEAT_STR20_REMOVE(var int BH) {
+    var C_NPC N2;
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.ATTRIBUTE[4] -= 20;
+    N2 = HLP_GETNPC(32533);
+    WEAPON_STATCHECK(N2);
 }
 
 instance BUFF_SLAGERMEAT_DEX20(LCBUFF) {
@@ -274,6 +426,20 @@ func void BUFF_SLAGERMEAT_DEX20_APPLY(var int BH) {
     };
     N = _^(PTR);
     N.ATTRIBUTE[5] += 20;
+}
+
+func void BUFF_SLAGERMEAT_DEX20_REMOVE(var int BH) {
+    var C_NPC N2;
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.ATTRIBUTE[5] -= 20;
+    N2 = HLP_GETNPC(32543);
+    WEAPON_STATCHECK(N2);
 }
 
 instance BUFF_SLAGERMEAT_HEALTH100(LCBUFF) {
@@ -298,6 +464,20 @@ func void BUFF_SLAGERMEAT_HEALTH100_APPLY(var int BH) {
     N.ATTRIBUTE[1] += 100;
 }
 
+func void BUFF_SLAGERMEAT_HEALTH100_REMOVE(var int BH) {
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.ATTRIBUTE[1] -= 100;
+    if ((N.ATTRIBUTE[0]) > (N.ATTRIBUTE[1])) {
+        N.ATTRIBUTE[0] = N.ATTRIBUTE[1];
+    };
+}
+
 instance BUFF_STRDOORBASH(LCBUFF) {
     NAME = "Buff Door Bash";
     BUFFTYPE = BUFF_GOOD;
@@ -316,6 +496,17 @@ func void BUFF_STRDOORBASH_TICK(var int BH) {
     };
 }
 
+func void BUFF_STRDOORBASH_APPLY(var int BH) {
+    var OCNPC N;
+    var int PTR;
+    PTR = BUFF_GETNPC(BH);
+    if (!(PTR)) {
+        return;
+    };
+    N = _^(PTR);
+    N.ATTRIBUTE[4] += 100;
+}
+
 func void BUFF_STRDOORBASH_REMOVE(var int BH) {
     var C_NPC N2;
     var OCNPC N;
@@ -328,6 +519,16 @@ func void BUFF_STRDOORBASH_REMOVE(var int BH) {
     N.ATTRIBUTE[4] -= 100;
     N2 = HLP_GETNPC(32564);
     WEAPON_STATCHECK(N2);
+}
+
+instance BUFF_WATERMAGESET(LCBUFF) {
+    NAME = "WaterMageSet";
+    BUFFTYPE = BUFF_GOOD;
+    DURATIONMS = (60) * (1000);
+    TICKMS = 2000;
+    ONTICK = SAVE_GETFUNCID(32567);
+    BUFFTEX = "DEFAULT.TGA";
+    SHOW = FALSE;
 }
 
 func void BUFF_WATERMAGESET_TICK(var int BH) {

@@ -5,3 +5,7 @@ func void NPC_INITAMBIENTS(var C_NPC NPC, var int MAXAMBIENTS) {
     };
 }
 
+func int NPC_GETLASTAMBIENT(var C_NPC NPC) {
+    return NPC.AIVAR[91];
+}
+

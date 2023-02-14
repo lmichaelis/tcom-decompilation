@@ -26,6 +26,21 @@ func string GETPARMVALUE(var string STR) {
     return CALL_RETVALASZSTRING();
 }
 
+func string _BIN_GETSAVEFILEPATH(var int SLOT) {
+    var string PATH;
+    var int ZOPT;
+    ZOPT = MEM_READINT(ZOPTIONS_POINTER_ADDRESS);
+    PATH = MEM_READSTRINGARRAY((ZOPT) + (ZCOPTIONS_DIR_STRING_OFFSET), 2);
+    PATH = STR_SUBSTR(PATH, 1, (STR_LEN(PATH)) - (2));
+    if (SLOT) {
+        PATH = CONCATSTRINGS(PATH, "/savegame");
+        PATH = CONCATSTRINGS(PATH, INTTOSTRING(SLOT));
+    };
+    PATH = CONCATSTRINGS(PATH, "/quicksave");
+    PATH = CONCATSTRINGS(PATH, "/SCRPTSAVE.SAV");
+    return PATH;
+}
+
 func int _BR_GETSELECTEDSLOT() {
     var int SLOT;
     var CGAMEMANAGER MAN;

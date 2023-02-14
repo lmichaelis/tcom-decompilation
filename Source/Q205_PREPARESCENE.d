@@ -284,6 +284,14 @@ func void Q205_ONITEMTAKEN_HOOK(var C_ITEM ITEM) {
     };
 }
 
+func int Q205_ONDROPUNCONSCIOUS(var C_NPC NPC) {
+    if (((NPC_ISPLAYER(NPC)) && ((LOG_GETSTATUS(MIS_Q205)) == (LOG_RUNNING))) && ((Q205_MARVINRENEGADECAVE) == (2))) {
+        PRINTD("Q205_OnDropUnconscious");
+        return TRUE;
+    };
+    return FALSE;
+}
+
 func void Q205_TRANSFERHEROITEMS() {
     GETITEMHOLDER();
     B_GIVEALLINVENTORY(HERO, ITEM_HOLDER);

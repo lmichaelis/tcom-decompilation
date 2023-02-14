@@ -7,3 +7,43 @@ func int ISRECIPEDOC(var C_ITEM ITM) {
     return FALSE;
 }
 
+func void OCITEMCONTAINER__DRAWITEMINFO_HOOK() {
+    var int J;
+    var int COUNTARRAYPTR;
+    var int TEXTARRAYPTR;
+    var int I;
+    var C_ITEM RECITEM;
+    var C_RECIPE REC;
+    var int PTR;
+    var C_ITEM ITM;
+    if (!(ESP)) {
+        return;
+    };
+    ITM = MEM_PTRTOINST(MEM_READINT((ESP) + (4)));
+    if (ISRECIPEDOC(ITM)) {
+        PTR = CREATE(ITM.HP);
+        REC = MEM_PTRTOINST(PTR);
+        RECITEM = MEM_PTRTOINST(ITM_GETPTR(REC.RECIPEITEM));
+        TEXTARRAYPTR = _@S(ITM.TEXT[0]);
+        COUNTARRAYPTR = _@(ITM.COUNT[0]);
+        if (HLP_STRCMP("KM_recipe_food_01.3DS", ITM.VISUAL)) {
+            if (MEM_READINTARRAY(_@(PLAYER_TALENT_COOKING[0]), REC.TALENTARRAYINDEX)) {
+                ITM.DESCRIPTION = CS2(ITM.NAME, NAME_RECIPE_KNOWN_SUFFIX);
+            };
+            REPEAT(I, (ITM_TEXT_MAX) - (1));
+            MEM_WRITESTRINGARRAY(TEXTARRAYPTR, I, MEM_READSTRINGARRAY(_@S(RECITEM.TEXT[0]), I));
+            MEM_WRITEINTARRAY(COUNTARRAYPTR, I, MEM_READINTARRAY(_@(RECITEM.COUNT[0]), I));
+        } else if (((HLP_STRCMP("KM_recipe_potion_01.3DS", ITM.VISUAL)) || (HLP_STRCMP("KM_recipe_potion_02.3DS", ITM.VISUAL))) || (HLP_STRCMP("KM_recipe_potion_03.3DS", ITM.VISUAL))) {
+            if (MEM_READINTARRAY(_@(PLAYER_TALENT_ALCHEMY[0]), REC.TALENTARRAYINDEX)) {
+                ITM.DESCRIPTION = CS2(ITM.NAME, NAME_RECIPE_KNOWN_SUFFIX);
+            };
+        } else if (MEM_READINTARRAY(_@(PLAYER_TALENT_SMITH[0]), REC.TALENTARRAYINDEX)) {
+            ITM.DESCRIPTION = CS2(ITM.NAME, NAME_RECIPE_KNOWN_SUFFIX);
+        };
+        REPEAT(J, (ITM_TEXT_MAX) - (2));
+        MEM_WRITESTRINGARRAY(TEXTARRAYPTR, (J) + (1), MEM_READSTRINGARRAY(_@S(RECITEM.TEXT[0]), (J) + (1)));
+        MEM_WRITEINTARRAY(COUNTARRAYPTR, (J) + (1), MEM_READINTARRAY(_@(RECITEM.COUNT[0]), (J) + (1)));
+        END;
+    };
+}
+

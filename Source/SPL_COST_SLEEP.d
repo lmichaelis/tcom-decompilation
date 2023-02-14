@@ -26,3 +26,7 @@ func int SPELL_LOGIC_SLEEP(var int MANAINVESTED) {
     return SPL_SENDSTOP;
 }
 
+func void SPELL_CAST_SLEEP() {
+    SELF.AIVAR[20] += 1;
+}
+

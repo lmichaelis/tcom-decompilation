@@ -281,7 +281,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_51(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_52(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_53(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_54(var int PAR1) {
     return 0;
 }
 
@@ -289,7 +297,28 @@ func int RESERVED_FUNC_INT_PAR_INT1_55(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_56(var int PAR1) {
+    AI_OUTPUT(OTHER, SELF, "DIA_Sambor_Hunting_Special_Teeth_15_01");
+    if ((NPC_HASITEMS(OTHER, 34203)) >= (MARKUS_CLAWSTROPHY)) {
+        if ((PLAYER_TALENT_TAKEANIMALTROPHY[0]) == (TRUE)) {
+            NPC_REMOVEINVITEMS(SELF, 34203, MARKUS_CLAWSTROPHY);
+            AI_OUTPUT(SELF, OTHER, "SVM_1_YouLearnedSomething");
+            B_GIVEINVITEMS(OTHER, SELF, 34203, MARKUS_CLAWSTROPHY);
+            PRINTSCREEN(PRINT_LEARNTAKEANIMALTROPHYTEETH, -(1), -(1), FONT_SCREEN, 2);
+        };
+    };
+    if ((NPC_HASITEMS(OTHER, 34203)) < (MARKUS_CLAWSTROPHY)) {
+        AI_OUTPUT(SELF, OTHER, "DIA_Markus_Hunting_Special_Claws_03_04");
+    };
+    DIA_MARKUS_HUNTING_SPECIAL_CHOICES();
+    return 0 /* !broken stack! */;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_57(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_58(var int PAR1) {
     return 0;
 }
 
@@ -297,7 +326,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_59(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_60(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_61(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_62(var int PAR1) {
     return 0;
 }
 
@@ -305,7 +342,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_63(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_64(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_65(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_66(var int PAR1) {
     return 0;
 }
 
@@ -313,7 +358,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_67(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_68(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_69(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_70(var int PAR1) {
     return 0;
 }
 
@@ -321,7 +374,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_71(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_72(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_73(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_74(var int PAR1) {
     return 0;
 }
 
@@ -329,7 +390,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_75(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_76(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_77(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_78(var int PAR1) {
     return 0;
 }
 
@@ -337,7 +406,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_79(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_80(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_81(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_82(var int PAR1) {
     return 0;
 }
 
@@ -345,7 +422,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_83(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_84(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_85(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_86(var int PAR1) {
     return 0;
 }
 
@@ -353,7 +438,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_87(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_88(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_89(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_90(var int PAR1) {
     return 0;
 }
 
@@ -361,7 +454,15 @@ func int RESERVED_FUNC_INT_PAR_INT1_91(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_92(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_93(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_94(var int PAR1) {
     return 0;
 }
 
@@ -369,11 +470,23 @@ func int RESERVED_FUNC_INT_PAR_INT1_95(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_96(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_97(var int PAR1) {
     return 0;
 }
 
+func int RESERVED_FUNC_INT_PAR_INT1_98(var int PAR1) {
+    return 0;
+}
+
 func int RESERVED_FUNC_INT_PAR_INT1_99(var int PAR1) {
+    return 0;
+}
+
+func int RESERVED_FUNC_INT_PAR_INT1_100(var int PAR1) {
     return 0;
 }
 

@@ -397,6 +397,13 @@ func int C_KQ404_GOTUNICORNSTUFF(var C_NPC NPC) {
     return 0 /* !broken stack! */;
 }
 
+func int C_KQ404_WORKERARMOR(var C_NPC NPC) {
+    if ((((((((((((((((((NPC_HASITEMS(NPC, 33906)) > (0)) || ((NPC_HASITEMS(NPC, 35571)) > (0))) || ((NPC_HASITEMS(NPC, 35572)) > (0))) || ((NPC_HASITEMS(NPC, 33907)) > (0))) || ((NPC_HASITEMS(NPC, 35578)) > (0))) || ((NPC_HASITEMS(NPC, 35579)) > (0))) || ((NPC_HASITEMS(NPC, 35580)) > (0))) || ((NPC_HASITEMS(NPC, 35394)) > (0))) || ((NPC_HASITEMS(NPC, 35395)) > (0))) || ((NPC_HASITEMS(NPC, 35396)) > (0))) || ((NPC_HASITEMS(NPC, 35397)) > (0))) || ((NPC_HASITEMS(NPC, 35410)) > (0))) || ((NPC_HASITEMS(NPC, 35411)) > (0))) || ((NPC_HASITEMS(NPC, 35412)) > (0))) || ((NPC_HASITEMS(NPC, 35413)) > (0))) || ((NPC_HASITEMS(NPC, 33925)) > (0))) || ((NPC_HASITEMS(NPC, 35581)) > (0))) {
+        return TRUE;
+    };
+    return 0 /* !broken stack! */;
+}
+
 func void KQ404_UNICORNLIST_GIVEITEMS() {
     B_GIVEPLAYERXP(XP_KQ404_UNICORN_GOTSTUFF);
     if ((NPC_HASITEMS(OTHER, 35528)) >= (1)) {

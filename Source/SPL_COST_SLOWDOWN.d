@@ -17,6 +17,7 @@ func int SPELL_LOGIC_SLOWDOWN(var int MANAINVESTED) {
     return SPL_SENDSTOP;
 }
 
+const int SPELL_SLOWDOWNDURATION = 60000;
 func void SPELL_CAST_SLOWDOWN() {
     var OCNPC NPC;
     NPC = HLP_GETNPC(1815);

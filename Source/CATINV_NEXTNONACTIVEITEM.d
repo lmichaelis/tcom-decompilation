@@ -17,6 +17,93 @@ func int CATINV_NEXTNONACTIVEITEM(var int LIST, var int MAX) {
     return I;
 }
 
+func int CATINV_LASTNONACTIVEITEM(var int LIST, var int MAX) {
+    var C_ITEM ITM;
+    var ZCLISTSORT L;
+    var int J;
+    var int I;
+    I = 0;
+    J = MAX;
+    WHILE((LIST) && ((I) < (MAX)));
+    L = _^(LIST);
+    if (HLP_IS_OCITEM(L.DATA)) {
+        ITM = _^(L.DATA);
+        if (((ITM.FLAGS) & (ITEM_ACTIVE)) != (ITEM_ACTIVE)) {
+            J = I;
+        };
+        I += 1;
+    };
+    LIST = L.NEXT;
+    END;
+    return J;
+}
+
+func void CATINV_RIGHT() {
+    var int LIST;
+    var int CALL;
+    var int NUMITEMS;
+    var int CONTENTS;
+    var int DUMP;
+    var int SELLASTCOL;
+    var int SWITCHVIEW;
+    var int COLTOGO;
+    var OCITEMCONTAINER CONTAINER;
+    CONTAINER = _^(ESI);
+    SWITCHVIEW = 0;
+    SELLASTCOL = TRUE;
+    if ((CATINV_G1MODE) && (MEM_READINT(OCNPC__GAME_MODE))) {
+        SWITCHVIEW = 0;
+    };
+    if ((MEM_KEYPRESSED(KEY_LSHIFT)) || (MEM_KEYPRESSED(KEY_RSHIFT))) {
+        SWITCHVIEW = -(1);
+        SELLASTCOL = FALSE;
+        DUMP = CATINV_SHIFTCATEGORY(1);
+    };
+    if (CATINV_CHANGEONLAST) {
+        CONTENTS = CONTAINER.CONTENTS;
+        if (CALL_BEGIN(CALL)) {
+            CALL_PUTRETVALTO(_@(NUMITEMS));
+            CALL__THISCALL(_@(CONTENTS), ZCLISTSORT_OCITEM___GETNUMINLIST);
+            CALL = CALL_END();
+        };
+        if (((((CONTAINER.SELECTEDITEM) + (1)) % (CONTAINER.MAXSLOTSCOL)) == (0)) || (((CONTAINER.SELECTEDITEM) + (1)) >= (NUMITEMS))) {
+            if ((!(CATINV_G1MODE)) || (CONTAINER.RIGHT)) {
+                if (CATINV_SHIFTCATEGORY(1)) {
+                    SWITCHVIEW = -(1);
+                };
+            };
+        } else if (CONTAINER.M_BMANIPULATEITEMSDISABLED) {
+            COLTOGO = (CONTAINER.MAXSLOTSCOL) - (((CONTAINER.SELECTEDITEM) + (1)) % (CONTAINER.MAXSLOTSCOL));
+            LIST = LIST_NODES(CONTAINER.CONTENTS, (((CONTAINER.SELECTEDITEM) + (1)) + (1)) + (1));
+            if ((CATINV_NEXTNONACTIVEITEM(LIST, COLTOGO)) == (COLTOGO)) {
+                if ((!(CATINV_G1MODE)) || (CONTAINER.RIGHT)) {
+                    if (CATINV_SHIFTCATEGORY(1)) {
+                        SWITCHVIEW = -(1);
+                    };
+                };
+            };
+        };
+    };
+    if ((SWITCHVIEW) == (-(1))) {
+        if (SELLASTCOL) {
+            CONTAINER.SELECTEDITEM += ((CONTAINER.MAXSLOTSCOL) - ((CONTAINER.SELECTEDITEM) % (CONTAINER.MAXSLOTSCOL))) - (1);
+        };
+        MEM_WRITEINT((ESP) + (12), CONTAINER.SELECTEDITEM);
+        MEM_WRITEINT((ESP) + (8), CONTAINER.OFFSET);
+        MEM_WRITEBYTE(OCITEMCONTAINER__NEXTITEM_CHECK1, ASMINT_OP_NOP);
+        MEM_WRITEBYTE((OCITEMCONTAINER__NEXTITEM_CHECK1) + (1), ASMINT_OP_JMP);
+        MEM_WRITEBYTE(OCITEMCONTAINER__NEXTITEM_CHECK2, 132);
+    };
+    if ((SWITCHVIEW) == (1)) {
+        MEM_WRITEBYTE(OCITEMCONTAINER__NEXTITEM_CHECK1, 235);
+        MEM_WRITEBYTE((OCITEMCONTAINER__NEXTITEM_CHECK1) + (1), 35);
+        MEM_WRITEBYTE(OCITEMCONTAINER__NEXTITEM_CHECK2, 133);
+    };
+    MEM_WRITEBYTE(OCITEMCONTAINER__NEXTITEM_CHECK1, 15);
+    MEM_WRITEBYTE((OCITEMCONTAINER__NEXTITEM_CHECK1) + (1), 141);
+    MEM_WRITEBYTE(OCITEMCONTAINER__NEXTITEM_CHECK2, 133);
+}
+
 func void CATINV_LEFT() {
     var int LIST;
     var int DUMP;
@@ -83,6 +170,21 @@ func int CATINV_SWITCHCONTAINER(var int CONTAINER) {
     return +(RET);
 }
 
+func int CATINV_KEYBINDINGISTOGGLED(var int KEYSTROKE, var int KEYBINDING) {
+    var int RET;
+    var int CALL;
+    var int ZPTR;
+    ZPTR = MEM_READINT(ZCINPUT_ZINPUT);
+    if (CALL_BEGIN(CALL)) {
+        CALL_INTPARAM(_@(KEYSTROKE));
+        CALL_INTPARAM(_@(KEYBINDING));
+        CALL_PUTRETVALTO(_@(RET));
+        CALL__THISCALL(_@(ZPTR), ZCINPUT__ISBINDEDTOGGLED);
+        CALL = CALL_END();
+    };
+    return +(RET);
+}
+
 func void CATINV_HANDLEEVENT(var int KEYSTROKE, var int CONTAINER) {
     var int DUMP;
     if ((KEYSTROKE) == (KEY_HOME)) {
@@ -106,6 +208,19 @@ func void CATINV_HANDLEEVENT(var int KEYSTROKE, var int CONTAINER) {
     if (CATINV_KEYBINDINGISTOGGLED(KEYSTROKE, ZOPT_GAMEKEY_WEAPON)) {
         DUMP = CATINV_SWITCHCONTAINER(CONTAINER);
     };
+}
+
+func void CATINV_HANDLEEVENTEDI() {
+    CATINV_HANDLEEVENT(EDI, ESI);
+}
+
+func void CATINV_HANDLEEVENTEBX() {
+    var int VIEWDIAITMCON;
+    if (MEM_READINT((EBP) + (OCVIEWDIALOGTRADE_RIGHT_OFFSET))) {
+        VIEWDIAITMCON = MEM_READINT((EBP) + (OCVIEWDIALOGTRADE_CONTAINERRIGHT_OFFSET));
+    };
+    VIEWDIAITMCON = MEM_READINT((EBP) + (OCVIEWDIALOGTRADE_CONTAINERLEFT_OFFSET));
+    CATINV_HANDLEEVENT(EBX, MEM_READINT((VIEWDIAITMCON) + (OCVIEWDIALOGITEMCONTAINER_ITEMCONTAINER_OFFSET)));
 }
 
 func void CATINV_HANDLEEVENTNPCINVENTORY() {

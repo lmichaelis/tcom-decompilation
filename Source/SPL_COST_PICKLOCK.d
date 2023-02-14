@@ -86,6 +86,9 @@ func int SPELL_LOGIC_PICKLOCK(var int MANAINVESTED) {
     return SPL_RECEIVEINVEST;
 }
 
+func void SPELL_CAST_PICKLOCK(var int SPELLLEVEL) {
+}
+
 func void SPELL_PICKLOCK_PRIO() {
     var int SPELLID;
     var int MOB_PRIO_BACKUP;

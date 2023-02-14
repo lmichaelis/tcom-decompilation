@@ -4,6 +4,15 @@ func void SPAWNARAXOSFASTTRAVEL(var string WP, var string ROUTINE) {
     TELEPORTNPCTOWP(57394, WP);
 }
 
+func int SPAWNARAXOSFASTTRAVELISAVAILABLE(var string WP) {
+    if (((NPC_GETDISTTOWP(HERO, WP)) <= (4000)) && ((HLP_STRCMP(SPAWNARAXOSFASTTRAVEL_GQ001_LASTWP, WP)) == (FALSE))) {
+        SPAWNARAXOSFASTTRAVEL_GQ001_LASTWP = WP;
+        return TRUE;
+    };
+    return FALSE;
+}
+
+var string SPAWNTHUGS_LASTWP;
 func void SPAWNTHUGS(var string WP, var string ROUTINE) {
     B_STARTOTHERROUTINE(VLK_6060_MYSTERIOUSMAN, ROUTINE);
     if ((LOG_GETSTATUS(MIS_FMQ003)) == (LOG_RUNNING)) {
@@ -17,10 +26,28 @@ func void SPAWNTHUGS(var string WP, var string ROUTINE) {
     };
 }
 
+func int SPAWNTHUGSISAVAILABLE(var string WP) {
+    if ((((NPC_GETDISTTOWP(HERO, WP)) <= (1000)) && ((HLP_STRCMP(SPAWNTHUGS_LASTWP, WP)) == (FALSE))) || (HLP_STRCMP(SPAWNTHUGS_LASTWP, ""))) {
+        SPAWNTHUGS_LASTWP = WP;
+        return TRUE;
+    };
+    return FALSE;
+}
+
+var string SPAWNBORR_LASTWP;
 func void SPAWNBORR(var string WP, var string ROUTINE) {
     FADESCREENTOBLACKF(1, 64273, 1000);
 }
 
+func int SPAWNBORRISAVAILABLE(var string WP) {
+    if (((NPC_GETDISTTOWP(HERO, WP)) <= (800)) && ((HLP_STRCMP(SPAWNBORR_LASTWP, WP)) == (FALSE))) {
+        SPAWNBORR_LASTWP = WP;
+        return TRUE;
+    };
+    return FALSE;
+}
+
+var string SPAWNGERHARD_SQ225_LASTWP;
 func void SPAWNGERHARD(var string WP, var string ROUTINE) {
     B_STARTOTHERROUTINE(VLK_3014_GERHARD_VINEYARDFIGHT, ROUTINE);
     TELEPORTNPCTOWP(53415, VLK_3014_GERHARD_VINEYARDFIGHT.WP);
@@ -28,11 +55,29 @@ func void SPAWNGERHARD(var string WP, var string ROUTINE) {
     TELEPORTNPCTOWP(56788, NONE_11214_MERCENARY.WP);
 }
 
+func int SPAWNGERHARDISAVAILABLE(var string WP) {
+    if (((NPC_GETDISTTOWP(HERO, WP)) <= (3000)) && ((HLP_STRCMP(SPAWNGERHARD_SQ225_LASTWP, WP)) == (FALSE))) {
+        SPAWNGERHARD_SQ225_LASTWP = WP;
+        return TRUE;
+    };
+    return FALSE;
+}
+
+var string SPAWNFARMER_SQ225_LASTWP;
 func void SPAWNFARMER(var string WP, var string ROUTINE) {
     B_STARTOTHERROUTINE(BAU_11216_FARMER, ROUTINE);
     TELEPORTNPCTOWP(56989, BAU_11216_FARMER.WP);
 }
 
+func int SPAWNFARMERISAVAILABLE(var string WP) {
+    if (((NPC_GETDISTTOWP(HERO, WP)) <= (3000)) && ((HLP_STRCMP(SPAWNFARMER_SQ225_LASTWP, WP)) == (FALSE))) {
+        SPAWNFARMER_SQ225_LASTWP = WP;
+        return TRUE;
+    };
+    return FALSE;
+}
+
+var string SPAWNKESSEL_SQ504_LASTWP;
 func void SPAWNKESSEL(var string WP, var string ROUTINE) {
     Q203_MILITIAGUILDREPUTATION = TRUE;
     B_STARTOTHERROUTINE(NONE_202_KESSEL, ROUTINE);
@@ -40,8 +85,25 @@ func void SPAWNKESSEL(var string WP, var string ROUTINE) {
     AI_TELEPORTALWAYS(NONE_202_KESSEL, NONE_202_KESSEL.WP, TRUE);
 }
 
+func int SPAWNKESSELISAVAILABLE(var string WP) {
+    if ((NPC_GETDISTTOWP(HERO, WP)) <= (5000)) {
+        PRINTD(WORLD_ENDGAME);
+        return TRUE;
+    };
+    return FALSE;
+}
+
+var string SPAWNHERSHLIK_Q602_LASTWP;
 func void SPAWNHERSHLIK(var string WP, var string ROUTINE) {
     B_STARTOTHERROUTINE(VLK_30020_HERSHLIK_Q602, ROUTINE);
     TELEPORTNPCTOWP(60105, WP);
+}
+
+func int SPAWNHERSHLIKISAVAILABLE(var string WP) {
+    if (((NPC_GETDISTTOWP(HERO, WP)) <= (500)) && ((HLP_STRCMP(SPAWNHERSHLIK_Q602_LASTWP, WP)) == (FALSE))) {
+        SPAWNHERSHLIK_Q602_LASTWP = WP;
+        return TRUE;
+    };
+    return FALSE;
 }
 

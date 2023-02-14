@@ -19,6 +19,24 @@ func void EQUIPWEAPON(var C_NPC SLF, var int ITEMINST) {
     CALL__THISCALL(MEM_INSTTOPTR(11632), OCNPC__EQUIPWEAPON);
 }
 
+func int NPC_GETARMOR(var C_NPC SLF) {
+    var C_ITEM ITM;
+    if (!(NPC_HASEQUIPPEDARMOR(SLF))) {
+        return -(1);
+    };
+    ITM = NPC_GETEQUIPPEDARMOR(SLF);
+    return HLP_GETINSTANCEID(ITM);
+}
+
+func int NPC_GETMELEEWEAPON(var C_NPC SLF) {
+    var C_ITEM ITM;
+    if (!(NPC_HASEQUIPPEDMELEEWEAPON(SLF))) {
+        return 0;
+    };
+    ITM = NPC_GETEQUIPPEDMELEEWEAPON(SLF);
+    return HLP_GETINSTANCEID(ITM);
+}
+
 func int NPC_GETRANGEDWEAPON(var C_NPC SLF) {
     var C_ITEM ITM;
     if (!(NPC_HASEQUIPPEDRANGEDWEAPON(SLF))) {
@@ -28,6 +46,7 @@ func int NPC_GETRANGEDWEAPON(var C_NPC SLF) {
     return HLP_GETINSTANCEID(ITM);
 }
 
+const int TRIA_MAXNPC = 16;
 func void DIACAM_UPDATE() {
     var int AICAM;
     if (INFOMANAGER_HASFINISHED()) {
@@ -76,6 +95,23 @@ func void _TRIA_UPDATEVISUAL(var C_NPC SLF, var int ARMOR) {
     MDL_SETVISUALBODY(SLF, NPC.BODY_VISUALNAME, ((NPC.BITFIELD[0]) & (OCNPC_BITFIELD0_BODY_TEXVARNR)) >> (14), (NPC.BITFIELD[1]) & (OCNPC_BITFIELD1_BODY_TEXCOLORNR), NPC.HEAD_VISUALNAME, ((NPC.BITFIELD[1]) & (OCNPC_BITFIELD1_HEAD_TEXVARNR)) >> (16), (NPC.BITFIELD[2]) & (OCNPC_BITFIELD2_TEETH_TEXVARNR), ARMOR);
 }
 
+func void NPC_TRADEITEM(var C_NPC SLF, var int ITM0, var int ITM1) {
+    if (ITM0) {
+        EQUIPWEAPON(SLF, ITM0);
+        NPC_REMOVEINVITEM(SLF, ITM0);
+    };
+    if (ITM1) {
+        CREATEINVITEM(SLF, ITM1);
+        EQUIPWEAPON(SLF, ITM1);
+    };
+}
+
+class _TRIA_FLTWRAPPER {
+	var float F0;
+	var float F1;
+	var float F2;
+	var float F3;
+};
 func void _TRIA_COPY(var int N0, var int N1) {
     var int RW1;
     var int MW1;
@@ -126,6 +162,36 @@ func void _TRIA_COPY(var int N0, var int N1) {
     NPC_TRADEITEM(NP1, RW1, RW0);
 }
 
+func void _TRIA_COPYNPC(var int SLF) {
+    if ((SLF) == (TRIA_LAST)) {
+        return;
+    };
+    if ((SLF) == (TRIA_SELF)) {
+        _TRIA_COPY(TRIA_SELF, TRIA_LAST);
+    };
+    if ((TRIA_LAST) == (TRIA_SELF)) {
+        _TRIA_COPY(TRIA_SELF, SLF);
+    };
+    _TRIA_COPY(TRIA_SELF, TRIA_LAST);
+    _TRIA_COPY(TRIA_SELF, SLF);
+    TRIA_LAST = SLF;
+}
+
+func void _TRIA_INITNPC(var C_NPC SLF, var int TURN) {
+    NPC_CLEARAIQUEUE(SLF);
+    AI_STANDUP(SLF);
+    AI_STOPLOOKAT(SLF);
+    AI_REMOVEWEAPON(SLF);
+    AI_SETWALKMODE(SLF, NPC_RUN);
+    if (TURN) {
+        AI_TURNTONPC(SLF, HERO);
+        AI_LOOKATNPC(SLF, HERO);
+    };
+    SLF.AIVAR[4] = TRUE;
+    AI_WAITTILLEND(HERO, SLF);
+    AI_STARTSTATE(SLF, 11654, 0, "");
+}
+
 func void TRIA_INVITE(var C_NPC SLF) {
     if (TRIA_RUNNING) {
         MEM_WARN("TRIA_Invite: Der Trialog läuft bereits.");
@@ -145,6 +211,36 @@ func void TRIA_INVITE(var C_NPC SLF) {
     };
     MEM_WRITESTATARR(TRIA_NPCPTR[0], TRIA_CPTR, MEM_INSTTOPTR(11691));
     TRIA_CPTR += 1;
+}
+
+func void TRIA_STARTEXT(var int TURN) {
+    var C_NPC SELFCOPY;
+    var C_NPC SLF;
+    var int P;
+    var int I;
+    if (TRIA_RUNNING) {
+        MEM_WARN("TRIA_Start: Es läuft bereits ein Trialog.");
+        return;
+    };
+    I = 0;
+    P = MEM_STACKPOS.POSITION;
+    if ((I) < (TRIA_CPTR)) {
+        SLF = MEM_PTRTOINST(MEM_READSTATARR(TRIA_NPCPTR[0], I));
+        _TRIA_INITNPC(SLF, TURN);
+        I += 1;
+        MEM_STACKPOS.POSITION = P;
+    };
+    NPC_CLEARAIQUEUE(HERO);
+    AI_OUTPUT(HERO, SELF, "");
+    AI_SETWALKMODE(HERO, NPC_RUN);
+    SELFCOPY = HLP_GETNPC(1815);
+    SELF = MEM_NULLTOINST();
+    TRIA_INVITE(SELFCOPY);
+    SELF = HLP_GETNPC(11697);
+    TRIA_WAIT();
+    TRIA_LAST = MEM_INSTTOPTR(1815);
+    TRIA_SELF = TRIA_LAST;
+    TRIA_RUNNING = 1;
 }
 
 func void TRIA_START() {
@@ -209,6 +305,10 @@ func void TRIA_NEXT(var C_NPC N0) {
     AI_FUNCTION_I(HERO, 11710, J);
 }
 
+func void _TRIA_NEXT(var int N0) {
+    _TRIA_COPYNPC(N0);
+}
+
 func void TRIA_CAM(var string EVT) {
     TRIA_WAIT();
     if (!(STR_LEN(EVT))) {
@@ -224,10 +324,25 @@ func void TRIA_CAM(var string EVT) {
     TRIA_CAMERA = EVT;
 }
 
+func void _TRIA_CAM(var string EVT) {
+    DIACAM_DISABLE();
+    WLD_SENDTRIGGER(EVT);
+}
+
 func void _TRIA_UNCAM(var string EVT) {
     DIACAM_ENABLE();
     DIACAM_UPDATE();
     WLD_SENDUNTRIGGER(EVT);
+}
+
+func void TRIA_FINISH() {
+    if (!(TRIA_RUNNING)) {
+        MEM_WARN("TRIA_Finish: Kein Trialog gestartet.");
+        return;
+    };
+    TRIA_WAIT();
+    TRIA_CAM("");
+    AI_FUNCTION(HERO, 11719);
 }
 
 func void _TRIA_FINISH() {

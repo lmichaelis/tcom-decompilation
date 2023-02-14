@@ -50,3 +50,40 @@ func void START_BOSSUI(var C_NPC BOSS, var int MODE) {
     };
 }
 
+func void FINISH_BOSSUI() {
+    BOSSUI = FALSE;
+    BAR_DELETE(BOSS_BAR);
+    DELETE(BOSSNAMEPRINT);
+    FF_REMOVE(21813);
+    FOCUSBAR.ZCVIEW_VPOSY = 171;
+}
+
+func void BOSSUI_FF() {
+    var C_NPC FOCUSNPC;
+    var OCNPC HER;
+    if (HLP_ISVALIDHANDLE(BOSS_BAR)) {
+        BAR_SETVALUE(BOSS_BAR, CURRENTBOSS.ATTRIBUTE[0]);
+    };
+    HER = HLP_GETNPC(1819);
+    if (HLP_IS_OCNPC(HER.FOCUS_VOB)) {
+        FOCUSNPC = MEM_PTRTOINST(HER.FOCUS_VOB);
+        if ((HLP_GETINSTANCEID(FOCUSNPC)) == (HLP_GETINSTANCEID(CURRENTBOSS))) {
+            if ((FOCUSBAR.ZCVIEW_VPOSY) != (8200)) {
+                FOCUSBAR.ZCVIEW_VPOSY = 8200;
+            };
+        } else if ((FOCUSBAR.ZCVIEW_VPOSY) != (420)) {
+            FOCUSBAR.ZCVIEW_VPOSY = 420;
+        };
+    };
+    if ((BOSSUI_MODE) == (1)) {
+        if (NPC_ISDEAD(CURRENTBOSS)) {
+            FINISH_BOSSUI();
+        };
+    };
+    if ((BOSSUI_MODE) == (2)) {
+        if (NPC_ISINSTATE(CURRENTBOSS, 61603)) {
+            FINISH_BOSSUI();
+        };
+    };
+}
+

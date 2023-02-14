@@ -24,3 +24,7 @@ func int SPELL_LOGIC_INFLATE(var int MANAINVESTED) {
     return SPL_SENDSTOP;
 }
 
+func void SPELL_CAST_INFLATE() {
+    SELF.AIVAR[20] += 1;
+}
+

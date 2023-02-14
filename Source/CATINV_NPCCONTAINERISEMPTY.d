@@ -25,3 +25,19 @@ func int CATINV_NPCCONTAINERISEMPTY(var int CONTAINER, var int INCLUDEEQUIPPED, 
     return TRUE;
 }
 
+func void CATINV_PREVENTCLOSEDEADINV() {
+    var int CALL;
+    if (CATINV_NPCCONTAINERISEMPTY(ESI, 0, 0)) {
+        if (CALL_BEGIN(CALL)) {
+            CALL__THISCALL(_@(ECX), OCNPC__CLOSEDEADNPC);
+            CALL = CALL_END();
+        };
+    };
+}
+
+func void CATINV_DEADRESETCATEGORY() {
+    if (!(CATINV_G1MODE)) {
+        CATINV_SETCATEGORYFIRST();
+    };
+}
+

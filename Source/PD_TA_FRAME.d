@@ -24,6 +24,21 @@ func void PRINTDEBUGS(var string TXT) {
     PRINTDEBUG(TXT);
 }
 
+func void PRINTDEBUGNPC(var int TYPE, var string TEXT) {
+    var string PIPE;
+    var string INST_ID;
+    var int INSTANCE_ID;
+    INSTANCE_ID = SELF.ID;
+    INST_ID = INTTOSTRING(INSTANCE_ID);
+    PIPE = CONCATSTRINGS("### ", SELF.NAME[0]);
+    PIPE = CONCATSTRINGS(PIPE, "(");
+    PIPE = CONCATSTRINGS(PIPE, INST_ID);
+    PIPE = CONCATSTRINGS(PIPE, ")");
+    PIPE = CONCATSTRINGS(PIPE, " ### -> ");
+    PIPE = CONCATSTRINGS(PIPE, TEXT);
+    PRINTDEBUGINSTCH(TYPE, PIPE);
+}
+
 func void PRINTGLOBALS(var int CHANNEL) {
     var string PIPE;
     PRINTDEBUGNPC(CHANNEL, "PrintGlobals");
@@ -47,6 +62,10 @@ func void PRINTGLOBALS(var int CHANNEL) {
         PIPE = CONCATSTRINGS("...item:   ", ITEM.NAME);
         PRINTDEBUGNPC(CHANNEL, PIPE);
     };
+}
+
+func void PRINTGUILD(var int CHANNEL, var int GUILD) {
+    PRINTDEBUGNPC(CHANNEL, "PrintGuild");
 }
 
 func void PRINTATTITUDES(var int CHANNEL) {
@@ -79,6 +98,13 @@ func void PRINTATTITUDES(var int CHANNEL) {
     if ((PERM_ATTITUDE) == (ATT_FRIENDLY)) {
         PRINTDEBUGNPC(CHANNEL, "PermAttitude == ATT_FRIENDLY");
     };
+}
+
+func void PRINTDEBUGINT(var int CHANNEL, var string PRETEXT, var int VALUE) {
+    var string PRINTTEXT;
+    PRINTTEXT = INTTOSTRING(VALUE);
+    PRINTTEXT = CONCATSTRINGS(PRETEXT, PRINTTEXT);
+    PRINTDEBUGNPC(CHANNEL, PRINTTEXT);
 }
 
 func void PRINTDEBUGSTRING(var int CHANNEL, var string PRETEXT, var string TEXT) {

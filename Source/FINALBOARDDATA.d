@@ -14,6 +14,17 @@ func void ADDFINALBOARD(var string TEXTURE, var func FNC) {
     LIST_ADD(FINALBOARDSLIST, PTR);
 }
 
+func void FINALBOARD_SECRETDIALOGUE_01() {
+    B_SAY(HERO, HERO, "$MARVIN_AbsolutelyAmazingEvent01");
+}
+
+func void FINALBOARD_SECRETDIALOGUE_02() {
+    B_SAY(HERO, HERO, "$MARVIN_AbsolutelyAmazingEvent02");
+    B_SAY(HERO, HERO, "$MARVIN_AbsolutelyAmazingEvent03");
+    B_SAY(HERO, HERO, "$MARVIN_AbsolutelyAmazingEvent04");
+    B_SAY(HERO, HERO, "$MARVIN_AbsolutelyAmazingEvent05");
+}
+
 func void FINALBOARD_SECRETDIALOGUE_03() {
     B_SAY(HERO, HERO, "$MARVIN_AbsolutelyAmazingEvent06");
     B_SAY(HERO, HERO, "$MARVIN_AbsolutelyAmazingEvent07");

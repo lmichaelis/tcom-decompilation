@@ -28,6 +28,42 @@ func void PC_SLEEP(var int T) {
     NPC_SENDPASSIVEPERC(HERO, PERC_ASSESSENTERROOM, $INSTANCE_HELP, HERO);
 }
 
+func void SLEEPABIT_S1() {
+    var C_NPC ROCK;
+    var C_NPC HER;
+    HER = HLP_GETNPC(50091);
+    ROCK = HLP_GETNPC(60260);
+    if (((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(HER))) || ((HLP_GETINSTANCEID(SELF)) == (HLP_GETINSTANCEID(ROCK)))) {
+        if ((KAPITEL) == (6)) {
+            B_SAY(HERO, HERO, "$MARVIN_QuestRefused2");
+        } else if (((Q307_POISONWAY) >= (1)) && ((Q307_WAITPOISONWAIT) == (FALSE))) {
+            AI_FUNCTION(HERO, 64637);
+        } else if ((Q301_BLOCKTELEPORT) == (1)) {
+            AI_OUTPUT(HERO, HERO, "DIA_Marvin_CantSleepRightNow_15_00");
+            AI_USEMOB(HERO, NPC_GETDETECTEDMOB(HERO), -(1));
+            PLAYER_MOBSI_PRODUCTION = MOBSI_NONE;
+            AI_STOPPROCESSINFOS(HERO);
+        } else if ((SILBACHSLEEP) == (1)) {
+            if ((LOG_GETSTATUS(MIS_Q501)) == (LOG_RUNNING)) {
+                SELF.AIVAR[4] = TRUE;
+                PLAYER_MOBSI_PRODUCTION = MOBSI_SLEEPABIT;
+                AI_PROCESSINFOS(HER);
+            } else if ((NPC_GETDISTTOWP(SELF, "VILLAGE_PUB_ROOM02_BED01")) <= (500)) {
+                AI_FUNCTION(HERO, 47997);
+            } else {
+                AI_OUTPUT(OTHER, SELF, "DIA_Marvin_WrongBed_15_00");
+                AI_USEMOB(HERO, NPC_GETDETECTEDMOB(HERO), -(1));
+                PLAYER_MOBSI_PRODUCTION = MOBSI_NONE;
+                AI_STOPPROCESSINFOS(HERO);
+            };
+        } else {
+            SELF.AIVAR[4] = TRUE;
+            PLAYER_MOBSI_PRODUCTION = MOBSI_SLEEPABIT;
+            AI_PROCESSINFOS(HER);
+        };
+    };
+}
+
 func void Q103_UNLOCKVILLAGE() {
     WLD_SENDTRIGGER("VILLAGE_DOOR_01");
     WLD_SENDTRIGGER("VILLAGE_DOOR_02");

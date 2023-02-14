@@ -270,6 +270,456 @@ func int RENDER_ADDITEMCENTER(var int ITEMINST, var int X, var int Y, var int W,
     return RENDER_ADDITEM(ITEMINST, (X) - ((W) >> (1)), (Y) - ((H) >> (1)), (X) + (((W) + (1)) >> (1)), (Y) + (((H) + (1)) >> (1)));
 }
 
+func int RENDER_ADDITEMCENTERPXL(var int ITEMINST, var int X1, var int Y1, var int W, var int H) {
+    return RENDER_ADDITEMCENTER(ITEMINST, PRINT_TOVIRTUAL(X1, PS_X), PRINT_TOVIRTUAL(Y1, PS_Y), PRINT_TOVIRTUAL(W, PS_X), PRINT_TOVIRTUAL(H, PS_Y));
+}
+
+func void RENDER_TOP(var int PTR) {
+    var RENDERITEM ITM;
+    ITM = _^(PTR);
+    if (ITM.ITMPTR) {
+        VIEWPTR_TOP(ITM.VIEW);
+    };
+}
+
+func void CRAFTINGVIEW_HIDE() {
+    var int HND;
+    var int I;
+    if ((CRAFTINGVIEW_RENDERDLG) != (0)) {
+        RENDER_REMOVE(CRAFTINGVIEW_RENDERDLG);
+        CRAFTINGVIEW_RENDERDLG = 0;
+    };
+    if ((CRAFTINGVIEW_RENDERITEM) != (0)) {
+        RENDER_REMOVE(CRAFTINGVIEW_RENDERITEM);
+        CRAFTINGVIEW_RENDERITEM = 0;
+    };
+    REPEAT(I, 8);
+    HND = MEM_READINTARRAY(_@(CRAFTINGVIEWTEXT[0]), I);
+    if (HLP_ISVALIDHANDLE(HND)) {
+        PRINT_DELETETEXT(HND);
+    };
+    END;
+    CRAFTINGVIEW_ISOPEN = FALSE;
+}
+
+func int CRAFTINGVIEW_CHECKARMORS(var string STR) {
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_01)) {
+        return 35414;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_02)) {
+        return 35422;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_03)) {
+        return 35417;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_04)) {
+        return 35414;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_05)) {
+        return 35403;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_06)) {
+        return 35398;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_07)) {
+        return 35531;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_08)) {
+        return 35543;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_09)) {
+        return 35542;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_10)) {
+        return 35533;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_11)) {
+        return 35531;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_12)) {
+        return 35532;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_13)) {
+        if ((TAILOR_VLK_RICH) == (1)) {
+            return 35530;
+        };
+        if ((TAILOR_VLK_RICH) == (2)) {
+            return 35528;
+        };
+        if ((TAILOR_VLK_RICH) == (3)) {
+            return 35529;
+        };
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_14)) {
+        if ((TAILOR_VLK_RICH) == (1)) {
+            return 35533;
+        };
+        if ((TAILOR_VLK_RICH) == (2)) {
+            return 35531;
+        };
+        if ((TAILOR_VLK_RICH) == (3)) {
+            return 35532;
+        };
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_15)) {
+        return 35543;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_16)) {
+        return 35544;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_17)) {
+        return 35545;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_18)) {
+        return 35548;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_19)) {
+        return 35550;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_20)) {
+        return 35542;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_21)) {
+        return 35546;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_22)) {
+        return 35549;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_23)) {
+        return 35547;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_24)) {
+        return 35551;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_25)) {
+        return 35417;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_26)) {
+        return 35403;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_27)) {
+        return 35465;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_28)) {
+        return 35398;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_29)) {
+        return 35430;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_30)) {
+        return 35435;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_31)) {
+        return 35407;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_32)) {
+        return 35410;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_33)) {
+        return 35411;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_34)) {
+        return 35412;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_35)) {
+        return 35413;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_36)) {
+        return 35571;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_37)) {
+        return 35394;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_38)) {
+        return 35395;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_39)) {
+        return 35396;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_40)) {
+        return 35397;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_41)) {
+        return 35552;
+    };
+    if (HLP_STRCMP(STR, TXT_ARMORTRADE_42)) {
+        return 35525;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CHAIN_L_TIER2)) {
+        return 35399;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CHAIN_M_TIER2)) {
+        return 35404;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CRAB_TIER2)) {
+        return 35408;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_LEATHER_L_TIER2)) {
+        return 35415;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_LEATHER_M_TIER2)) {
+        return 35418;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_HUNTER_L_TIER2)) {
+        return 35423;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_STH_L_TIER2)) {
+        return 35431;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_STH_H_TIER2)) {
+        return 35436;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_NORDMAR_TIER2)) {
+        return 35445;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_R_TIER2)) {
+        return 35452;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_B_TIER2)) {
+        return 35466;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_W1_TIER2)) {
+        return 35455;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_W2_TIER2)) {
+        return 35460;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_H1_TIER2)) {
+        return 35471;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_H2_TIER2)) {
+        return 35476;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_R_TIER2)) {
+        return 35483;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_B_TIER2)) {
+        return 35489;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_W1_TIER2)) {
+        return 35502;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_W2_TIER2)) {
+        return 35507;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_C1_TIER2)) {
+        return 35494;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_C2_TIER2)) {
+        return 35499;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_USM_L_TIER2)) {
+        return 35480;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_WS_M_TIER2)) {
+        return 35516;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_GRD_M_TIER2)) {
+        return 35618;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_KNIGHT_TIER2)) {
+        return 35526;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CHAIN_L_TIER3)) {
+        return 35400;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CHAIN_M_TIER3)) {
+        return 35405;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_CRAB_TIER3)) {
+        return 35409;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_LEATHER_L_TIER3)) {
+        return 35416;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_LEATHER_M_TIER3)) {
+        return 35419;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_HUNTER_L_TIER3)) {
+        return 35424;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_STH_L_TIER3)) {
+        return 35432;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_STH_H_TIER3)) {
+        return 35437;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_NORDMAR_TIER3)) {
+        return 35446;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_R_TIER3)) {
+        return 35453;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_B_TIER3)) {
+        return 35467;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_W1_TIER3)) {
+        return 35455;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_W2_TIER3)) {
+        return 35460;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_H1_TIER3)) {
+        return 35472;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_ARX_H2_TIER3)) {
+        return 35477;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_R_TIER3)) {
+        return 35484;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_B_TIER3)) {
+        return 35490;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_W1_TIER3)) {
+        return 35503;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_W2_TIER3)) {
+        return 35508;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_C1_TIER3)) {
+        return 35495;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_MIL_C2_TIER3)) {
+        return 35500;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_USM_L_TIER3)) {
+        return 35481;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_WS_M_TIER3)) {
+        return 35517;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_GRD_M_TIER3)) {
+        return 35619;
+    };
+    if (HLP_STRCMP(STR, ARMORSELLER_KNIGHT_TIER3)) {
+        return 35527;
+    };
+    return -(1);
+}
+
+func void CRAFTINGVIEW_SHOW(var int RECINST, var int MODE, var int AMOUNT) {
+    var int COUNT;
+    var int COUNTARRAYPTR;
+    var int INVITEMS;
+    var int I;
+    var int COLOR;
+    var int YQUARTSIZE;
+    var int S;
+    var C_ITEM RECITEM;
+    var int TEXTARRAYPTR;
+    var int FH;
+    var int PTR;
+    var int J;
+    var int SCALEF;
+    var int TEXTYPOSH;
+    var int TEXTYPOS;
+    var C_RECIPE REC;
+    var int TEXTXPOS;
+    var int TEXTCENTER;
+    var string ARMOR_TEXT;
+    var C_ITEM CURRENTITEM;
+    var int OFFSET;
+    var int WINDOWWIDTH;
+    var int WINDOWHEIGHT;
+    var int CV_TABPTR;
+    CV_CURRENTITEM = RECINST;
+    CV_CURRENTMODE = MODE;
+    CV_CURRENTAMOUNT = AMOUNT;
+    PRINT_GETSCREENSIZE();
+    YQUARTSIZE = (PRINT_SCREEN[1]) / (4);
+    CRAFTINGVIEW_HIDE();
+    FH = PRINT_GETFONTHEIGHT(TEXT_FONT_DEFAULT);
+    SCALEF = BAR_GETINTERFACESCALING();
+    TEXTYPOSH = (((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2))) - (ROUNDF(MULF(MKF(90), SCALEF)));
+    TEXTYPOS = (((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2))) - (90);
+    TEXTXPOS = ((PRINT_SCREEN[0]) / (2)) - (ROUNDF(MULF(MKF(200), SCALEF)));
+    TEXTCENTER = (PRINT_SCREEN[0]) / (2);
+    WINDOWWIDTH = ROUNDF(MULF(MKF(800), SCALEF));
+    WINDOWHEIGHT = ROUNDF(MULF(MKF(200), SCALEF));
+    CRAFTINGVIEW_DLG = VIEWPTR_CREATECENTERPXL((PRINT_SCREEN[0]) / (2), ((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2)), WINDOWWIDTH, WINDOWHEIGHT);
+    VIEWPTR_SETTEXTURE(CRAFTINGVIEW_DLG, "DLG_CHOICE.TGA");
+    CRAFTINGVIEW_RENDERDLG = RENDER_ADDVIEW(CRAFTINGVIEW_DLG);
+    RENDER_TOP(CRAFTINGVIEW_RENDERDLG);
+    if ((MODE) != (2)) {
+        PTR = CREATE(RECINST);
+        REC = MEM_PTRTOINST(PTR);
+        CRAFTINGVIEW_RENDERITEM = RENDER_ADDITEMCENTERPXL(REC.RECIPEITEM, ((PRINT_SCREEN[0]) / (2)) - (ROUNDF(MULF(MKF(300), SCALEF))), ((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2)), WINDOWHEIGHT, WINDOWHEIGHT);
+        RENDER_TOP(CRAFTINGVIEW_RENDERITEM);
+        RENDER_OPENVIEW(CRAFTINGVIEW_RENDERITEM);
+        RECITEM = MEM_PTRTOINST(ITM_GETPTR(REC.RECIPEITEM));
+        CV_TABPTR = _@S(TXT_CRAFTINGVIEWTAB[0]);
+        if ((CRAFTINGVIEW_SELECTEDTAB) == (CV_INGREDIENTSTAB)) {
+            CRAFTINGVIEWTEXT[0] = PRINT_EXTPXL(((TEXTCENTER) - (PRINT_GETSTRINGWIDTH(MEM_READSTRINGARRAY(CV_TABPTR, 0), TEXT_FONT_DEFAULT))) - (10), TEXTYPOSH, MEM_READSTRINGARRAY(CV_TABPTR, 0), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+            CRAFTINGVIEWTEXT[1] = PRINT_EXTPXL((TEXTCENTER) + (10), TEXTYPOSH, MEM_READSTRINGARRAY(CV_TABPTR, 1), TEXT_FONT_DEFAULT, COL_GRAY, -(1));
+            OFFSET = ((6) - (REC.TOTALREQUIRED)) / (2);
+            REPEAT(I, REC.TOTALREQUIRED);
+            S = SB_NEW();
+            CURRENTITEM = MEM_PTRTOINST(ITM_GETPTR(RECIPE_GETREQUIREDITEMINSTANCE(REC, I)));
+            if ((HLP_ISITEMGROUP(RECIPE_GETREQUIREDITEMINSTANCE(REC, I))) == (TRUE)) {
+                INVITEMS = NPC_HASITEMGROUP(HERO, RECIPE_GETREQUIREDITEMINSTANCE(REC, I));
+            } else {
+                INVITEMS = NPC_HASITEMS(HERO, RECIPE_GETREQUIREDITEMINSTANCE(REC, I));
+            };
+            SB(CURRENTITEM.DESCRIPTION);
+            SB(": ");
+            SBI(INVITEMS);
+            SB("/");
+            if (RECIPE_ISREQUIREDITEMMULTIUSE(REC, I)) {
+                SBI(RECIPE_GETREQUIREDITEMAMOUNT(REC, I));
+                if ((INVITEMS) >= (RECIPE_GETREQUIREDITEMAMOUNT(REC, I))) {
+                    COLOR = RGBA(100, 200, 255, 255);
+                } else {
+                    COLOR = RGBA(255, 50, 50, 255);
+                };
+            } else {
+                SBI((RECIPE_GETREQUIREDITEMAMOUNT(REC, I)) * (AMOUNT));
+                if ((INVITEMS) >= ((RECIPE_GETREQUIREDITEMAMOUNT(REC, I)) * (AMOUNT))) {
+                    COLOR = RGBA(50, 255, 50, 255);
+                } else {
+                    COLOR = RGBA(255, 50, 50, 255);
+                };
+            };
+            MEM_WRITEINTARRAY(_@(CRAFTINGVIEWTEXT[0]), ((I) + (2)) + (OFFSET), PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (((I) + (1)) + (OFFSET))), SB_TOSTRING(), TEXT_FONT_DEFAULT, COLOR, -(1)));
+            SB_DESTROY();
+        } else {
+            CRAFTINGVIEW_SELECTEDTAB = CV_PROPERTIESTAB;
+            if (0) {
+                CRAFTINGVIEWTEXT[0] = PRINT_EXTPXL(((TEXTCENTER) - (PRINT_GETSTRINGWIDTH(MEM_READSTRINGARRAY(CV_TABPTR, 0), TEXT_FONT_DEFAULT))) - (10), TEXTYPOSH, MEM_READSTRINGARRAY(CV_TABPTR, 0), TEXT_FONT_DEFAULT, COL_GRAY, -(1));
+                CRAFTINGVIEWTEXT[1] = PRINT_EXTPXL((TEXTCENTER) + (10), TEXTYPOSH, MEM_READSTRINGARRAY(CV_TABPTR, 1), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+                TEXTARRAYPTR = _@S(RECITEM.TEXT[0]);
+                COUNTARRAYPTR = _@(RECITEM.COUNT[0]);
+                REPEAT(J, ITM_TEXT_MAX);
+                COUNT = MEM_READINTARRAY(COUNTARRAYPTR, J);
+                S = SB_NEW();
+                SB(MEM_READSTRINGARRAY(TEXTARRAYPTR, J));
+                if ((COUNT) > (0)) {
+                    SB(" ");
+                    SBI(COUNT);
+                };
+                MEM_WRITEINTARRAY(_@(CRAFTINGVIEWTEXT[0]), (J) + (2), PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * ((J) + (1))), SB_TOSTRING(), TEXT_FONT_DEFAULT, COL_WHITE, -(1)));
+                SB_DESTROY();
+                END;
+            };
+        };
+    };
+    RECITEM = MEM_PTRTOINST(ITM_GETPTR(RECINST));
+    CRAFTINGVIEW_RENDERITEM = RENDER_ADDITEMCENTERPXL(RECINST, ((PRINT_SCREEN[0]) / (2)) - (ROUNDF(MULF(MKF(300), SCALEF))), ((PRINT_SCREEN[1]) / (2)) + ((YQUARTSIZE) / (2)), WINDOWHEIGHT, WINDOWHEIGHT);
+    RENDER_TOP(CRAFTINGVIEW_RENDERITEM);
+    RENDER_OPENVIEW(CRAFTINGVIEW_RENDERITEM);
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_BLUNT));
+    CRAFTINGVIEWTEXT[1] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (1)), CS3(NAME_PROT_BLUNT, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_EDGE));
+    CRAFTINGVIEWTEXT[2] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (2)), CS3(NAME_PROT_EDGE, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_POINT));
+    CRAFTINGVIEWTEXT[3] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (3)), CS3(NAME_PROT_POINT, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_FIRE));
+    CRAFTINGVIEWTEXT[4] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (4)), CS3(NAME_PROT_FIRE, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    ARMOR_TEXT = I2S(MEM_READINTARRAY(_@(RECITEM.PROTECTION[0]), PROT_MAGIC));
+    CRAFTINGVIEWTEXT[5] = PRINT_EXTPXL(TEXTXPOS, (TEXTYPOS) + ((FH) * (5)), CS3(NAME_PROT_MAGIC, " ", ARMOR_TEXT), TEXT_FONT_DEFAULT, COL_WHITE, -(1));
+    CRAFTINGVIEW_ISOPEN = TRUE;
+}
+
 func void CRAFTINGVIEW_TABSWITCHER(var int KEY) {
     if ((CRAFTINGVIEW_ISOPEN) == (TRUE)) {
         if ((CV_CURRENTMODE) != (2)) {
@@ -283,6 +733,10 @@ func void CRAFTINGVIEW_TABSWITCHER(var int KEY) {
             };
         };
     };
+}
+
+func void INIT_CRAFTINGVIEW_GAMESTART() {
+    HOOKENGINEF(OCINFORMATIONMANAGER__UPDATE, 5, 94786);
 }
 
 func void INIT_CRAFTINGVIEW_ALWAYS() {

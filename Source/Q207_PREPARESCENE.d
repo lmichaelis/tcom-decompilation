@@ -36,6 +36,22 @@ func int C_Q207_GOTSOBER(var C_NPC NPC) {
     return 0 /* !broken stack! */;
 }
 
+func void B_Q207_GIVESOBER_USEIT() {
+    AI_STOPLOOKAT(SELF);
+    if ((NPC_HASITEMS(OTHER, 36389)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 36389, 1);
+        AI_USEITEM(SELF, 36389);
+    };
+    if ((NPC_HASITEMS(OTHER, 33982)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 33982, 1);
+        AI_USEITEM(SELF, 33982);
+    };
+    if ((NPC_HASITEMS(OTHER, 33990)) >= (1)) {
+        B_GIVEINVITEMS(OTHER, SELF, 33990, 1);
+        AI_USEITEM(SELF, 33990);
+    };
+}
+
 func void Q207_SPAWNGOBBO() {
     PRINTD("Gobliny + bandyci stworzone!");
     WLD_INSERTNPC(50491, "FP_ROAM_PART15_220");

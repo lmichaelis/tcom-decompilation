@@ -36,6 +36,16 @@ func int SPELL_LOGIC_PALLIGHTHEAL(var int MANAINVESTED) {
     return SPL_SENDSTOP;
 }
 
+func int SPELL_LOGIC_PALMEDIUMHEAL(var int MANAINVESTED) {
+    if ((NPC_GETACTIVESPELLISSCROLL(SELF)) && ((SELF.ATTRIBUTE[2]) >= (SPL_COST_SCROLL))) {
+        return SPL_SENDCAST;
+    };
+    if ((SELF.ATTRIBUTE[2]) >= (SPL_COST_PALMEDIUMHEAL)) {
+        return SPL_SENDCAST;
+    };
+    return SPL_SENDSTOP;
+}
+
 func int SPELL_LOGIC_PALFULLHEAL(var int MANAINVESTED) {
     if ((NPC_GETACTIVESPELLISSCROLL(SELF)) && ((SELF.ATTRIBUTE[2]) >= (SPL_COST_SCROLL))) {
         return SPL_SENDCAST;
@@ -46,7 +56,27 @@ func int SPELL_LOGIC_PALFULLHEAL(var int MANAINVESTED) {
     return SPL_SENDSTOP;
 }
 
+func int SPELL_LOGIC_LIGHTHEAL(var int MANAINVESTED) {
+    if ((NPC_GETACTIVESPELLISSCROLL(SELF)) && ((SELF.ATTRIBUTE[2]) >= ((SELF.ATTRIBUTE[3]) / (5)))) {
+        return SPL_SENDCAST;
+    };
+    if ((SELF.ATTRIBUTE[2]) >= ((SELF.ATTRIBUTE[3]) / (5))) {
+        return SPL_SENDCAST;
+    };
+    return SPL_SENDSTOP;
+}
+
 func int SPELL_LOGIC_MEDIUMHEAL(var int MANAINVESTED) {
+    if ((NPC_GETACTIVESPELLISSCROLL(SELF)) && ((SELF.ATTRIBUTE[2]) >= ((SELF.ATTRIBUTE[3]) / (5)))) {
+        return SPL_SENDCAST;
+    };
+    if ((SELF.ATTRIBUTE[2]) >= ((SELF.ATTRIBUTE[3]) / (5))) {
+        return SPL_SENDCAST;
+    };
+    return SPL_SENDSTOP;
+}
+
+func int SPELL_LOGIC_FULLHEAL(var int MANAINVESTED) {
     if ((NPC_GETACTIVESPELLISSCROLL(SELF)) && ((SELF.ATTRIBUTE[2]) >= ((SELF.ATTRIBUTE[3]) / (5)))) {
         return SPL_SENDCAST;
     };

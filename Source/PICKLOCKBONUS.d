@@ -23,6 +23,22 @@ func string RANDOMIZEPICKLOCKSTRING(var int LENGTH) {
     return S;
 }
 
+func void RANDOMIZEPICKLOCKS_SUB(var int NODE) {
+    var int LENGTH;
+    var OCMOBLOCKABLE MOB;
+    var ZCLISTSORT L;
+    L = _^(NODE);
+    if (L.DATA) {
+        if (HLP_IS_OCMOBLOCKABLE(L.DATA)) {
+            MOB = _^(L.DATA);
+            LENGTH = STR_LEN(MOB.PICKLOCKSTR);
+            if ((LENGTH) > (0)) {
+                MOB.PICKLOCKSTR = RANDOMIZEPICKLOCKSTRING(LENGTH);
+            };
+        };
+    };
+}
+
 func int GETPICKLOCKSTRLEN(var string ORIGINALPICKLOCKSTR) {
     var int SKILLLEVEL;
     var int PICKLOCKSTRLEN;
@@ -41,6 +57,12 @@ func int GETPICKLOCKSTRLEN(var string ORIGINALPICKLOCKSTR) {
         PICKLOCKSTRLEN = 0;
     };
     return PICKLOCKSTRLEN;
+}
+
+func void HANDLE_RANDOMIZEPICKLOCKS() {
+    if (MEM_WORLD.VOBLIST) {
+        LIST_FORFS(MEM_WORLD.VOBLIST, 20609);
+    };
 }
 
 func void HANDLE_CANOPEN() {

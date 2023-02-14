@@ -47,3 +47,11 @@ func int SPELL_LOGIC_CHARGEZAP(var int MANAINVESTED) {
     return SPL_STATUS_CANINVEST_NO_MANADEC;
 }
 
+func void SPELL_CAST_CHARGEZAP(var int SPELLLEVEL) {
+    SELF.ATTRIBUTE[2] = (SELF.ATTRIBUTE[2]) - (STEP_CHARGEZAP);
+    if ((SELF.ATTRIBUTE[2]) < (0)) {
+        SELF.ATTRIBUTE[2] = 0;
+    };
+    SELF.AIVAR[20] += 1;
+}
+

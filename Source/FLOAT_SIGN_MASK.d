@@ -27,8 +27,70 @@ func int _FLT_BUILD_FUNC(var int CODEPTR, var int PARAM1PTR, var int PARAM2PTR, 
     return CALL_CLOSE();
 }
 
+func int MKF(var int X) {
+    var int RESULT;
+    var int CODE;
+    if (!(CODE)) {
+        CODE = _FLT_BUILD_FUNC(_@(FLTINT_MK_CODE[0]), _@(X), 0, 1, _@(RESULT));
+    };
+    ASM_RUN(CODE);
+    return +(RESULT);
+}
+
+func int TRUNCF(var int X) {
+    var int RESULT;
+    var int CODE;
+    if (!(CODE)) {
+        CODE = _FLT_BUILD_FUNC(_@(FLTINT_TRUNC_CODE[0]), _@(X), 0, 0, _@(RESULT));
+    };
+    ASM_RUN(CODE);
+    return +(RESULT);
+}
+
+func int ADDF(var int X, var int Y) {
+    var int RESULT;
+    var int CODE;
+    if (!(CODE)) {
+        CODE = _FLT_BUILD_FUNC(_@(FLTINT_ADD_CODE[0]), _@(X), _@(Y), 1, _@(RESULT));
+    };
+    ASM_RUN(CODE);
+    return +(RESULT);
+}
+
+func int MULF(var int X, var int Y) {
+    var int RESULT;
+    var int CODE;
+    if (!(CODE)) {
+        CODE = _FLT_BUILD_FUNC(_@(FLTINT_MUL_CODE[0]), _@(X), _@(Y), 1, _@(RESULT));
+    };
+    ASM_RUN(CODE);
+    return +(RESULT);
+}
+
+func int DIVF(var int X, var int Y) {
+    var int RESULT;
+    var int CODE;
+    if (!(CODE)) {
+        CODE = _FLT_BUILD_FUNC(_@(FLTINT_DIV_CODE[0]), _@(X), _@(Y), 1, _@(RESULT));
+    };
+    ASM_RUN(CODE);
+    return +(RESULT);
+}
+
 func int SQRF(var int F) {
     return MULF(F, F);
+}
+
+func int SQRTF(var int F) {
+    var int SQRTF_G1;
+    var int SQRTF_G2;
+    var int RESULT;
+    var int CODE;
+    if (!(CODE)) {
+        CODE = _FLT_BUILD_FUNC(MEMINT_SWITCHG1G2(SQRTF_G1, SQRTF_G2), _@(F), 0, 1, _@(RESULT));
+    };
+    ASM_RUN(CODE);
+    return +(RESULT);
 }
 
 func int NEGF(var int X) {
@@ -38,8 +100,23 @@ func int NEGF(var int X) {
     return (X) | (FLOAT_SIGN_MASK);
 }
 
+func int ABSF(var int X) {
+    return (X) & (~(FLOAT_SIGN_MASK));
+}
+
 func int SUBF(var int X, var int Y) {
     return ADDF(X, NEGF(Y));
+}
+
+func int ROUNDF(var int X) {
+    if ((X) < (0)) {
+        return TRUNCF(SUBF(X, FLOATHALB));
+    };
+    return TRUNCF(ADDF(X, FLOATHALB));
+}
+
+func int INVF(var int X) {
+    return DIVF(FLOATEINS, X);
 }
 
 func int FRACF(var int P, var int Q) {
@@ -49,6 +126,26 @@ func int FRACF(var int P, var int Q) {
     return DIVF(MKF(P), MKF(Q));
 }
 
+func int SQRTF_APPROX(var int F) {
+    return SQRTF(F);
+}
+
+func int GF(var int X, var int Y) {
+    var int ISNEGY;
+    var int ISNEGX;
+    ISNEGX = (X) & (FLOAT_SIGN_MASK);
+    ISNEGY = (Y) & (FLOAT_SIGN_MASK);
+    if ((ISNEGX) && (ISNEGY)) {
+        if ((X) < (Y)) {
+            return TRUE;
+        };
+    };
+    if ((X) > (Y)) {
+        return TRUE;
+    };
+    return FALSE;
+}
+
 func int GEF(var int X, var int Y) {
     if ((X) == (Y)) {
         return TRUE;
@@ -56,13 +153,29 @@ func int GEF(var int X, var int Y) {
     return GF(X, Y);
 }
 
+func int LEF(var int X, var int Y) {
+    return !(GF(X, Y));
+}
+
+func int LF(var int X, var int Y) {
+    return !(GEF(X, Y));
+}
+
 func float CASTFROMINTF(var int F) {
     return F;
+}
+
+func int CASTTOINTF(var float F) {
+    return MEM_READINT(_@F(F));
 }
 
 func string TOSTRINGF(var int X) {
     var float F;
     F = 0;
     return FLOATTOSTRING(F);
+}
+
+func void PRINTF(var int X) {
+    PRINT(TOSTRINGF(X));
 }
 

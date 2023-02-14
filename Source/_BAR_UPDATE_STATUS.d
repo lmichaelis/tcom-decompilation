@@ -41,6 +41,17 @@ func void _BAR_ARCHIVER(var _BAR THIS) {
     PM_SAVEINT("hidden", THIS.HIDDEN);
 }
 
+func void _BAR_UNARCHIVER(var _BAR THIS) {
+    THIS.VALMAX = PM_LOAD("valMax");
+    THIS.BARW = PM_LOAD("barW");
+    THIS.V0 = PM_LOAD("v0");
+    THIS.V1 = PM_LOAD("v1");
+    if (PM_EXISTS("hidden")) {
+        THIS.HIDDEN = PM_LOAD("hidden");
+    };
+    THIS.HIDDEN = -(1);
+}
+
 func void _BAR_DELETE(var _BAR B) {
     if (HLP_ISVALIDHANDLE(B.V0)) {
         DELETE(B.V0);
@@ -48,6 +59,15 @@ func void _BAR_DELETE(var _BAR B) {
     if (HLP_ISVALIDHANDLE(B.V1)) {
         DELETE(B.V1);
     };
+}
+
+func void BAR_SETMAX(var int BAR, var int MAX) {
+    var _BAR B;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return;
+    };
+    B = GET(BAR);
+    B.VALMAX = MAX;
 }
 
 func void BAR_SETPROMILLE(var int BAR, var int PRO) {
@@ -62,10 +82,37 @@ func void BAR_SETPROMILLE(var int BAR, var int PRO) {
     VIEW_RESIZE(B.V1, ((PRO) * (B.BARW)) / (1000), -(1));
 }
 
+func void BAR_SETPERCENT(var int BAR, var int PERC) {
+    BAR_SETPROMILLE(BAR, (PERC) * (10));
+}
+
+func void BAR_SETVALUE(var int BAR, var int VAL) {
+    var _BAR B;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return;
+    };
+    B = GET(BAR);
+    if (VAL) {
+        BAR_SETPROMILLE(BAR, ((VAL) * (1000)) / (B.VALMAX));
+    };
+    BAR_SETPROMILLE(BAR, 0);
+}
+
 func void BAR_DELETE(var int BAR) {
     if (HLP_ISVALIDHANDLE(BAR)) {
         DELETE(BAR);
     };
+}
+
+func void BAR_HIDE(var int BAR) {
+    var _BAR B;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return;
+    };
+    B = GET(BAR);
+    VIEW_CLOSE(B.V0);
+    VIEW_CLOSE(B.V1);
+    B.HIDDEN = TRUE;
 }
 
 func void BAR_SHOW(var int BAR) {
@@ -79,6 +126,22 @@ func void BAR_SHOW(var int BAR) {
         VIEW_OPEN(B.V1);
     };
     B.HIDDEN = FALSE;
+}
+
+func void _BAR_MOVETO_INTERNAL(var int BAR, var int X, var int Y) {
+    var ZCVIEW V;
+    var _BAR B;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return;
+    };
+    B = GET(BAR);
+    V = VIEW_GET(B.V0);
+    X -= (V.VSIZEX) >> (1);
+    Y -= (V.VSIZEY) >> (1);
+    X -= V.VPOSX;
+    Y -= V.VPOSY;
+    VIEW_MOVE(B.V0, X, Y);
+    VIEW_MOVE(B.V1, X, Y);
 }
 
 func void _BAR_RESIZE_INTERNAL(var int BAR, var int WIDTH, var int HEIGHT) {
@@ -133,6 +196,9 @@ func void _BAR_RESIZE_INTERNAL(var int BAR, var int WIDTH, var int HEIGHT) {
     _BAR_MOVETO_INTERNAL(BAR, VCENTERX, VCENTERY);
 }
 
+const int BAR_ANCHOR_N = 2;
+const int BAR_ANCHOR_S = 4;
+const int BAR_ANCHOR_E = 8;
 const int BAR_ANCHOR_W = 16;
 const int BAR_ANCHOR_NE = 10;
 const int BAR_ANCHOR_NW = 18;
@@ -154,6 +220,28 @@ func int BAR_GETANCHORXY(var int X, var int Y) {
         ANCHOR = (ANCHOR) | (BAR_ANCHOR_S);
     };
     return +(ANCHOR);
+}
+
+func int BAR_GETANCHOR(var int BAR) {
+    var int Y;
+    var ZCVIEW V;
+    var int X;
+    var _BAR B;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return 0;
+    };
+    B = GET(BAR);
+    V = VIEW_GET(B.V0);
+    X = (V.VPOSX) + ((V.VSIZEX) >> (1));
+    Y = (V.VPOSY) + ((V.VSIZEY) >> (1));
+    return BAR_GETANCHORXY(X, Y);
+}
+
+func int BAR_GETINTERFACESCALING() {
+    var OCVIEWSTATUSBAR HPBAR;
+    MEM_INITGLOBALINST();
+    HPBAR = _^(MEM_GAME.HPBAR);
+    return FRACF(HPBAR.ZCVIEW_VSIZEX, PRINT_TOVIRTUAL(180, PS_X));
 }
 
 func void BAR_SCALEEXT(var int BAR, var int SCALEF, var int X0, var int Y0, var int X1, var int Y1) {
@@ -212,6 +300,55 @@ func void BAR_SCALEEXT(var int BAR, var int SCALEF, var int X0, var int Y0, var 
     _BAR_MOVETO_INTERNAL(BAR, X, Y);
 }
 
+func void BAR_SCALE(var int BAR, var int SCALEF) {
+    if ((SCALEF) != (FLOATONE)) {
+        PRINT_GETSCREENSIZE();
+        BAR_SCALEEXT(BAR, SCALEF, PRINT_SCREEN[0], PRINT_SCREEN[1], PRINT_SCREEN[0], PRINT_SCREEN[1]);
+    };
+}
+
+func void BAR_MOVETO(var int BAR, var int X, var int Y) {
+    var int SCALE;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return;
+    };
+    SCALE = BAR_GETINTERFACESCALING();
+    BAR_SCALE(BAR, DIVF(FLOATONE, SCALE));
+    _BAR_MOVETO_INTERNAL(BAR, X, Y);
+    BAR_SCALE(BAR, SCALE);
+}
+
+func void BAR_MOVETOPXL(var int BAR, var int X, var int Y) {
+    BAR_MOVETO(BAR, PRINT_TOVIRTUAL(X, PS_X), PRINT_TOVIRTUAL(Y, PS_Y));
+}
+
+func void BAR_RESIZE(var int BAR, var int WIDTH, var int HEIGHT) {
+    var int SCALE;
+    var _BAR B;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return;
+    };
+    B = GET(BAR);
+    SCALE = BAR_GETINTERFACESCALING();
+    BAR_SCALE(BAR, DIVF(FLOATONE, SCALE));
+    _BAR_RESIZE_INTERNAL(BAR, WIDTH, HEIGHT);
+    BAR_SCALE(BAR, SCALE);
+}
+
+func void BAR_RESIZEPXL(var int BAR, var int X, var int Y) {
+    BAR_RESIZE(BAR, PRINT_TOVIRTUAL(X, PS_X), PRINT_TOVIRTUAL(Y, PS_Y));
+}
+
+func void BAR_SETALPHA(var int BAR, var int ALPHA) {
+    var _BAR B;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return;
+    };
+    B = GET(BAR);
+    VIEW_SETALPHA(B.V0, ALPHA);
+    VIEW_SETALPHA(B.V1, ALPHA);
+}
+
 func void BAR_SETBACKTEXTURE(var int BAR, var string BACKTEX) {
     var _BAR B;
     if (!(HLP_ISVALIDHANDLE(BAR))) {
@@ -219,6 +356,20 @@ func void BAR_SETBACKTEXTURE(var int BAR, var string BACKTEX) {
     };
     B = GET(BAR);
     VIEW_SETTEXTURE(B.V0, BACKTEX);
+}
+
+func void BAR_SETBARTEXTURE(var int BAR, var string BARTEX) {
+    var _BAR B;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return;
+    };
+    B = GET(BAR);
+    VIEW_SETTEXTURE(B.V1, BARTEX);
+}
+
+func int _BAR_PLAYERSTATUS() {
+    MEM_INITGLOBALINST();
+    return (HLP_ISVALIDNPC(HERO)) && (MEM_GAME.SHOWPLAYERSTATUS);
 }
 
 func void _BAR_UPDATESHOW(var int BAR) {
@@ -237,6 +388,16 @@ func void _BAR_UPDATESHOW(var int BAR) {
     };
     VIEW_OPEN(B.V0);
     VIEW_OPEN(B.V1);
+}
+
+func void _BAR_UPDATEHIDE(var int BAR) {
+    var _BAR B;
+    if (!(HLP_ISVALIDHANDLE(BAR))) {
+        return;
+    };
+    B = GET(BAR);
+    VIEW_CLOSE(B.V0);
+    VIEW_CLOSE(B.V1);
 }
 
 func void _BAR_UPDATE() {
@@ -299,6 +460,7 @@ func int BAR_CREATE(var int INST) {
     return BH;
 }
 
+var int _BAR_SCREEN_X;
 var int _BAR_SCREEN_Y;
 var int _BAR_SCALING;
 func void _BAR_UPDATERESOLUTION() {

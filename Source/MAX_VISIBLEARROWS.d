@@ -24,14 +24,41 @@ func int QUIVERS_GETQUIVERTYPE(var C_NPC SLF) {
     return FALSE;
 }
 
+func void REFRESHBOWQUIVERMODEL(var C_NPC SLF) {
+    var int VOBPTR;
+    if ((NPC_HASITEMS(SLF, 34383)) > (MAX_VISIBLEARROWS)) {
+        VOBPTR = MEM_INSERTVOB(CS3("ItRw_Quiver_", INTTOSTRING(MAX_VISIBLEARROWS), ".3ds"), MEM_GETANYWP());
+    };
+    VOBPTR = MEM_INSERTVOB(CS3("ItRw_Quiver_", INTTOSTRING(NPC_HASITEMS(SLF, 34383)), ".3ds"), MEM_GETANYWP());
+    OCNPC_PUTINSLOT(SLF, "ZS_CROSSBOW", VOBPTR, QUIVERSLOTID);
+    SLF.AIVAR[98] = NPC_HASITEMS(SLF, 34383);
+    MEM_DELETEVOB(VOBPTR);
+}
+
 func void CREATEBOWQUIVER(var C_NPC SLF) {
     SLF.AIVAR[90] = TRUE;
     REFRESHBOWQUIVERMODEL(SLF);
 }
 
+func void REFRESHCBOWQUIVERMODEL(var C_NPC SLF) {
+    var int VOBPTR;
+    if ((NPC_HASITEMS(SLF, 34384)) > (MAX_VISIBLEARROWS)) {
+        VOBPTR = MEM_INSERTVOB(CS3("ItRw_Quiver_", INTTOSTRING(MAX_VISIBLEARROWS), "c.3ds"), MEM_GETANYWP());
+    };
+    VOBPTR = MEM_INSERTVOB(CS3("ItRw_Quiver_", INTTOSTRING(NPC_HASITEMS(SLF, 34384)), "c.3ds"), MEM_GETANYWP());
+    OCNPC_PUTINSLOT(SLF, "ZS_BOW", VOBPTR, QUIVERSLOTID);
+    SLF.AIVAR[98] = NPC_HASITEMS(SLF, 34384);
+    MEM_DELETEVOB(VOBPTR);
+}
+
 func void CREATECBOWQUIVER(var C_NPC SLF) {
     SLF.AIVAR[90] = TRUE;
     REFRESHCBOWQUIVERMODEL(SLF);
+}
+
+func void REMOVEQUIVER(var C_NPC SLF) {
+    SLF.AIVAR[90] = FALSE;
+    OCNPC_REMOVEFROMSLOT(SLF, "ZS_CROSSBOW", 1, QUIVERSLOTID);
 }
 
 func void REFRESHQUIVER(var C_NPC NPC) {
@@ -45,6 +72,12 @@ func void REFRESHQUIVER(var C_NPC NPC) {
             REFRESHCBOWQUIVERMODEL(NPC);
         };
     };
+}
+
+func void QUIVERS_FF() {
+    var C_NPC HER;
+    HER = HLP_GETNPC(1819);
+    REFRESHQUIVER(HER);
 }
 
 func void CREATEQUIVERSFORALL(var int NODE) {
@@ -68,6 +101,31 @@ func void CREATEQUIVERSFORALL(var int NODE) {
     };
     if (!(L.NEXT)) {
         LIST_DESTROYS(NODE);
+    };
+}
+
+func void _EVT_QUIVER_EQUIP() {
+    var C_NPC SLF;
+    var C_ITEM ITM;
+    var int ITMPTR;
+    if ((MEM_WORLDTIMER.WORLDTIME) == (0)) {
+        return;
+    };
+    if ((!(ECX)) || (!(ESP))) {
+        return;
+    };
+    ITMPTR = MEM_READINT((ESP) + (4));
+    if (!(ITMPTR)) {
+        return;
+    };
+    ITM = MEM_PTRTOINST(ITMPTR);
+    if (((ITM.FLAGS) & (ITEM_BOW)) || ((ITM.FLAGS) & (ITEM_CROSSBOW))) {
+        SLF = MEM_PTRTOINST(ECX);
+        if ((ITM.FLAGS) & (ITEM_BOW)) {
+            CREATEBOWQUIVER(SLF);
+        } else if ((ITM.FLAGS) & (ITEM_CROSSBOW)) {
+            CREATECBOWQUIVER(SLF);
+        };
     };
 }
 

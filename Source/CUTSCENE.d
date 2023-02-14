@@ -10,6 +10,18 @@ func void CUTSCENE_START(var int CUTSCENE) {
     MEM_CALLBYID(C.ONSTART);
 }
 
+func void KILLSUMMONEDNPCS(var int NODE) {
+    var OCNPC NPC;
+    var ZCLISTSORT L;
+    L = _^(NODE);
+    if (L.DATA) {
+        NPC = _^(L.DATA);
+        if (((NPC.BITFIELD[0]) & (OCNPC_BITFIELD0_ISSUMMONED)) == (OCNPC_BITFIELD0_ISSUMMONED)) {
+            NPC.ATTRIBUTE[0] = 0;
+        };
+    };
+}
+
 var int CURRENTTRIGGEREDCAMERAPTR;
 var int ISINCAMERA;
 var int ISINFINALBOARDS;

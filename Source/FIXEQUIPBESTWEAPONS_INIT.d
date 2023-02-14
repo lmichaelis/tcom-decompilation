@@ -16,3 +16,13 @@ func void NPCEQUIPBESTWEAPONBYTYPE(var C_NPC NPC, var int TYPE) {
     };
 }
 
+func void _FIXEQUIPBESTWEAPONS() {
+    var C_NPC NPC;
+    NPC = _^(ESI);
+    if ((NPC.FLAGS) == (2)) {
+        return;
+    };
+    NPCEQUIPBESTWEAPONBYTYPE(NPC, ITEM_KAT_NF);
+    NPCEQUIPBESTWEAPONBYTYPE(NPC, ITEM_KAT_FF);
+}
+

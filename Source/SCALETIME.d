@@ -7,6 +7,17 @@ func void SCALETIME(var int X) {
     MEM_WORLDTIMER.WORLDTIME = ADDF(MEM_WORLDTIMER.WORLDTIME, WORLD_TIMER);
 }
 
+func int CONVERTTOTIMETICKS(var int H, var int M) {
+    var int T;
+    var int TPMF;
+    var int TPHF;
+    TPHF = MKF(OCWORLDTIMER_TICKSPERHOUR);
+    TPMF = DIVF(TPHF, MKF(60));
+    T = MULF(MKF(H), TPHF);
+    T = ADDF(T, MULF(MKF(M), TPMF));
+    return T;
+}
+
 var int TIMETOSTOPWHEN;
 func void STOPTIMEATHOURFF() {
     MEM_WORLDTIMER.WORLDTIME = TIMETOSTOPWHEN;
@@ -17,6 +28,11 @@ func void STOPTIMEATHOUR(var int H, var int M) {
     FF_APPLY(21065);
 }
 
+func void RESUMETIME() {
+    FF_REMOVE(21065);
+}
+
+var int CLOCKSPEED;
 func void CLOCKSPEEDFF() {
     SCALETIME(CLOCKSPEED);
 }

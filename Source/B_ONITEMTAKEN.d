@@ -21,3 +21,17 @@ func void B_ONITEMTAKEN(var C_ITEM ITEM) {
     Q514_VOLFZACKEARMOR(ITEM);
 }
 
+func void OCNPCINVENTORY__INSERT_HOOK() {
+    var C_NPC NPC;
+    var C_ITEM ITEM;
+    var OCNPCINVENTORY NPCINV;
+    NPCINV = _^(ECX);
+    NPC = _^(NPCINV.OWNER);
+    if ((NPC_ISPLAYER(NPC)) == (FALSE)) {
+        return;
+    };
+    ITEM = _^(ESI);
+    TELEMETRY_TAKEITEM(HLP_GETINSTANCEID(ITEM));
+    B_ONITEMTAKEN(ITEM);
+}
+

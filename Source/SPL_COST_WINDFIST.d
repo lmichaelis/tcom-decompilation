@@ -50,3 +50,11 @@ func int SPELL_LOGIC_WINDFIST(var int MANAINVESTED) {
     return SPL_STATUS_CANINVEST_NO_MANADEC;
 }
 
+func void SPELL_CAST_WINDFIST(var int SPELLLEVEL) {
+    SELF.ATTRIBUTE[2] = (SELF.ATTRIBUTE[2]) - (STEP_WINDFIST);
+    if ((SELF.ATTRIBUTE[2]) < (0)) {
+        SELF.ATTRIBUTE[2] = 0;
+    };
+    SELF.AIVAR[20] += 1;
+}
+

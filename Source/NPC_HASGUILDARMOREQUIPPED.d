@@ -22,6 +22,35 @@ func int NPC_HASGUILDARMOREQUIPPED(var C_NPC NPC, var int GUILD) {
     return FALSE;
 }
 
+func int NPC_HASGUILDARMORINEQ(var C_NPC NPC, var int GUILD) {
+    if ((GUILD) == (GIL_MIL)) {
+        if (((((((((((((((((((NPC_HASITEMS(NPC, 35501)) > (0)) || ((NPC_HASITEMS(NPC, 35502)) > (0))) || ((NPC_HASITEMS(NPC, 35503)) > (0))) || ((NPC_HASITEMS(NPC, 35506)) > (0))) || ((NPC_HASITEMS(NPC, 35507)) > (0))) || ((NPC_HASITEMS(NPC, 35508)) > (0))) || ((NPC_HASITEMS(NPC, 35488)) > (0))) || ((NPC_HASITEMS(NPC, 35489)) > (0))) || ((NPC_HASITEMS(NPC, 35490)) > (0))) || ((NPC_HASITEMS(NPC, 35482)) > (0))) || ((NPC_HASITEMS(NPC, 35483)) > (0))) || ((NPC_HASITEMS(NPC, 35484)) > (0))) || ((NPC_HASITEMS(NPC, 35498)) > (0))) || ((NPC_HASITEMS(NPC, 35499)) > (0))) || ((NPC_HASITEMS(NPC, 35500)) > (0))) || ((NPC_HASITEMS(NPC, 35493)) > (0))) || ((NPC_HASITEMS(NPC, 35494)) > (0))) || ((NPC_HASITEMS(NPC, 35495)) > (0))) {
+            return TRUE;
+        };
+    };
+    if ((GUILD) == (GIL_SLD)) {
+        if (((((((((((((((((((NPC_HASITEMS(NPC, 35470)) > (0)) || ((NPC_HASITEMS(NPC, 35471)) > (0))) || ((NPC_HASITEMS(NPC, 35472)) > (0))) || ((NPC_HASITEMS(NPC, 35475)) > (0))) || ((NPC_HASITEMS(NPC, 35476)) > (0))) || ((NPC_HASITEMS(NPC, 35477)) > (0))) || ((NPC_HASITEMS(NPC, 35451)) > (0))) || ((NPC_HASITEMS(NPC, 35452)) > (0))) || ((NPC_HASITEMS(NPC, 35453)) > (0))) || ((NPC_HASITEMS(NPC, 35465)) > (0))) || ((NPC_HASITEMS(NPC, 35466)) > (0))) || ((NPC_HASITEMS(NPC, 35467)) > (0))) || ((NPC_HASITEMS(NPC, 35454)) > (0))) || ((NPC_HASITEMS(NPC, 35455)) > (0))) || ((NPC_HASITEMS(NPC, 35456)) > (0))) || ((NPC_HASITEMS(NPC, 35459)) > (0))) || ((NPC_HASITEMS(NPC, 35460)) > (0))) || ((NPC_HASITEMS(NPC, 35461)) > (0))) {
+            return TRUE;
+        };
+    };
+    if ((GUILD) == (GIL_KDF)) {
+        if ((((((NPC_HASITEMS(NPC, 33916)) > (0)) || ((NPC_HASITEMS(NPC, 33919)) > (0))) || ((NPC_HASITEMS(NPC, 33573)) > (0))) || ((NPC_HASITEMS(NPC, 33924)) > (0))) || ((NPC_HASITEMS(NPC, 35593)) > (0))) {
+            return TRUE;
+        };
+    };
+    return FALSE;
+}
+
+func void NPC_REMOVEALLGUILDARMORS(var C_NPC NPC, var int GUILD) {
+    PRINTD("Npc_RemoveAllGuildArmors");
+    if ((GUILD) == (GIL_MIL)) {
+    };
+    if ((GUILD) == (GIL_SLD)) {
+        NPC_REMOVEINVITEMS(NPC, 35460, NPC_HASITEMS(NPC, 35460));
+        NPC_REMOVEINVITEMS(NPC, 35461, NPC_HASITEMS(NPC, 35461));
+    };
+}
+
 func void NPC_REMOVEALLGUILDSPECIALIZATIONARMORS(var C_NPC NPC, var int GUILD, var int SPECIALIZATION) {
     PRINTD("Npc_RemoveAllGuildSpecializationArmors");
     if ((GUILD) == (GIL_MIL)) {

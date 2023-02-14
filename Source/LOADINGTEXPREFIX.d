@@ -10,6 +10,15 @@ func void SETLOADTEXNAME(var string TEXNAME) {
     MEM_WRITEINT((LOADINGTEXNAME_OFFSET) + (LEN), (MEM_READINT((LOADINGTEXNAME_OFFSET) + (LEN))) & (~(255)));
 }
 
+func string GETRANDNUMBERSTRING(var int MAX) {
+    var int RAND;
+    RAND = (HLP_RANDOM(MAX)) + (1);
+    if ((RAND) <= (9)) {
+        return CONCATSTRINGS("0", INTTOSTRING(RAND));
+    };
+    return INTTOSTRING(RAND);
+}
+
 func void UPDATELOADINGTEXTURE() {
     var string TEX;
     var string N;

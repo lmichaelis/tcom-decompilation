@@ -5,8 +5,22 @@ func int C_NPCBELONGSTOWOLFSLAIR(var C_NPC SLF) {
     return FALSE;
 }
 
+func int C_NPCBELONGSTOCITY(var C_NPC SLF) {
+    if (((((((SLF.GUILD) == (GIL_VLK)) || ((SLF.GUILD) == (GIL_MIL))) || ((SLF.GUILD) == (GIL_PAL))) || ((SLF.GUILD) == (GIL_KDF))) || (((SLF.GUILD) == (GIL_NOV)) && ((NPC_HASITEMS(SLF, 33913)) >= (1)))) || ((SLF.GUILD) == (GIL_SLD))) {
+        return TRUE;
+    };
+    return FALSE;
+}
+
 func int C_NPCBELONGSTOMONASTERY(var C_NPC SLF) {
     if (((SLF.GUILD) == (GIL_KDW)) || (((SLF.GUILD) == (GIL_NOV)) && ((NPC_HASITEMS(SLF, 35594)) >= (1)))) {
+        return TRUE;
+    };
+    return FALSE;
+}
+
+func int C_NPCBELONGSTOFARMS(var C_NPC SLF) {
+    if ((SLF.GUILD) == (GIL_BAU)) {
         return TRUE;
     };
     return FALSE;

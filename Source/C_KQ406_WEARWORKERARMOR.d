@@ -10,6 +10,10 @@ func int C_KQ406_WEARWORKERARMOR(var C_NPC NPC) {
     return FALSE;
 }
 
+func void KQ406_PREPARESCENE() {
+    FF_APPLYONCEEXTGT(34759, 0, -(1));
+}
+
 func void KQ406_PREPARESCENE_APPLY() {
     var int MOVPTR4;
     var ZCMOVER MOVER2;
